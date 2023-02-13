@@ -1,10 +1,12 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import {
-	Button, Paper, Stack, TextField, Link, Typography, Container,
+	Button, Paper, Stack, TextField, Link, Typography, Container, Box,
 } from '@mui/material';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function LogInScreen() {
 	// const [email, setEmail] = useState('');
@@ -17,17 +19,17 @@ export default function LogInScreen() {
 	};
 
 	return (
-		<Container
-			sx={{
-				marginTop: 8,
-				marginBottom: 8,
-				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
-			}}
-		>
-
-			<Paper>
+		<Box sx={{ minHeight: '100vh' }}>
+			<Header />
+			<Container
+				sx={{
+					marginTop: 8,
+					marginBottom: 8,
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+				}}
+			>
 				<form onSubmit={handleSubmit}>
 					<Stack spacing={5} padding={5}>
 						<Typography variant="h4">Sign In</Typography>
@@ -52,7 +54,7 @@ export default function LogInScreen() {
 							required
 						/>
 						<Stack direction="row" alignItems="baseline" spacing={5}>
-							<Link component={RouterLink} to={`/register`}>
+							<Link component={RouterLink} to={`/patientregister`}>
 								New user? Sign up!
 							</Link>
 							<Button variant="contained" color="secondary" type="submit">
@@ -61,8 +63,8 @@ export default function LogInScreen() {
 						</Stack>
 					</Stack>
 				</form>
-			</Paper>
-
-		</Container>
+			</Container>
+			<Footer />
+		</Box>
 	);
 }
