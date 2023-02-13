@@ -6,11 +6,15 @@ import {
 	TextField,
 	Typography,
 	Container,
+	Box,
+	Link,
 } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link as RouterLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
-export default function RegisterScreen() {
+export default function PatientRegisterScreen() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [name, setName] = useState("");
@@ -20,16 +24,16 @@ export default function RegisterScreen() {
 	};
 
 	return (
-		<Container
-			sx={{
-				marginTop: 8,
-				marginBottom: 8,
-				display: "flex",
-				flexDirection: "column",
-				alignItems: "center",
-			}}
-		>
-			<Paper>
+		<Box>
+			<Header />
+			<Container
+				sx={{
+					marginTop: 8,
+					marginBottom: 8,
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+				}}>
 				<form onSubmit={handleSubmit}>
 					<Stack spacing={5} padding={5}>
 						<Typography variant="h4">Register</Typography>
@@ -62,12 +66,18 @@ export default function RegisterScreen() {
 							autoComplete="current-password"
 							required
 						/>
-						<Button variant="contained" color="secondary" type="submit">
-							Sign Up
-						</Button>
+						<Stack direction="row" alignItems="baseline" spacing={5}>
+							<Link component={RouterLink} to={`/signin`}>
+								Have an account? Log in!
+							</Link>
+							<Button variant="contained" color="secondary" type="submit">
+								Sign In
+							</Button>
+						</Stack>
 					</Stack>
 				</form>
-			</Paper>
-		</Container>
+			</Container>
+			<Footer />
+		</Box >
 	);
 }
