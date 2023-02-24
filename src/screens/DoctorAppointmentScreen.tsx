@@ -99,6 +99,7 @@ export default function DoctorAppointmentScreen(props: any) {
               <Button variant="outlined" color="secondary" onClick={() => handleDetailButtonClick(patient)}>
                 View Details
               </Button></Stack>
+
           </ListItem>
         ))}
       </List>
