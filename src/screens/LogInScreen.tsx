@@ -54,7 +54,7 @@ export default function LogInScreen() {
 							required
 						/>
 						<Stack direction="row" alignItems="baseline" spacing={5}>
-							<Link component={RouterLink} to={`/patientregister`}>
+							<Link component={RouterLink} to={`/Register`}>
 								New user? Sign up!
 							</Link>
 							<Button variant="contained" color="secondary" type="submit">
