@@ -11,6 +11,11 @@ import PatientAppointmentScreen from './screens/PatientAppointmentScreen';
 import PatientAssessmentScreen from './screens/PatientAssessmentScreen';
 import PatientSettingsScreen from './screens/PatientSettingsScreen';
 import RegisterScreen from "./screens/RegisterScreen";
+import DoctorHomeScreen from './screens/DoctorHomeScreen';
+import DoctorDashboardScreen from './screens/DoctorDashboardScreen';
+import DoctorAppointmentScreen from './screens/DoctorAppointmentScreen';
+import DoctorProfileScreen from './screens/DoctorProfileScreen';
+import DoctorSettingsScreen from './screens/DoctorSettingsScreen';
 
 function App() {
 	return (
@@ -28,6 +33,13 @@ function App() {
 						<Route path="assessment" element={<PatientAssessmentScreen />} />
 						<Route path="profile" element={<PatientProfileScreen />} />
 						<Route path="settings" element={<PatientSettingsScreen />} />
+					</Route>
+					<Route path="doctor" element={<DoctorHomeScreen />}>
+						<Route index element={<DoctorDashboardScreen />} />
+						<Route path="dashboard" element={<DoctorDashboardScreen />} />
+						<Route path="appointments" element={<DoctorAppointmentScreen />} />
+						<Route path="profile" element={<DoctorProfileScreen />} />
+						<Route path="settings" element={<DoctorSettingsScreen />} />
 					</Route>
 					<Route path="patientregister" element={<PatientRegisterScreen />} />
 					<Route path="register" element={<RegisterScreen />} />
