@@ -55,9 +55,9 @@ export default function RegisterScreen() {
 									value={position}
 									onChange={e => setPosition(e.target.value)}
 									label="Position"
-									defaultValue={""}
+									required
+									autoFocus
 								>
-									<MenuItem value="">Select Position</MenuItem>
 									<MenuItem value="patient">Patient</MenuItem>
 									<MenuItem value="doctor">Doctor</MenuItem>
 									<MenuItem value="counselor">Counselor</MenuItem>
