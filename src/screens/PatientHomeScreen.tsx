@@ -2,6 +2,7 @@ import * as React from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
+import Avatar from '@mui/material/Avatar';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
@@ -25,9 +26,12 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DrawerOptionTextIconsType from '../types/DrawerOptionTextIconsType';
-import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate, Link as RouterLink } from 'react-router-dom';
 import PatientDashboardScreen from './PatientDashboardScreen';
 import PatientProfileScreen from './PatientProfileScreen';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
 
 
 const drawerWidth = 240;
@@ -56,7 +60,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
-	justifyContent: 'flex-end',
+	justifyContent: 'space-between',
 	padding: theme.spacing(0, 1),
 	// necessary for content to be below app bar
 	...theme.mixins.toolbar,
@@ -168,6 +172,21 @@ export default function PatientHomeScreen() {
 			)}
 		</List>
 
+	const breadcrumbs = [
+		<Link underline="hover" key="1" color="inherit" to="/patient" component={RouterLink}>
+			Home
+		</Link>,
+		<Link
+			underline="hover"
+			key="2"
+			color="inherit"
+			to="/patient/dashboard"
+			component={RouterLink}
+		>
+			Dashboard
+		</Link>
+	];
+
 	const handleDrawerOpen = () => {
 		setOpen(true);
 	};
@@ -193,13 +212,20 @@ export default function PatientHomeScreen() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography variant="h6" noWrap component="div">
-						DepressionCare
-					</Typography>
+					<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "baseline" }}>
+						<Typography variant="h6" noWrap component="div">
+							DepressionCare
+						</Typography>
+						<Breadcrumbs separator="›" aria-label="breadcrumb" color="primary.contrastText">
+							{breadcrumbs}
+						</Breadcrumbs>
+					</Stack>
 				</Toolbar>
 			</AppBar>
 			<Drawer variant="permanent" open={open}>
-				<DrawerHeader>
+				<DrawerHeader sx={{ justifyContent: 'space-between' }}>
+					<Avatar>P</Avatar>
+					<Typography>Patient</Typography>
 					<IconButton onClick={handleDrawerClose}>
 						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
 					</IconButton>
