@@ -11,6 +11,8 @@ import PatientAppointmentScreen from './screens/PatientAppointmentScreen';
 import PatientAssessmentScreen from './screens/PatientAssessmentScreen';
 import PatientSettingsScreen from './screens/PatientSettingsScreen';
 import RegisterScreen from "./screens/RegisterScreen";
+{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
+import CounselorProfileScreen from './screens/counselorFile/CounselorProfileScreen';
 
 function App() {
 	return (
@@ -28,10 +30,16 @@ function App() {
 						<Route path="assessment" element={<PatientAssessmentScreen />} />
 						<Route path="profile" element={<PatientProfileScreen />} />
 						<Route path="settings" element={<PatientSettingsScreen />} />
+						<Route path="counselorProfile" element={<CounselorProfileScreen />} />
 					</Route>
 					<Route path="patientregister" element={<PatientRegisterScreen />} />
 					<Route path="register" element={<RegisterScreen />} />
 				</Routes>
+
+				{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
+				{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
+				
+
 			</div>
 		</Router>
 	);

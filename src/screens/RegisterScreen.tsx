@@ -23,6 +23,7 @@ export default function RegisterScreen() {
 	const [addr, setAddr] = useState("");
 	const [dob, setDob] = useState("");
 	const [doctorRegNumber, setDoctorRegNumber] = useState('');
+	const [counselorRegNumber, setCounselorRegNumber] = useState('');
 
 
 	const handleSubmit = (e: FormEvent) => {
@@ -179,8 +180,76 @@ export default function RegisterScreen() {
 						)}
 						{position === 'counselor' && (
 							<div>
-								<h2>Counselor Registration Form</h2>
+								<h2>Hi~ Counselor Registration Form ❤️</h2>
 								{/* Add Counselor-specific form fields here */}
+								<Stack spacing={5} padding={0}>
+									<TextField
+										id="name-field"
+										label="Name"
+										variant="outlined"
+										value={name}
+										onChange={(e) => setName(e.target.value)}
+										required
+										autoFocus
+										autoComplete="name"
+									/>
+									<TextField
+										id="email-field"
+										label="E-mail"
+										variant="outlined"
+										value={email}
+										onChange={(e) => setEmail(e.target.value)}
+										autoComplete="email"
+										required
+									/>
+									<TextField
+										id="password-field"
+										label="Password"
+										variant="outlined"
+										value={password}
+										onChange={(e) => setPassword(e.target.value)}
+										type="password"
+										autoComplete="current-password"
+										required
+									/>
+									<TextField
+										id="dateOfBirth"
+										label="Date of Birth"
+										type="date"
+										value={dob}
+										onChange={e => setDob(e.target.value)}
+										variant="outlined"
+										required
+										InputLabelProps={{
+											shrink: true,
+										}}
+									/>
+									<TextField
+										id="address"
+										label="Address"
+										value={addr}
+										onChange={e => setAddr(e.target.value)}
+										variant="outlined"
+										fullWidth
+										required
+									/>
+									<TextField
+										id="phoneNumber"
+										label="PhoneNumber"
+										value={phoneNumber}
+										onChange={e => setPhoneNumber(e.target.value)}
+										variant="outlined"
+										required
+									/>
+									<TextField
+										id="counselorRegNumber"
+										label="Counselor Registration Number"
+										value={counselorRegNumber}
+										onChange={e => setCounselorRegNumber(e.target.value)}
+										variant="outlined"
+										required
+									/>
+								</Stack>
 							</div>
 						)}
 						{position === 'manager' && (
