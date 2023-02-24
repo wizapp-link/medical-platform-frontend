@@ -56,6 +56,14 @@ export default function PatientProfileScreen(props: any) {
 							fullWidth
 							required
 						/>
+						<Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+							<Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
+								Discard
+							</Button>
+							<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
+								Submit
+							</Button>
+						</Stack>
 					</Stack>
 				</form>
 			</Container>

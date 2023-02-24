@@ -1,4 +1,4 @@
-import { Box, Container, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Stack, TextField, Typography } from '@mui/material';
 import React, { FormEvent, useState } from 'react';
 
 export default function PatientSettingsScreen(props: any) {
@@ -55,6 +55,14 @@ export default function PatientSettingsScreen(props: any) {
 							type="password"
 							required
 						/>
+						<Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+							<Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
+								Discard
+							</Button>
+							<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
+								Submit
+							</Button>
+						</Stack>
 					</Stack>
 				</form>
 			</Container>
