@@ -10,6 +10,7 @@ import PatientProfileScreen from './screens/PatientProfileScreen';
 import PatientAppointmentScreen from './screens/PatientAppointmentScreen';
 import PatientAssessmentScreen from './screens/PatientAssessmentScreen';
 import PatientSettingsScreen from './screens/PatientSettingsScreen';
+import RegisterScreen from "./screens/RegisterScreen";
 
 function App() {
 	return (
@@ -29,6 +30,7 @@ function App() {
 						<Route path="settings" element={<PatientSettingsScreen />} />
 					</Route>
 					<Route path="patientregister" element={<PatientRegisterScreen />} />
+					<Route path="register" element={<RegisterScreen />} />
 				</Routes>
 			</div>
 		</Router>
