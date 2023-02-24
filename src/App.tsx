@@ -11,12 +11,19 @@ import PatientAppointmentScreen from './screens/PatientAppointmentScreen';
 import PatientAssessmentScreen from './screens/PatientAssessmentScreen';
 import PatientSettingsScreen from './screens/PatientSettingsScreen';
 import RegisterScreen from "./screens/RegisterScreen";
-import CounselorProfileScreen from './screens/counselorFile/CounselorProfileScreen';
+
 import DoctorHomeScreen from './screens/DoctorHomeScreen';
 import DoctorDashboardScreen from './screens/DoctorDashboardScreen';
 import DoctorAppointmentScreen from './screens/DoctorAppointmentScreen';
 import DoctorProfileScreen from './screens/DoctorProfileScreen';
 import DoctorSettingsScreen from './screens/DoctorSettingsScreen';
+
+{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
+import CounselorHomeScreen from './screens/CounselorHomeScreen';
+import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
+import CounselorDashboardScreen from './screens/CounselorDashboardScreen';
+import CounselorProfileScreen from './screens/CounselorProfileScreen';
+import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
 
 
 function App() {
@@ -35,7 +42,6 @@ function App() {
 						<Route path="assessment" element={<PatientAssessmentScreen />} />
 						<Route path="profile" element={<PatientProfileScreen />} />
 						<Route path="settings" element={<PatientSettingsScreen />} />
-						<Route path="counselorProfile" element={<CounselorProfileScreen />} />
 					</Route>
 					<Route path="doctor" element={<DoctorHomeScreen />}>
 						<Route index element={<DoctorDashboardScreen />} />
@@ -44,14 +50,18 @@ function App() {
 						<Route path="profile" element={<DoctorProfileScreen />} />
 						<Route path="settings" element={<DoctorSettingsScreen />} />
 					</Route>
+					{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
+					<Route path="counselor" element={<CounselorHomeScreen />}>
+						<Route index element={<CounselorDashboardScreen />} />
+						<Route path="dashboard" element={<CounselorDashboardScreen />} />
+						<Route path="appointments" element={<CounselorAppointmentScreen />} />
+						<Route path="profile" element={<CounselorProfileScreen />} />
+						<Route path="settings" element={<CounselorSettingsScreen />} />
+					</Route>
+					{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
 					<Route path="patientregister" element={<PatientRegisterScreen />} />
 					<Route path="register" element={<RegisterScreen />} />
 				</Routes>
-
-				{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
-				{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
-				
-
 			</div>
 		</Router>
 	);
