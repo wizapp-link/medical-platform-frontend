@@ -19,6 +19,11 @@ export default function RegisterScreen() {
 	const [password, setPassword] = useState("");
 	const [name, setName] = useState("");
 	const [position, setPosition] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState('');
+	const [addr, setAddr] = useState("");
+	const [dob, setDob] = useState("");
+	const [doctorRegNumber, setDoctorRegNumber] = useState('');
+
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
@@ -36,7 +41,7 @@ export default function RegisterScreen() {
 					alignItems: 'center',
 				}}>
 				<form onSubmit={handleSubmit}>
-					<Stack spacing={5} padding={5}>
+					<Stack spacing={5} padding={5} mb={15}>
 						<Typography variant="h4">Register</Typography>
 						<div>
 							<FormControl fullWidth>
@@ -130,6 +135,45 @@ export default function RegisterScreen() {
 										autoComplete="current-password"
 										required
 									/>
+									<TextField
+										id="number-field"
+										variant="outlined"
+										label="Number"
+										value={phoneNumber}
+										onChange={(e) => setPhoneNumber(e.target.value)}
+										required
+									/>
+									<TextField
+										id="dateOfBirth"
+										label="Date of Birth"
+										type="date"
+										value={dob}
+										onChange={e => setDob(e.target.value)}
+										variant="outlined"
+										required
+										InputLabelProps={{
+											shrink: true,
+										}}
+									/>
+									<TextField
+										id="address"
+										label="Address"
+										value={addr}
+										onChange={e => setAddr(e.target.value)}
+										variant="outlined"
+										fullWidth
+										required
+									/>
+									<TextField
+										id="doctorRegNumber"
+										label="Doctor Registration Number"
+										value={doctorRegNumber}
+										onChange={e => setDoctorRegNumber(e.target.value)}
+										variant="outlined"
+										required
+									/>
+
+
 								</Stack>
 							</div>
 						)}
@@ -151,7 +195,7 @@ export default function RegisterScreen() {
 								Have an account? Log in!
 							</Link>
 							<Button variant="contained" color="secondary" type="submit">
-								Sign In
+								Register now!
 							</Button>
 						</Stack>
 					</Stack>
