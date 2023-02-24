@@ -2,17 +2,21 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import {
 	Button, Paper, Stack, TextField, Link, Typography, Container, Box, FormControl, InputLabel, MenuItem, Select,
 } from '@mui/material';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function LogInScreen() {
+	const [searchParams, setSearchParams] = useSearchParams();
+	let initPosition = searchParams.get("position");
+	if (!initPosition) initPosition = "patient";
+
 	// const [email, setEmail] = useState('');
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [position, setPosition] = useState('patient');
+	const [position, setPosition] = useState(initPosition);
 
 
 	const handleSubmit = (e: FormEvent) => {
@@ -77,7 +81,7 @@ export default function LogInScreen() {
 							required
 						/>
 						<Stack direction="row" alignItems="baseline" spacing={5}>
-							<Link component={RouterLink} to={`/Register`}>
+							<Link component={RouterLink} to={`/Register?position=${position}`}>
 								New user? Sign up!
 							</Link>
 							<Button variant="contained" color="secondary" type="submit">

@@ -9,22 +9,25 @@ import {
 	Box,
 	Link, FormControl, NativeSelect, InputLabel, Select, MenuItem
 } from "@mui/material";
-import { useLocation, useNavigate, Link as RouterLink } from "react-router-dom";
+import { useLocation, useNavigate, Link as RouterLink, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 export default function RegisterScreen() {
+	const [searchParams, setSearchParams] = useSearchParams();
+	let initPosition = searchParams.get("position");
+	if (!initPosition) initPosition = "patient";
+
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [name, setName] = useState("");
-	const [position, setPosition] = useState("");
+	const [position, setPosition] = useState(initPosition);
 	const [phoneNumber, setPhoneNumber] = useState('');
 	const [addr, setAddr] = useState("");
 	const [dob, setDob] = useState("");
 	const [doctorRegNumber, setDoctorRegNumber] = useState('');
 	const [counselorRegNumber, setCounselorRegNumber] = useState('');
-
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
@@ -100,6 +103,35 @@ export default function RegisterScreen() {
 										autoComplete="current-password"
 										required
 									/>
+									<TextField
+										id="number-field"
+										variant="outlined"
+										label="Number"
+										value={phoneNumber}
+										onChange={(e) => setPhoneNumber(e.target.value)}
+										required
+									/>
+									<TextField
+										id="dateOfBirth"
+										label="Date of Birth"
+										type="date"
+										value={dob}
+										onChange={e => setDob(e.target.value)}
+										variant="outlined"
+										required
+										InputLabelProps={{
+											shrink: true,
+										}}
+									/>
+									<TextField
+										id="address"
+										label="Address"
+										value={addr}
+										onChange={e => setAddr(e.target.value)}
+										variant="outlined"
+										fullWidth
+										required
+									/>
 								</Stack>
 							</div>
 						)}
@@ -173,8 +205,6 @@ export default function RegisterScreen() {
 										variant="outlined"
 										required
 									/>
-
-
 								</Stack>
 							</div>
 						)}
@@ -260,7 +290,7 @@ export default function RegisterScreen() {
 						)}
 
 						<Stack direction="row" alignItems="baseline" spacing={5}>
-							<Link component={RouterLink} to={`/signin`}>
+							<Link component={RouterLink} to={`/signin?position=${position}`}>
 								Have an account? Log in!
 							</Link>
 							<Button variant="contained" color="secondary" type="submit">
