@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SigninScreen from './screens/LogInScreen';
-import PatientRegisterScreen from './screens/PatientRegisterScreen';
 import PatientHomeScreen from './screens/PatientHomeScreen';
 import PatientDashboardScreen from './screens/PatientDashboardScreen';
 import PatientProfileScreen from './screens/PatientProfileScreen';
@@ -44,13 +43,12 @@ function App() {
 						<Route path="profile" element={<DoctorProfileScreen />} />
 						<Route path="settings" element={<DoctorSettingsScreen />} />
 					</Route>
-					<Route path="patientregister" element={<PatientRegisterScreen />} />
 					<Route path="register" element={<RegisterScreen />} />
 				</Routes>
 
 				{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
 				{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
-				
+
 
 			</div>
 		</Router>
