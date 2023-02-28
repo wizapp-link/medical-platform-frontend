@@ -13,6 +13,8 @@ import { useLocation, useNavigate, Link as RouterLink, useSearchParams } from "r
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { baseTheme } from '../Themes';
 
 export default function RegisterScreen() {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -34,6 +36,7 @@ export default function RegisterScreen() {
 	};
 
 	return (
+		<ThemeProvider theme={baseTheme}>
 		<Box>
 			<Header />
 			<Container
@@ -210,7 +213,7 @@ export default function RegisterScreen() {
 						)}
 						{position === 'counselor' && (
 							<div>
-								<h2>Hi~ Counselor Registration Form ❤️</h2>
+								<h2>Counselor Registration Form</h2>
 								{/* Add Counselor-specific form fields here */}
 								<Stack spacing={5} padding={0}>
 									<TextField
@@ -293,7 +296,7 @@ export default function RegisterScreen() {
 							<Link component={RouterLink} to={`/signin?position=${position}`}>
 								Have an account? Log in!
 							</Link>
-							<Button variant="contained" color="secondary" type="submit">
+							<Button variant="contained" color="primary" type="submit">
 								Register now!
 							</Button>
 						</Stack>
@@ -302,5 +305,6 @@ export default function RegisterScreen() {
 			</Container>
 			<Footer />
 		</Box >
+		</ThemeProvider>
 	);
 }

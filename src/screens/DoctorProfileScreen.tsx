@@ -1,6 +1,9 @@
 import { Box, Button, Container, makeStyles, Stack, TextField, Typography } from "@mui/material";
 import * as React from "react";
 import { FormEvent, useState } from "react";
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { doctorTheme } from '../Themes';
+
 
 type DoctorProfile = {
   name: string;
@@ -44,6 +47,7 @@ export default function DoctorProfileScreen() {
   };
 
   return (
+    <ThemeProvider theme={doctorTheme}>
     <Box>
       <Container>
         <>
@@ -114,6 +118,6 @@ export default function DoctorProfileScreen() {
         </>
       </Container>
     </Box>
-
+    </ThemeProvider>
   );
 }

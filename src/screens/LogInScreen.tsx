@@ -7,6 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import backdrop from "./../assets/images/backdrop.jpg";
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { baseTheme } from '../Themes';
 
 export default function LogInScreen() {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -24,6 +27,7 @@ export default function LogInScreen() {
 	};
 
 	return (
+		<ThemeProvider theme={baseTheme}>
 		<Box sx={{ minHeight: '100vh' }}>
 			<Header />
 			<Container
@@ -81,17 +85,21 @@ export default function LogInScreen() {
 							required
 						/>
 						<Stack direction="row" alignItems="baseline" spacing={5}>
-							<Link component={RouterLink} to={`/Register?position=${position}`}>
+							<Link component={RouterLink} to={`/Register?position=${position}`} color='primary'>
 								New user? Sign up!
 							</Link>
-							<Button variant="contained" color="secondary" type="submit">
+							<Button variant="contained" color="primary" type="submit">
 								Sign In
 							</Button>
+							
 						</Stack>
 					</Stack>
 				</form>
+
 			</Container>
 			<Footer />
 		</Box>
+		</ThemeProvider>
+		
 	);
 }

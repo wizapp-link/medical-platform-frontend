@@ -1,6 +1,8 @@
 import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 import * as React from 'react';
 import { FormEvent, useState } from "react";
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { doctorTheme } from '../Themes';
 
 export default function PatientSettingsScreen(props: any) {
 	const [email, setEmail] = useState("email_from@redux.store");
@@ -13,6 +15,7 @@ export default function PatientSettingsScreen(props: any) {
 	};
 
 	return (
+		<ThemeProvider theme={doctorTheme}>
 		<Box>
 			<Container>
 				<form onSubmit={handleSubmit}>
@@ -68,5 +71,6 @@ export default function PatientSettingsScreen(props: any) {
 				</form>
 			</Container>
 		</Box >
+		</ThemeProvider>
 	);
 }

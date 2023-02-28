@@ -32,9 +32,14 @@ import PatientProfileScreen from './PatientProfileScreen';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { patientTheme } from '../Themes';
+
 
 
 const drawerWidth = 240;
+const backgroundColor = '#A9C39E';
+const textColor = '#153D3C';
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: drawerWidth,
@@ -43,6 +48,8 @@ const openedMixin = (theme: Theme): CSSObject => ({
 		duration: theme.transitions.duration.enteringScreen,
 	}),
 	overflowX: 'hidden',
+	color: textColor,
+	backgroundColor: backgroundColor
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -55,6 +62,8 @@ const closedMixin = (theme: Theme): CSSObject => ({
 	[theme.breakpoints.up('sm')]: {
 		width: `calc(${theme.spacing(8)} + 1px)`,
 	},
+	backgroundColor: backgroundColor,
+	color: textColor
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -86,6 +95,7 @@ const AppBar = styled(MuiAppBar, {
 			duration: theme.transitions.duration.enteringScreen,
 		}),
 	}),
+	backgroundColor: backgroundColor
 }));
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -103,6 +113,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 			'& .MuiDrawer-paper': closedMixin(theme),
 		}),
 	}),
+	
 );
 
 export default function PatientHomeScreen() {
@@ -124,7 +135,7 @@ export default function PatientHomeScreen() {
 						<ListItemButton sx={{
 							minHeight: 48,
 							justifyContent: open ? 'initial' : 'center',
-							px: 2.5
+							px: 2.5,
 						}}
 							onClick={handleIconButtonClicks(item.text)}
 						>
@@ -196,6 +207,7 @@ export default function PatientHomeScreen() {
 	};
 
 	return (
+		<ThemeProvider theme={patientTheme}>
 		<Box sx={{ display: 'flex' }}>
 			<CssBaseline />
 			<AppBar position="fixed" open={open}>
@@ -213,8 +225,8 @@ export default function PatientHomeScreen() {
 						<MenuIcon />
 					</IconButton>
 					<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "baseline" }}>
-						<Typography variant="h6" noWrap component="div">
-							DepressionCare
+						<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
+							Depression Care
 						</Typography>
 						<Breadcrumbs separator="›" aria-label="breadcrumb" color="primary.contrastText">
 							{breadcrumbs}
@@ -240,5 +252,6 @@ export default function PatientHomeScreen() {
 				<Outlet />
 			</Box>
 		</Box>
+		</ThemeProvider>
 	);
 }

@@ -11,13 +11,12 @@ import PatientAppointmentScreen from './screens/PatientAppointmentScreen';
 import PatientAssessmentScreen from './screens/PatientAssessmentScreen';
 import PatientSettingsScreen from './screens/PatientSettingsScreen';
 import RegisterScreen from "./screens/RegisterScreen";
-
+import { createTheme, ThemeProvider, colors} from '@mui/material';
 import DoctorHomeScreen from './screens/DoctorHomeScreen';
 import DoctorDashboardScreen from './screens/DoctorDashboardScreen';
 import DoctorAppointmentScreen from './screens/DoctorAppointmentScreen';
 import DoctorProfileScreen from './screens/DoctorProfileScreen';
 import DoctorSettingsScreen from './screens/DoctorSettingsScreen';
-
 {/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
 import CounselorHomeScreen from './screens/CounselorHomeScreen';
 import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
@@ -25,6 +24,19 @@ import CounselorDashboardScreen from './screens/CounselorDashboardScreen';
 import CounselorProfileScreen from './screens/CounselorProfileScreen';
 import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
 
+const patientTheme = createTheme({
+	palette:{
+		primary:{
+			main: '#DCE7D7',
+			dark: '#A9C39E',
+			contrastText: '#153D3C'
+		},
+		secondary:{
+			main:'#F6B56B',
+			dark:'#F1876F'
+		}
+	},
+})
 
 function App() {
 	return (
@@ -35,6 +47,7 @@ function App() {
 				<Routes>
 					<Route path="signin" element={<SigninScreen />} />
 					<Route path="/" element={<SigninScreen />} />
+				
 					<Route path="patient" element={<PatientHomeScreen />}>
 						<Route index element={<PatientDashboardScreen />} />
 						<Route path="dashboard" element={<PatientDashboardScreen />} />

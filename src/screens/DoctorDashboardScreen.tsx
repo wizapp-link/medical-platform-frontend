@@ -3,9 +3,12 @@ import { Box, Typography, Stack, Button, Divider, List, ListItem, ListItemText, 
 import * as React from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { doctorTheme } from '../Themes';
 
 export default function DoctorDashboardScreen(props: any) {
-	return <Stack padding={2} spacing={2}>
+	return <ThemeProvider theme={doctorTheme}>
+	<Stack padding={2} spacing={2}>
 		<Typography variant='h3'>
 			Good day! Doctor!
 		</Typography>
@@ -31,7 +34,7 @@ export default function DoctorDashboardScreen(props: any) {
 							spacing={1}
 						>
 							<Button variant="contained">Accept</Button>
-							<Button variant="outlined" color="secondary">Reject</Button>
+							<Button variant="contained" color="secondary">Reject</Button>
 							{/* <IconButton color="primary"><CheckCircleIcon /></IconButton>
 						<IconButton color="secondary"><CancelIcon /></IconButton> */}
 						</Stack>
@@ -53,4 +56,5 @@ export default function DoctorDashboardScreen(props: any) {
 
 		</Stack>
 	</Stack>
+	</ThemeProvider> 
 }

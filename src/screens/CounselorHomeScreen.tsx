@@ -28,9 +28,14 @@ import DrawerOptionTextIconsType from '../types/DrawerOptionTextIconsType';
 import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
 import PatientDashboardScreen from './PatientDashboardScreen';
 import PatientProfileScreen from './PatientProfileScreen';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { counselorTheme } from '../Themes';
+
 
 
 const drawerWidth = 240;
+const backgroundColor = '#C8F8EA';
+const textColor = '#0C293E';
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: drawerWidth,
@@ -39,6 +44,8 @@ const openedMixin = (theme: Theme): CSSObject => ({
 		duration: theme.transitions.duration.enteringScreen,
 	}),
 	overflowX: 'hidden',
+	color: textColor,
+	backgroundColor: backgroundColor
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -51,6 +58,8 @@ const closedMixin = (theme: Theme): CSSObject => ({
 	[theme.breakpoints.up('sm')]: {
 		width: `calc(${theme.spacing(8)} + 1px)`,
 	},
+	color: textColor,
+	backgroundColor: backgroundColor
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -82,6 +91,8 @@ const AppBar = styled(MuiAppBar, {
 			duration: theme.transitions.duration.enteringScreen,
 		}),
 	}),
+	color: textColor,
+	backgroundColor: backgroundColor
 }));
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -129,6 +140,7 @@ export default function CounselorHomeScreen() {
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
+									color: textColor
 								}}
 							>
 								<item.icon />
@@ -157,6 +169,7 @@ export default function CounselorHomeScreen() {
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
+									color: textColor
 								}}
 							>
 								<item.icon />
@@ -177,6 +190,7 @@ export default function CounselorHomeScreen() {
 	};
 
 	return (
+		<ThemeProvider theme={counselorTheme}>
 		<Box sx={{ display: 'flex' }}>
 			<CssBaseline />
 			<AppBar position="fixed" open={open}>
@@ -194,7 +208,7 @@ export default function CounselorHomeScreen() {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" noWrap component="div">
-						DepressionCare
+						Depression Care
 					</Typography>
 				</Toolbar>
 			</AppBar>
@@ -214,5 +228,6 @@ export default function CounselorHomeScreen() {
 				<Outlet />
 			</Box>
 		</Box>
+		</ThemeProvider>
 	);
 }

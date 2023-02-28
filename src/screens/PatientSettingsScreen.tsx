@@ -1,5 +1,7 @@
 import { Box, Button, Container, Stack, TextField, Typography } from '@mui/material';
 import React, { FormEvent, useState } from 'react';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { patientTheme } from '../Themes';
 
 export default function PatientSettingsScreen(props: any) {
 	const [email, setEmail] = useState("email_from@redux.store");
@@ -12,11 +14,12 @@ export default function PatientSettingsScreen(props: any) {
 	};
 
 	return (
+		<ThemeProvider theme={patientTheme}>
 		<Box>
 			<Container>
 				<form onSubmit={handleSubmit}>
 					<Stack spacing={5} padding={5}>
-						<Typography variant="h4">Settings</Typography>
+						<Typography variant="h4" color={'primary.contrastText'}>Settings</Typography>
 						<TextField
 							id="email-field"
 							label="E-mail"
@@ -26,6 +29,7 @@ export default function PatientSettingsScreen(props: any) {
 							autoComplete="email"
 							required
 							disabled
+							color='secondary'
 						/>
 						<TextField
 							id="password-field"
@@ -36,6 +40,7 @@ export default function PatientSettingsScreen(props: any) {
 							type="password"
 							autoComplete="current-password"
 							required
+							color='secondary'
 						/>
 						<TextField
 							id="new-password-field-1"
@@ -45,6 +50,7 @@ export default function PatientSettingsScreen(props: any) {
 							onChange={(e) => setNewPassword1(e.target.value)}
 							type="password"
 							required
+							color='secondary'
 						/>
 						<TextField
 							id="new-password-field-2"
@@ -54,12 +60,16 @@ export default function PatientSettingsScreen(props: any) {
 							onChange={(e) => setNewPassword2(e.target.value)}
 							type="password"
 							required
+							color='secondary'
+
 						/>
 						<Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
 							<Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
 								Discard
 							</Button>
-							<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
+							<Button variant="contained" type="submit" onClick={handleSubmit} 
+							sx={{backgroundColor:'primary.dark',":hover":{backgroundColor:'primary.main'}}}
+							>
 								Submit
 							</Button>
 						</Stack>
@@ -67,5 +77,6 @@ export default function PatientSettingsScreen(props: any) {
 				</form>
 			</Container>
 		</Box >
+		</ThemeProvider>
 	);
 }
