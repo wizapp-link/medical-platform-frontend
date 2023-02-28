@@ -37,16 +37,6 @@ export default function CounselorAppointmentScreen(props: any) {
       emailAddress: "Ben@gmail.com",
       doctorRegistrationNumber: "77777777"
     },
-    // {
-    //   id: 3,
-    //   name: "Alex",
-    //   selfAssessmentResults: ["Alex selfAssessmentResults", "Alex selfAssessmentResults2"],
-    //   address: "address3",
-    //   dob: "1998/01/03",
-    //   phoneNumber: "5140000002",
-    //   emailAddress: "Alex@gmail.com",
-    //   doctorRegistrationNumber: "99999999"
-    // }
   ]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   // const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
@@ -83,7 +73,7 @@ export default function CounselorAppointmentScreen(props: any) {
   return (
     <Box sx={{ padding: 2 }}>
       <Typography variant="h4" gutterBottom>
-        Accepted Patients
+        Appointment List
       </Typography>
       <List>
         {patients.map((patient) => (
@@ -92,8 +82,17 @@ export default function CounselorAppointmentScreen(props: any) {
               <Avatar alt="patient" src="" />
             </ListItemAvatar>
             <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
+            <ListItemAvatar>
+              <Avatar alt="doctor" src="/static/images/doctor/sampleDoctor.jpg" />
+            </ListItemAvatar>
+            <ListItemText
+              primary="Dr. Gregory House"
+              secondary="Date: 2023-02-12 "
+            >
+              {" - 16:00 to 17:00"}
+            </ListItemText>
             <Stack direction={"row"} spacing={2}>
-              <Button variant="contained">Assign</Button>
+              {/* <Button variant="contained">Assign</Button> */}
               <Button variant="outlined" color="secondary">Remove</Button>
             </Stack>
 

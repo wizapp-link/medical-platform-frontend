@@ -4,6 +4,7 @@ import * as React from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from "react";
+import { height } from '@mui/system';
 
 
 export default function CounselorDashboardScreen(props: any) {
@@ -83,41 +84,35 @@ export default function CounselorDashboardScreen(props: any) {
 				Recent Patient List
 			</Typography>
 			<List>
-				<ListItem
-				// secondaryAction={
-				// 	<Stack
-				// 		direction={'column'}
-				// 		spacing={1}
-				// 	>
-				// 		<Button variant="contained">Accept</Button>
-				// 		<Button variant="outlined" color="secondary">Reject</Button>
-				// 		{/* <IconButton color="primary"><CheckCircleIcon /></IconButton>
-				// 	<IconButton color="secondary"><CancelIcon /></IconButton> */}
-				// 	</Stack>
-				// }
-				>
-					{/* <ListItemAvatar>
-						<Avatar alt="doctor" src="/static/images/doctor/sampleDoctor.jpg" />
-					</ListItemAvatar>
-					<ListItemText
-						primary="Dr. Gregory House"
-						secondary="Date: 2023-02-12 "
-					>
-						{" - 16:00 to 17:00"}
-					</ListItemText> */}
+				<ListItem>
 					<List>
 						{patients.map((patient) => (
 							<ListItem key={patient.id} disablePadding>
-								<ListItemAvatar>
-									<Avatar alt="patient" src="" />
-								</ListItemAvatar>
+								<Stack direction={"row"}>
+									<Stack direction={"row"}>
+										<ListItemAvatar>
+											<Avatar alt="patient" src="" />
+										</ListItemAvatar>
+										<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
+									</Stack>
 
-								<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-								<Stack direction={"row"} padding={2} spacing={2}>
-									<Button variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
-									<Button variant="contained">Accept</Button>
-									<Button variant="outlined" color="secondary">Reject</Button>
+									<Stack direction={"row"} >
+										<Stack direction={"row"}>
+											<Button
+											sx={{
+												marginLeft:5,
+												width:180,
+												height:40
+											}}
+											variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
+											<Stack direction={"row"} spacing={2} sx={{marginLeft: 80}}>
+												<Button sx={{height:40}} variant="contained">Assign</Button>
+												<Button sx={{height:40}} variant="outlined" color="secondary">Reject</Button>
+											</Stack>
+										</Stack>
+									</Stack>
 								</Stack>
+
 							</ListItem>
 						))}
 
