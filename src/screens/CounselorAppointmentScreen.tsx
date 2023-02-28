@@ -78,7 +78,7 @@ export default function CounselorAppointmentScreen(props: any) {
 
       <Typography variant="h4" gutterBottom>
         Appointment List
-
+        </Typography>
       <Typography variant="h4" gutterBottom color={'primary.contrastText'}>
         Accepted Patients
 
@@ -110,7 +110,7 @@ export default function CounselorAppointmentScreen(props: any) {
 							<Button variant="contained" color='primary' sx={{ color:'primary.contrastText', ":hover":{backgroundColor:'secondary.dark'}}}>Reject</Button>
 
             </Stack>
-
+          </Stack>
           </ListItem>
         ))}
       </List>

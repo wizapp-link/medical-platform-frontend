@@ -101,6 +101,7 @@ export default function CounselorDashboardScreen(props: any) {
 										</ListItemAvatar>
 										<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
 									</Stack>
+									</Stack>
 
 
 									<Stack direction={"row"} >
