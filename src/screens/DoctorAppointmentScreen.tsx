@@ -15,6 +15,7 @@ import {
 import * as React from "react";
 import { useState } from "react";
 
+
 export default function DoctorAppointmentScreen(props: any) {
   const [patients, setPatients] = useState<Patient[]>([
     {

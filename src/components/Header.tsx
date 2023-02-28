@@ -8,20 +8,21 @@ import { Link, Badge } from '@mui/material';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { styled, alpha } from '@mui/material/styles';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { baseTheme } from '../Themes';
 
 export default function Header() {
 	const navigate = useNavigate();
 	const { url } = useParams();
 
 	return (
+		<ThemeProvider theme={baseTheme}>
 		<AppBar position="fixed" color="primary">
 			<Toolbar>
-				<IconButton edge="start" color="inherit" aria-label="menu">
-					<MenuIcon />
-				</IconButton>
-				<Typography variant="h6" flexGrow={1}>
-					<Link to="/" component={RouterLink} sx={{ textDecoration: 'none', color: 'inherit' }}>
-						DepressionCare
+				
+				<Typography variant="h6" flexGrow={1} align="center" fontSize={30}>
+					<Link to="/" component={RouterLink} justifyContent='center' sx={{ textDecoration: 'none', color: 'inherit'}}>
+						Depression Care
 					</Link>
 				</Typography>
 				{/* <Typography variant='h6'>
@@ -29,5 +30,6 @@ export default function Header() {
 				</Typography> */}
 			</Toolbar>
 		</AppBar>
+		</ThemeProvider>
 	);
 }

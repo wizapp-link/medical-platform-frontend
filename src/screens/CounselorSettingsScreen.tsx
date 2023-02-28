@@ -1,8 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import * as React from 'react';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { counselorTheme } from '../Themes';
 
 export default function CounselorSettingsScreen(props: any) {
-	return <Box>
+	return <ThemeProvider theme={counselorTheme}>
+	<Box>
 		<Typography paragraph>
             Counselor Settings Screen <br/>
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -19,4 +22,5 @@ export default function CounselorSettingsScreen(props: any) {
 			sapien faucibus et molestie ac.
 		</Typography>
 	</Box>
+	</ThemeProvider> 
 }

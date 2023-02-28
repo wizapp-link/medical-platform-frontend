@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { counselorTheme } from '../Themes';
 
 export default function CounselorAppointmentScreen(props: any) {
   const [patients, setPatients] = useState<Patient[]>([
@@ -81,8 +83,9 @@ export default function CounselorAppointmentScreen(props: any) {
 
 
   return (
+    <ThemeProvider theme={counselorTheme}>
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom color={'primary.contrastText'}>
         Accepted Patients
       </Typography>
       <List>
@@ -91,10 +94,10 @@ export default function CounselorAppointmentScreen(props: any) {
             <ListItemAvatar>
               <Avatar alt="patient" src="" />
             </ListItemAvatar>
-            <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
+            <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} sx={{color:'primary.contrastText'}} />
             <Stack direction={"row"} spacing={2}>
-              <Button variant="contained">Assign</Button>
-              <Button variant="outlined" color="secondary">Remove</Button>
+            <Button variant="contained"  sx={{backgroundColor:'primary.dark',color:'primary.contrastText', ":hover":{backgroundColor: 'primary.light'}}}>Accept</Button>
+							<Button variant="contained" color='primary' sx={{ color:'primary.contrastText', ":hover":{backgroundColor:'secondary.dark'}}}>Reject</Button>
             </Stack>
 
           </ListItem>
@@ -132,5 +135,6 @@ export default function CounselorAppointmentScreen(props: any) {
       </Dialog> */}
 
     </Box>
+    </ThemeProvider>
   );
 }

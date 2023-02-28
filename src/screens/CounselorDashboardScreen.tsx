@@ -4,6 +4,8 @@ import * as React from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from "react";
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { counselorTheme } from '../Themes';
 
 
 export default function CounselorDashboardScreen(props: any) {
@@ -64,22 +66,23 @@ export default function CounselorDashboardScreen(props: any) {
 
 
 
-	return <Stack padding={2} spacing={2}>
-		<Typography variant='h3'>
+	return <ThemeProvider theme={counselorTheme}>
+	<Stack padding={2} spacing={2}>
+		<Typography variant='h3' color={'primary.contrastText'}>
 			Good day! Counselor!
 		</Typography>
-		<Typography variant='h5'>
+		<Typography variant='h5' color={'primary.contrastText'}>
 			How can we help you?
 		</Typography>
 		{/* if the assessment is not completed */}
 		{/* <Button variant="contained">Complete the assessment</Button> */}
 		{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
-		<Button variant="contained">View Appointments</Button>
+		<Button variant="contained" sx={{backgroundColor:'primary.dark', color:'primary.contrastText',":hover":{backgroundColor: 'primary.light'}}}>View Appointments</Button>
 		<Divider />
 
 
 		<Stack>
-			<Typography variant='h5'>
+			<Typography variant='h5' color={'primary.contrastText'}>
 				Recent Patient List
 			</Typography>
 			<List>
@@ -114,9 +117,9 @@ export default function CounselorDashboardScreen(props: any) {
 
 								<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
 								<Stack direction={"row"} padding={2} spacing={2}>
-									<Button variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
-									<Button variant="contained">Accept</Button>
-									<Button variant="outlined" color="secondary">Reject</Button>
+									<Button variant="outlined" sx={{color:'primary.contrastText', borderColor:'primary.contrastText'}} onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
+									<Button variant="contained"  sx={{backgroundColor:'primary.dark',color:'primary.contrastText', ":hover":{backgroundColor: 'primary.light'}}}>Accept</Button>
+							<Button variant="contained" color='primary' sx={{ color:'primary.contrastText', ":hover":{backgroundColor:'secondary.dark'}}}>Reject</Button>
 								</Stack>
 							</ListItem>
 						))}
@@ -124,15 +127,15 @@ export default function CounselorDashboardScreen(props: any) {
 					</List>
 
 					<Dialog open={showAssessmentDialog} onClose={handleClose}>
-						<DialogTitle>{selectedPatient?.name}</DialogTitle>
+						<DialogTitle  color={'primary.contrastText'}>{selectedPatient?.name}</DialogTitle>
 						<DialogContent>
-							<Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
-							<Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
-							<Typography variant="h6">Self-Assessment Results</Typography>
+							<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
+							<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
+							<Typography variant="h6" color={'primary.contrastText'}>Self-Assessment Results</Typography>
 							<List>
 								{selectedPatient?.selfAssessmentResults.map((result) => (
-									<ListItem key={result}>
-										<ListItemText primary={result} />
+									<ListItem key={result} sx={{color:'primary.contrastText'}}>
+										<ListItemText primary={result} sx={{color:'primary.contrastText'}}/>
 									</ListItem>
 								))}
 							</List>
@@ -145,4 +148,5 @@ export default function CounselorDashboardScreen(props: any) {
 
 		</Stack>
 	</Stack>
+	</ThemeProvider> 
 }

@@ -1,5 +1,7 @@
 import { Box, Button, Container, Link, Stack, TextField, Typography } from '@mui/material';
 import React, { FormEvent, useState } from 'react';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { patientTheme } from '../Themes';
 
 export default function PatientProfileScreen(props: any) {
 	const [name, setName] = useState("");
@@ -12,6 +14,7 @@ export default function PatientProfileScreen(props: any) {
 	};
 
 	return (
+		<ThemeProvider theme={patientTheme}>
 		<Box>
 			<Container>
 				<form onSubmit={handleSubmit}>
@@ -26,6 +29,7 @@ export default function PatientProfileScreen(props: any) {
 							required
 							autoFocus
 							autoComplete="name"
+							color='secondary'
 						/>
 						<TextField
 							id="number-field"
@@ -34,6 +38,7 @@ export default function PatientProfileScreen(props: any) {
 							value={phoneNumber}
 							onChange={(e) => setPhoneNumber(e.target.value)}
 							required
+							color='secondary'
 						/>
 						<TextField
 							id="dateOfBirth"
@@ -43,6 +48,7 @@ export default function PatientProfileScreen(props: any) {
 							onChange={e => setDob(e.target.value)}
 							variant="outlined"
 							required
+							color='secondary'
 							InputLabelProps={{
 								shrink: true,
 							}}
@@ -55,12 +61,13 @@ export default function PatientProfileScreen(props: any) {
 							variant="outlined"
 							fullWidth
 							required
+							color='secondary'
 						/>
 						<Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
 							<Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
 								Discard
 							</Button>
-							<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
+							<Button variant="contained" type="submit" onClick={handleSubmit} sx={{backgroundColor:'primary.dark',":hover":{backgroundColor:'primary.main'}}}>
 								Submit
 							</Button>
 						</Stack>
@@ -68,5 +75,6 @@ export default function PatientProfileScreen(props: any) {
 				</form>
 			</Container>
 		</Box >
+		</ThemeProvider>
 	);
 }
