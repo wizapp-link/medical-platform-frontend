@@ -94,40 +94,28 @@ export default function CounselorDashboardScreen(props: any) {
 						<List>
 							{patients.map((patient) => (
 								<ListItem key={patient.id} disablePadding>
-									<Stack direction={"row"}>
-										<Stack direction={"row"}>
-											<ListItemAvatar>
-												<Avatar alt="patient" src="" />
-											</ListItemAvatar>
-											<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-										</Stack>
+									<ListItemAvatar>
+										<Avatar alt="patient" src="" />
+									</ListItemAvatar>
+									<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
+										sx={{
+											flexGrow: 0,
+											flexShrink: 0,
+											flexBasis: '5%'
+										}} />
+									<Button
+										sx={{
+											flexGrow: 0,
+											flexShrink: 0,
+											width: 180,
+											height: 40,
+										}}
+										variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
 
-
-										<Stack direction={"row"} >
-											<Stack direction={"row"}>
-												<Button
-													sx={{
-														marginLeft: 5,
-														width: 180,
-														height: 40
-													}}
-													variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
-												<Stack direction={"row"} spacing={2} sx={{ marginLeft: 80 }}>
-													<Button sx={{ height: 40 }} variant="contained">Assign</Button>
-													<Button sx={{ height: 40 }} variant="outlined" color="secondary">Reject</Button>
-												</Stack>
-											</Stack>
-										</Stack>
-
+									<Stack direction={"row"} spacing={2} pl={90}>
+										<Button sx={{ height: 40 }} variant="contained">Assign</Button>
+										<Button sx={{ height: 40 }} variant="outlined" color="secondary">Reject</Button>
 									</Stack>
-									{/* <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-									<Stack direction={"row"} padding={2} spacing={2}>
-										<Button variant="outlined" sx={{ color: 'primary.contrastText', borderColor: 'primary.contrastText' }} onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
-										<Button variant="contained" sx={{ backgroundColor: 'primary.dark', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>Accept</Button>
-										<Button variant="contained" color='primary' sx={{ color: 'primary.contrastText', ":hover": { backgroundColor: 'secondary.dark' } }}>Reject</Button>
-
-									</Stack> */}
-
 								</ListItem>
 							))}
 
