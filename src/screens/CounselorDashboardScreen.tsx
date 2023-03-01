@@ -7,7 +7,7 @@ import { useState } from "react";
 
 import { height } from '@mui/system';
 
-import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { counselorTheme } from '../Themes';
 
 
@@ -71,88 +71,89 @@ export default function CounselorDashboardScreen(props: any) {
 
 
 	return <ThemeProvider theme={counselorTheme}>
-	<Stack padding={2} spacing={2}>
-		<Typography variant='h3' color={'primary.contrastText'}>
-			Good day! Counselor!
-		</Typography>
-		<Typography variant='h5' color={'primary.contrastText'}>
-			How can we help you?
-		</Typography>
-		{/* if the assessment is not completed */}
-		{/* <Button variant="contained">Complete the assessment</Button> */}
-		{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
-		<Button variant="contained" sx={{backgroundColor:'primary.dark', color:'primary.contrastText',":hover":{backgroundColor: 'primary.light'}}}>View Appointments</Button>
-		<Divider />
-
-
-		<Stack>
-			<Typography variant='h5' color={'primary.contrastText'}>
-				Recent Patient List
+		<Stack padding={2} spacing={2}>
+			<Typography variant='h3' color={'primary.contrastText'}>
+				Good day! Counselor!
 			</Typography>
-			<List>
-				<ListItem>
-					<List>
-						{patients.map((patient) => (
-							<ListItem key={patient.id} disablePadding>
-								<Stack direction={"row"}>
+			<Typography variant='h5' color={'primary.contrastText'}>
+				How can we help you?
+			</Typography>
+			{/* if the assessment is not completed */}
+			{/* <Button variant="contained">Complete the assessment</Button> */}
+			{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
+			<Button variant="contained" sx={{ backgroundColor: 'primary.dark', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>View Appointments</Button>
+			<Divider />
+
+
+			<Stack>
+				<Typography variant='h5' color={'primary.contrastText'}>
+					Recent Patient List
+				</Typography>
+				<List>
+					<ListItem>
+						<List>
+							{patients.map((patient) => (
+								<ListItem key={patient.id} disablePadding>
 									<Stack direction={"row"}>
-										<ListItemAvatar>
-											<Avatar alt="patient" src="" />
-										</ListItemAvatar>
-										<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-									</Stack>
-
-
-									<Stack direction={"row"} >
 										<Stack direction={"row"}>
-											<Button
-											sx={{
-												marginLeft:5,
-												width:180,
-												height:40
-											}}
-											variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
-											<Stack direction={"row"} spacing={2} sx={{marginLeft: 80}}>
-												<Button sx={{height:40}} variant="contained">Assign</Button>
-												<Button sx={{height:40}} variant="outlined" color="secondary">Reject</Button>
+											<ListItemAvatar>
+												<Avatar alt="patient" src="" />
+											</ListItemAvatar>
+											<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
+										</Stack>
+
+
+										<Stack direction={"row"} >
+											<Stack direction={"row"}>
+												<Button
+													sx={{
+														marginLeft: 5,
+														width: 180,
+														height: 40
+													}}
+													variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
+												<Stack direction={"row"} spacing={2} sx={{ marginLeft: 80 }}>
+													<Button sx={{ height: 40 }} variant="contained">Assign</Button>
+													<Button sx={{ height: 40 }} variant="outlined" color="secondary">Reject</Button>
+												</Stack>
 											</Stack>
 										</Stack>
+
 									</Stack>
+									{/* <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
+									<Stack direction={"row"} padding={2} spacing={2}>
+										<Button variant="outlined" sx={{ color: 'primary.contrastText', borderColor: 'primary.contrastText' }} onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
+										<Button variant="contained" sx={{ backgroundColor: 'primary.dark', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>Accept</Button>
+										<Button variant="contained" color='primary' sx={{ color: 'primary.contrastText', ":hover": { backgroundColor: 'secondary.dark' } }}>Reject</Button>
 
-								<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-								<Stack direction={"row"} padding={2} spacing={2}>
-									<Button variant="outlined" sx={{color:'primary.contrastText', borderColor:'primary.contrastText'}} onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
-									<Button variant="contained"  sx={{backgroundColor:'primary.dark',color:'primary.contrastText', ":hover":{backgroundColor: 'primary.light'}}}>Accept</Button>
-							<Button variant="contained" color='primary' sx={{ color:'primary.contrastText', ":hover":{backgroundColor:'secondary.dark'}}}>Reject</Button>
+									</Stack> */}
 
-								</Stack>
+								</ListItem>
+							))}
 
-							</ListItem>
-						))}
+						</List>
 
-					</List>
+						<Dialog open={showAssessmentDialog} onClose={handleClose}>
+							<DialogTitle color={'primary.contrastText'}>{selectedPatient?.name}</DialogTitle>
+							<DialogContent>
+								<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
+								<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
+								<Typography variant="h6" color={'primary.contrastText'}>Self-Assessment Results</Typography>
+								<List>
+									{selectedPatient?.selfAssessmentResults.map((result) => (
+										<ListItem key={result} sx={{ color: 'primary.contrastText' }}>
+											<ListItemText primary={result} sx={{ color: 'primary.contrastText' }} />
+										</ListItem>
+									))}
+								</List>
+							</DialogContent>
+						</Dialog>
 
-					<Dialog open={showAssessmentDialog} onClose={handleClose}>
-						<DialogTitle  color={'primary.contrastText'}>{selectedPatient?.name}</DialogTitle>
-						<DialogContent>
-							<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
-							<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
-							<Typography variant="h6" color={'primary.contrastText'}>Self-Assessment Results</Typography>
-							<List>
-								{selectedPatient?.selfAssessmentResults.map((result) => (
-									<ListItem key={result} sx={{color:'primary.contrastText'}}>
-										<ListItemText primary={result} sx={{color:'primary.contrastText'}}/>
-									</ListItem>
-								))}
-							</List>
-						</DialogContent>
-					</Dialog>
+						<Divider variant="inset" component="li" />
+					</ListItem>
+				</List>
 
-					<Divider variant="inset" component="li" />
-				</ListItem>
-			</List>
-
+			</Stack>
 		</Stack>
-	</Stack>
-	</ThemeProvider> 
+	</ThemeProvider>
 }
