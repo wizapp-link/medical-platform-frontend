@@ -14,14 +14,21 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
-export default function PatientRegisterScreen() {
+export default function ForgotPasswordScreen() {
+	const navigate = useNavigate();
+
 	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [password1, setPassword1] = useState("");
+	const [password2, setPassword2] = useState("");
 	const [name, setName] = useState("");
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
 	};
+
+	const handleReturnToLogIn = () => {
+		navigate('/');
+	}
 
 	return (
 		<Box>
@@ -36,17 +43,7 @@ export default function PatientRegisterScreen() {
 				}}>
 				<form onSubmit={handleSubmit}>
 					<Stack spacing={5} padding={5}>
-						<Typography variant="h4">Register</Typography>
-						<TextField
-							id="name-field"
-							label="Name"
-							variant="outlined"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							required
-							autoFocus
-							autoComplete="name"
-						/>
+						<Typography variant="h4">Reset Password</Typography>
 						<TextField
 							id="email-field"
 							label="E-mail"
@@ -55,23 +52,43 @@ export default function PatientRegisterScreen() {
 							onChange={(e) => setEmail(e.target.value)}
 							autoComplete="email"
 							required
+							autoFocus
+						/>
+						<Stack direction="row" spacing={1}>
+							<TextField
+								id="otp-field"
+								label="OTP"
+								variant="outlined"
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								required
+							/>
+							<Button>Resend</Button>
+						</Stack>
+						<TextField
+							id="password-field"
+							label="New Password"
+							variant="outlined"
+							value={password1}
+							onChange={(e) => setPassword1(e.target.value)}
+							type="password"
+							required
 						/>
 						<TextField
 							id="password-field"
-							label="Password"
+							label="Confirm Password"
 							variant="outlined"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
+							value={password2}
+							onChange={(e) => setPassword2(e.target.value)}
 							type="password"
-							autoComplete="current-password"
 							required
 						/>
 						<Stack direction="row" alignItems="baseline" spacing={5}>
-							<Link component={RouterLink} to={`/signin`}>
-								Have an account? Log in!
-							</Link>
-							<Button variant="contained" color="secondary" type="submit">
-								Sign In
+							<Button variant="contained" color="secondary" onClick={handleReturnToLogIn}>
+								Return to Log In
+							</Button>
+							<Button variant="contained" color="primary" type="submit">
+								Submit
 							</Button>
 						</Stack>
 					</Stack>
