@@ -76,7 +76,6 @@ export default function CounselorAppointmentScreen(props: any) {
     <ThemeProvider theme={counselorTheme}>
       <Box sx={{ padding: 2 }}>
 
-
         <Typography variant="h4" gutterBottom>
           Appointment List
           <List>
@@ -103,45 +102,6 @@ export default function CounselorAppointmentScreen(props: any) {
           </List>
         </Typography>
         {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
-      <Typography variant="h4" gutterBottom>
-        Appointment List
-        </Typography>
-      <Typography variant="h4" gutterBottom color={'primary.contrastText'}>
-        Accepted Patients
-
-      </Typography>
-      <List>
-        {patients.map((patient) => (
-          <ListItem key={patient.id} disablePadding>
-            <ListItemAvatar>
-              <Avatar alt="patient" src="" />
-            </ListItemAvatar>
-
-            <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-            <ListItemAvatar>
-              <Avatar alt="doctor" src="/static/images/doctor/sampleDoctor.jpg" />
-            </ListItemAvatar>
-            <ListItemText
-              primary="Dr. Gregory House"
-              secondary="Date: 2023-02-12 "
-            >
-              {" - 16:00 to 17:00"}
-            </ListItemText>
-            <Stack direction={"row"} spacing={2}>
-              {/* <Button variant="contained">Assign</Button> */}
-              <Button variant="outlined" color="secondary">Remove</Button>
-
-            <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} sx={{color:'primary.contrastText'}} />
-            <Stack direction={"row"} spacing={2}>
-            <Button variant="contained"  sx={{backgroundColor:'primary.dark',color:'primary.contrastText', ":hover":{backgroundColor: 'primary.light'}}}>Accept</Button>
-							<Button variant="contained" color='primary' sx={{ color:'primary.contrastText', ":hover":{backgroundColor:'secondary.dark'}}}>Reject</Button>
-
-            </Stack>
-          </Stack>
-          </ListItem>
-        ))}
-      </List>
-      {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
         <DialogTitle>{selectedPatient?.name}</DialogTitle>
         <DialogContent>
           <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
