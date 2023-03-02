@@ -78,6 +78,7 @@ export default function CounselorDashboardScreen(props: any) {
 			<Typography variant='h5' color={'primary.contrastText'}>
 				How can we help you?
 			</Typography>
+
 			{/* if the assessment is not completed */}
 			{/* <Button variant="contained">Complete the assessment</Button> */}
 			{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
@@ -115,6 +116,36 @@ export default function CounselorDashboardScreen(props: any) {
 									<Stack direction={"row"} spacing={2} pl={90}>
 										<Button sx={{ height: 40 }} variant="contained">Assign</Button>
 										<Button sx={{ height: 40 }} variant="outlined" color="secondary">Reject</Button>
+
+			<List>
+				<ListItem>
+					<List>
+						{patients.map((patient) => (
+							<ListItem key={patient.id} disablePadding>
+								<Stack direction={"row"}>
+									<Stack direction={"row"}>
+										<ListItemAvatar>
+											<Avatar alt="patient" src="" />
+										</ListItemAvatar>
+										<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
+									</Stack>
+									</Stack>
+
+
+									<Stack direction={"row"} >
+										<Stack direction={"row"}>
+											<Button
+											sx={{
+												marginLeft:5,
+												width:180,
+												height:40
+											}}
+											variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
+											<Stack direction={"row"} spacing={2} sx={{marginLeft: 80}}>
+												<Button sx={{height:40}} variant="contained">Assign</Button>
+												<Button sx={{height:40}} variant="outlined" color="secondary">Reject</Button>
+											</Stack>
+										</Stack>
 									</Stack>
 								</ListItem>
 							))}
