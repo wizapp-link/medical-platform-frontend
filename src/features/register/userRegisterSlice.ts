@@ -3,9 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 // import { userSigninSuccess } from './userSigninSlice';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../app/store';
-import type { AppDispatch } from '../app/store';
-import { useAppSelector } from '../app/hooks';
+import type { RootState } from '../../app/store';
+import type { AppDispatch } from '../../app/store';
+import { useAppSelector } from '../../app/hooks';
+import positionToRole from '../../constants/PositionToRole';
 
 const initialState: UserRegisterState = {
 	loading: false,
@@ -40,24 +41,25 @@ const userRegisterSlice = createSlice({
 // eslint-disable-next-line max-len
 export const { userRegisterFail, userRegisterRequest, userRegisterSuccess } = userRegisterSlice.actions;
 
-export const register = (position: string, name: string, email: string, password: string, phoneNumber: string, registerNumber: string, dob: string, address: string) => async (dispatch: AppDispatch) => {
+export const register = (position: string, name: string, email: string, password: string, phoneNumber: string, registrationNumber: string, dob: string, address: string) => async (dispatch: AppDispatch) => {
 
-	// check and convert position type
-	if(["patient", "counselor", "counsellor", "doctor", "manager"].includes(position)){
-		if(position === "counselor") position = "counsellor";
-	} else {
-		console.log("Position type error!");
+	// check and convert position type in frontend to role type in backend
+	const role = positionToRole.get(position);
+	if(position === undefined){
+		console.error(`Position ${position} type error!`);
 	}
 	
   dispatch(userRegisterRequest());
   try {
-    const res = await axios.post(`/api/signup_${position}`, { fullname: name, email, password, phoneNo: Number(phoneNumber), registerNo: Number(registerNumber), dob, address});
+    const res = await axios.post(`/api/v1/signup`, { name, email, password, role, phone: Number(phoneNumber), registrationNo: Number(registrationNumber), dob, address});
 
 		if(res.status === 200){
 			console.log(`${position} successfully registered!`)
+			console.log(`Backend Message: `)
+      console.log(res.data)
 			dispatch(userRegisterSuccess());
 		} else{
-			console.log(`Uncatched Error in ${position} registration!`);
+			console.error(`Uncaught Error in ${position} registration!\nBackend Messsage: ${res.data}`);
 		}
     // dispatch(userSigninSuccess(data));
     // localStorage.setItem('userInfo', JSON.stringify(data));
