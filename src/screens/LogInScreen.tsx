@@ -3,18 +3,25 @@ import {
 	Button, Paper, Stack, TextField, Link, Typography, Container, Box, FormControl, InputLabel, MenuItem, Select,
 } from '@mui/material';
 import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import backdrop from "./../assets/images/backdrop.jpg";
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { baseTheme } from '../Themes';
+import { selectUserLogIn, logIn } from '../features/auth/userLogInSlice';
+import { roleToPosition } from '../constants/PositionRoleMap';
 
 export default function LogInScreen() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	let initPosition = searchParams.get("position");
 	if (!initPosition) initPosition = "patient";
+
+	const location = useLocation();
+	const navigate = useNavigate();
+	const userLogIn = useAppSelector(selectUserLogIn);
+	const { userInfo, loading, error, errorMessage } = userLogIn;
+	const dispatch = useAppDispatch();
 
 	// const [email, setEmail] = useState('');
 	const [email, setEmail] = useState('');
@@ -24,7 +31,15 @@ export default function LogInScreen() {
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+		dispatch(logIn(email, password));
 	};
+
+	useEffect(() => {
+		if (userInfo) {
+			const redirect = `/${roleToPosition.get(userInfo.userData.role)}`
+			navigate(redirect);
+		}
+	}, [userInfo]);
 
 	return (
 		<ThemeProvider theme={baseTheme}>
