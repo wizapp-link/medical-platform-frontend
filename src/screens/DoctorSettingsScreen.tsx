@@ -100,19 +100,19 @@ export default function PatientSettingsScreen(props: any) {
 
 							<Snackbar
 								open={openNotMatch}
-								message="the password did not match the re-typed password"
+								message="NEW PASSWORD DID NOT MATCH CONFIRM PASSWORD"
 								autoHideDuration={3000}
 								onClose={handleSnackbarClose}
 							/>
 							<Snackbar
 								open={openUncorrectPsw}
-								message="Current Password is not correct"
+								message="CURRENT PASSWORD IS NOT CORRECT"
 								autoHideDuration={3000}
 								onClose={handleSnackbarClose}
 							/>
 							<Snackbar
 								open={openChanged}
-								message="Password change successful"
+								message="PASSWORD CHANGED SUCCESSFUL"
 								autoHideDuration={3000}
 								onClose={handleSnackbarClose}
 							/>
