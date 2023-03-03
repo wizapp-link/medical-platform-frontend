@@ -15,7 +15,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { baseTheme } from '../Themes';
-import { register, selectUserRegister } from "../features/register/userRegisterSlice";
+import { register, selectUserRegister } from "../features/auth/userRegisterSlice";
 
 export default function RegisterScreen() {
 	const [searchParams, setSearchParams] = useSearchParams();

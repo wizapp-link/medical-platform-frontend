@@ -6,7 +6,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 import type { AppDispatch } from '../../app/store';
 import { useAppSelector } from '../../app/hooks';
-import positionToRole from '../../constants/PositionToRole';
+import { positionToRole } from '../../constants/PositionRoleMap';
 
 const initialState: UserRegisterState = {
 	loading: false,
