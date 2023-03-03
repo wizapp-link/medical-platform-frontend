@@ -19,15 +19,21 @@ export default function PatientSettingsScreen(props: any) {
 	const [openNotMatch, setOpenNotMatch] = useState(false)
 	const [openUncorrectPsw, setOpenUncorrectPsw] = useState(false)
 	const [openChanged, setOpenChanged] = useState(false)
+	const [openNotFilled, setOpenNotFilled] = useState(false)
 
 	const handleSnackbarClose = () => {
 		setOpenNotMatch(false)
 		setOpenUncorrectPsw(false)
 		setOpenChanged(false)
+		setOpenNotFilled(false)
 	};
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+		if(!password || !newPassword1 || !newPassword2) {
+			setOpenNotFilled(true)
+			return;
+		}
 		if(password != doctor.password){
 			setOpenUncorrectPsw(true)
 			return;
@@ -113,6 +119,12 @@ export default function PatientSettingsScreen(props: any) {
 							<Snackbar
 								open={openChanged}
 								message="PASSWORD CHANGED SUCCESSFUL"
+								autoHideDuration={3000}
+								onClose={handleSnackbarClose}
+							/>
+							<Snackbar
+								open={openNotFilled}
+								message="PLEASE FILL ALL REQUIRED FIELDS"
 								autoHideDuration={3000}
 								onClose={handleSnackbarClose}
 							/>
