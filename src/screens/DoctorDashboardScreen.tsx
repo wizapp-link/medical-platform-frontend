@@ -5,12 +5,15 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { createTheme, ThemeProvider, colors} from '@mui/material';
 import { doctorTheme } from '../Themes';
+import {RootState} from "../app/store";
+import { useSelector } from "react-redux";
 
 export default function DoctorDashboardScreen(props: any) {
+	const doctor = useSelector((state:RootState) => state.doctor)
 	return <ThemeProvider theme={doctorTheme}>
 	<Stack padding={2} spacing={2}>
 		<Typography variant='h3'>
-			Good day! Doctor!
+			Good day! {doctor.name}!
 		</Typography>
 		<Typography variant='h5'>
 			How can we help you?

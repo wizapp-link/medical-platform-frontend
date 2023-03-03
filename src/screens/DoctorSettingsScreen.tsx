@@ -1,17 +1,48 @@
-import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import * as React from 'react';
 import { FormEvent, useState } from "react";
 import { createTheme, ThemeProvider, colors} from '@mui/material';
 import { doctorTheme } from '../Themes';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { passwordUpdate } from "../features/doctor/doctorSlice";
 
 export default function PatientSettingsScreen(props: any) {
-	const [email, setEmail] = useState("email_from@redux.store");
+	const doctor = useSelector((state:RootState) => state.doctor)
+	const dispatch = useDispatch()
+
+	const [email, setEmail] = useState(doctor.email);
 	const [password, setPassword] = useState("");
 	const [newPassword1, setNewPassword1] = useState("");
 	const [newPassword2, setNewPassword2] = useState("");
 
+	const [openNotMatch, setOpenNotMatch] = useState(false)
+	const [openUncorrectPsw, setOpenUncorrectPsw] = useState(false)
+	const [openChanged, setOpenChanged] = useState(false)
+
+	const handleSnackbarClose = () => {
+		setOpenNotMatch(false)
+		setOpenUncorrectPsw(false)
+		setOpenChanged(false)
+	};
+
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+		if(password != doctor.password){
+			setOpenUncorrectPsw(true)
+			return;
+		}
+		if(newPassword1 != newPassword2) {
+			setOpenNotMatch(true)
+			return;
+		}
+
+		dispatch(passwordUpdate(newPassword1
+		))
+		setPassword("")
+		setNewPassword1("")
+		setNewPassword2("")
+		setOpenChanged(true)
 	};
 
 	return (
@@ -66,6 +97,25 @@ export default function PatientSettingsScreen(props: any) {
 							<Button variant="contained" color="primary" type="submit" onClick={handleSubmit}>
 								Submit
 							</Button>
+
+							<Snackbar
+								open={openNotMatch}
+								message="NEW PASSWORD DID NOT MATCH CONFIRM PASSWORD"
+								autoHideDuration={3000}
+								onClose={handleSnackbarClose}
+							/>
+							<Snackbar
+								open={openUncorrectPsw}
+								message="CURRENT PASSWORD IS NOT CORRECT"
+								autoHideDuration={3000}
+								onClose={handleSnackbarClose}
+							/>
+							<Snackbar
+								open={openChanged}
+								message="PASSWORD CHANGED SUCCESSFUL"
+								autoHideDuration={3000}
+								onClose={handleSnackbarClose}
+							/>
 						</Stack>
 					</Stack>
 				</form>
