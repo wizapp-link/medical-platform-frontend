@@ -1,10 +1,15 @@
+import { createTheme, ThemeProvider, colors} from '@mui/material';
 import { Box, Typography, Stack, Button, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper } from '@mui/material';
 import * as React from 'react';
+import { patientTheme } from '../Themes';
+
+
 
 export default function PatientAppointmentScreen(props: any) {
 	return (
+		<ThemeProvider theme={patientTheme}>
 		<Stack>
-			<Typography variant='h5'>
+			<Typography variant='h5' color={'primary.contrastText'}>
 				Appointment History
 			</Typography>
 			<List>
@@ -14,8 +19,8 @@ export default function PatientAppointmentScreen(props: any) {
 							direction={'column'}
 							spacing={1}
 						>
-							<Button variant="contained">Accept</Button>
-							<Button variant="outlined" color="secondary">Reject</Button>
+							<Button variant="contained"  sx={{backgroundColor:'primary.dark',color:'primary.contrastText', ":hover":{backgroundColor:'primary.main'}}}>Accept</Button>
+							<Button variant="contained" color='secondary' sx={{ color:'primary.contrastText', borderColor:'secondary.dark',":hover":{backgroundColor:'secondary.dark'}}}>Reject</Button>
 							{/* <IconButton color="primary"><CheckCircleIcon /></IconButton>
 						<IconButton color="secondary"><CancelIcon /></IconButton> */}
 						</Stack>
@@ -27,6 +32,7 @@ export default function PatientAppointmentScreen(props: any) {
 					<ListItemText
 						primary="Dr. Gregory House"
 						secondary="Date: 2023-02-12 "
+						sx={{color:'primary.contrastText'}}
 					>
 						{" - 16:00 to 17:00"}
 					</ListItemText>
@@ -36,5 +42,6 @@ export default function PatientAppointmentScreen(props: any) {
 			</List>
 
 		</Stack>
+		</ThemeProvider>
 	)
 }

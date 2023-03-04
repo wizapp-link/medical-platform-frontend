@@ -10,10 +10,11 @@ import {
   ListItemAvatar,
   Avatar,
   Paper,
-  Dialog, DialogTitle, DialogContent
+  Dialog, DialogTitle, DialogContent, Container
 } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
+
 
 export default function DoctorAppointmentScreen(props: any) {
   const [patients, setPatients] = useState<Patient[]>([
@@ -82,95 +83,65 @@ export default function DoctorAppointmentScreen(props: any) {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        Assigned Patients
-      </Typography>
-      <List>
-        {patients.map((patient) => (
-          <ListItem key={patient.id} disablePadding>
-						<ListItemAvatar>
-							<Avatar alt="patient" src="" />
-						</ListItemAvatar>
-            <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-            <Stack direction={"row"} spacing={2}>
-              <Button variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>
-                Self-Assessment
-              </Button>
-              <Button variant="outlined" color="secondary" onClick={() => handleDetailButtonClick(patient)}>
-                View Details
-              </Button></Stack>
+      <Container>
+        <>
+          <Stack spacing={5} padding={5}>
+            <Typography variant="h4" gutterBottom>
+              Assigned Patients
+            </Typography>
+            <List>
+              {patients.map((patient) => (
+                <ListItem key={patient.id} disablePadding>
+                  <ListItemAvatar>
+                    <Avatar alt="patient" src="" />
+                  </ListItemAvatar>
+                  <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
+                  <Stack direction={"row"} spacing={2}>
+                    <Button variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>
+                      Self-Assessment
+                    </Button>
+                    <Button variant="outlined" color="secondary" onClick={() => handleDetailButtonClick(patient)}>
+                      View Details
+                    </Button></Stack>
 
-          </ListItem>
-        ))}
-      </List>
-      <Dialog open={showAssessmentDialog} onClose={handleClose}>
-        <DialogTitle>{selectedPatient?.name}</DialogTitle>
-        <DialogContent>
-          <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
-          <Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
-          <Typography variant="h6">Self-Assessment Results</Typography>
-          <List>
-            {selectedPatient?.selfAssessmentResults.map((result) => (
-              <ListItem key={result}>
-                <ListItemText primary={result} />
-              </ListItem>
-            ))}
-          </List>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={showDetailDialog} onClose={handleClose}>
-        <DialogTitle>{selectedPatient?.name}</DialogTitle>
-        <DialogContent>
-          <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
-          <Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
-          <Typography variant="h6">Detailed Information</Typography>
-          <Typography variant="subtitle1">Address: {selectedPatient?.address}</Typography>
-          <Typography variant="subtitle1">Date of Birth: {selectedPatient?.dob}</Typography>
-          <Typography variant="subtitle1">Phone Number: {selectedPatient?.phoneNumber}</Typography>
-          <Typography variant="subtitle1">Email Address: {selectedPatient?.emailAddress}</Typography>
-          <Typography variant="subtitle1">
-            Doctor Registration Number: {selectedPatient?.doctorRegistrationNumber}
-          </Typography>
-        </DialogContent>
-      </Dialog>
+                </ListItem>
+              ))}
+            </List>
+          </Stack>
+          <Dialog open={showAssessmentDialog} onClose={handleClose}>
+            <DialogTitle>{selectedPatient?.name}</DialogTitle>
+            <DialogContent>
+              <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
+              <Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
+              <Typography variant="h6">Self-Assessment Results</Typography>
+              <List>
+                {selectedPatient?.selfAssessmentResults.map((result) => (
+                  <ListItem key={result}>
+                    <ListItemText primary={result} />
+                  </ListItem>
+                ))}
+              </List>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={showDetailDialog} onClose={handleClose}>
+            <DialogTitle>{selectedPatient?.name}</DialogTitle>
+            <DialogContent>
+              <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
+              <Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
+              <Typography variant="h6">Detailed Information</Typography>
+              <Typography variant="subtitle1">Address: {selectedPatient?.address}</Typography>
+              <Typography variant="subtitle1">Date of Birth: {selectedPatient?.dob}</Typography>
+              <Typography variant="subtitle1">Phone Number: {selectedPatient?.phoneNumber}</Typography>
+              <Typography variant="subtitle1">Email Address: {selectedPatient?.emailAddress}</Typography>
+              <Typography variant="subtitle1">
+                Doctor Registration Number: {selectedPatient?.doctorRegistrationNumber}
+              </Typography>
+            </DialogContent>
+          </Dialog>
+        </>
+      </Container>
 
     </Box>
   );
 }
 
-// return (
-// 	<Stack>
-// 		<Typography variant='h5'>
-// 			Appointment History
-// 		</Typography>
-// 		<List>
-// 			<ListItem
-// 				secondaryAction={
-// 					<Stack
-// 						direction={'column'}
-// 						spacing={1}
-// 					>
-// 						<Button variant="contained">Accept</Button>
-// 						<Button variant="outlined" color="secondary">Reject</Button>
-// 						{/* <IconButton color="primary"><CheckCircleIcon /></IconButton>
-// 					<IconButton color="secondary"><CancelIcon /></IconButton> */}
-// 					</Stack>
-// 				}
-// 			>
-// 				<ListItemAvatar>
-// 					<Avatar alt="doctor" src="/static/images/doctor/sampleDoctor.jpg" />
-// 				</ListItemAvatar>
-// 				<ListItemText
-// 					primary="Dr. Gregory House"
-// 					secondary="Date: 2023-02-12 "
-// 				>
-// 					{" - 16:00 to 17:00"}
-// 				</ListItemText>
-//
-// 				<Divider variant="inset" component="li" />
-// 			</ListItem>
-// 		</List>
-//
-// 	</Stack>
-// )
-// }

@@ -30,9 +30,13 @@ import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate, Link as Ro
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { doctorTheme } from '../Themes';
 
 
 const drawerWidth = 240;
+const backgroundColor = '#7676FF';
+const textColor = '#FFFFFF';
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: drawerWidth,
@@ -41,6 +45,8 @@ const openedMixin = (theme: Theme): CSSObject => ({
 		duration: theme.transitions.duration.enteringScreen,
 	}),
 	overflowX: 'hidden',
+	color: textColor,
+	backgroundColor: backgroundColor
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -53,6 +59,8 @@ const closedMixin = (theme: Theme): CSSObject => ({
 	[theme.breakpoints.up('sm')]: {
 		width: `calc(${theme.spacing(8)} + 1px)`,
 	},
+	color: textColor,
+	backgroundColor: backgroundColor
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -62,6 +70,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 	padding: theme.spacing(0, 1),
 	// necessary for content to be below app bar
 	...theme.mixins.toolbar,
+	
 }));
 
 interface AppBarProps extends MuiAppBarProps {
@@ -84,6 +93,8 @@ const AppBar = styled(MuiAppBar, {
 			duration: theme.transitions.duration.enteringScreen,
 		}),
 	}),
+	color: textColor,
+	backgroundColor: backgroundColor
 }));
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -131,6 +142,7 @@ export default function DoctorHomeScreen() {
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
+									color: textColor
 								}}
 							>
 								<item.icon />
@@ -159,6 +171,7 @@ export default function DoctorHomeScreen() {
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
+									color: textColor
 								}}
 							>
 								<item.icon />
@@ -194,6 +207,7 @@ export default function DoctorHomeScreen() {
 	};
 
 	return (
+		<ThemeProvider theme={doctorTheme}>
 		<Box sx={{ display: 'flex' }}>
 			<CssBaseline />
 			<AppBar position="fixed" open={open}>
@@ -206,6 +220,7 @@ export default function DoctorHomeScreen() {
 						sx={{
 							marginRight: 5,
 							...(open && { display: 'none' }),
+							color: textColor
 						}}
 					>
 						<MenuIcon />
@@ -222,9 +237,11 @@ export default function DoctorHomeScreen() {
 			</AppBar>
 			<Drawer variant="permanent" open={open}>
 				<DrawerHeader sx={{ justifyContent: 'space-between' }}>
-					<Avatar>P</Avatar>
+					<Avatar>D</Avatar>
 					<Typography>Doctor</Typography>
-					<IconButton onClick={handleDrawerClose}>
+					<IconButton onClick={handleDrawerClose}
+					sx={{color: textColor}}
+					>
 						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
 					</IconButton>
 				</DrawerHeader>
@@ -238,5 +255,6 @@ export default function DoctorHomeScreen() {
 				<Outlet />
 			</Box>
 		</Box>
+		</ThemeProvider>
 	);
 }

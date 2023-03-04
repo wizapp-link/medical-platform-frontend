@@ -28,9 +28,14 @@ import DrawerOptionTextIconsType from '../types/DrawerOptionTextIconsType';
 import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
 import PatientDashboardScreen from './PatientDashboardScreen';
 import PatientProfileScreen from './PatientProfileScreen';
-
+import { createTheme, ThemeProvider, colors } from '@mui/material';
+import { counselorTheme } from '../Themes';
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
+import { useAppSelector } from '../app/hooks';
 
 const drawerWidth = 240;
+const backgroundColor = '#C8F8EA';
+const textColor = '#0C293E';
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: drawerWidth,
@@ -39,6 +44,8 @@ const openedMixin = (theme: Theme): CSSObject => ({
 		duration: theme.transitions.duration.enteringScreen,
 	}),
 	overflowX: 'hidden',
+	color: textColor,
+	backgroundColor: backgroundColor
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -51,6 +58,8 @@ const closedMixin = (theme: Theme): CSSObject => ({
 	[theme.breakpoints.up('sm')]: {
 		width: `calc(${theme.spacing(8)} + 1px)`,
 	},
+	color: textColor,
+	backgroundColor: backgroundColor
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -82,6 +91,8 @@ const AppBar = styled(MuiAppBar, {
 			duration: theme.transitions.duration.enteringScreen,
 		}),
 	}),
+	color: textColor,
+	backgroundColor: backgroundColor
 }));
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -129,6 +140,7 @@ export default function CounselorHomeScreen() {
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
+									color: textColor
 								}}
 							>
 								<item.icon />
@@ -157,6 +169,7 @@ export default function CounselorHomeScreen() {
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
+									color: textColor
 								}}
 							>
 								<item.icon />
@@ -177,42 +190,44 @@ export default function CounselorHomeScreen() {
 	};
 
 	return (
-		<Box sx={{ display: 'flex' }}>
-			<CssBaseline />
-			<AppBar position="fixed" open={open}>
-				<Toolbar>
-					<IconButton
-						color="inherit"
-						aria-label="open drawer"
-						onClick={handleDrawerOpen}
-						edge="start"
-						sx={{
-							marginRight: 5,
-							...(open && { display: 'none' }),
-						}}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant="h6" noWrap component="div">
-						DepressionCare
-					</Typography>
-				</Toolbar>
-			</AppBar>
-			<Drawer variant="permanent" open={open}>
-				<DrawerHeader>
-					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-					</IconButton>
-				</DrawerHeader>
-				<Divider />
-				{drawerUserOptionsList}
-				<Divider />
-				{drawerAccountOptionsList}
-			</Drawer>
-			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-				<DrawerHeader />
-				<Outlet />
+		<ThemeProvider theme={counselorTheme}>
+			<Box sx={{ display: 'flex' }}>
+				<CssBaseline />
+				<AppBar position="fixed" open={open}>
+					<Toolbar>
+						<IconButton
+							color="inherit"
+							aria-label="open drawer"
+							onClick={handleDrawerOpen}
+							edge="start"
+							sx={{
+								marginRight: 5,
+								...(open && { display: 'none' }),
+							}}
+						>
+							<MenuIcon />
+						</IconButton>
+						<Typography variant="h6" noWrap component="div">
+							Depression Care
+						</Typography>
+					</Toolbar>
+				</AppBar>
+				<Drawer variant="permanent" open={open}>
+					<DrawerHeader>
+						<IconButton onClick={handleDrawerClose}>
+							{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+						</IconButton>
+					</DrawerHeader>
+					<Divider />
+					{drawerUserOptionsList}
+					<Divider />
+					{drawerAccountOptionsList}
+				</Drawer>
+				<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+					<DrawerHeader />
+					<Outlet />
+				</Box>
 			</Box>
-		</Box>
+		</ThemeProvider>
 	);
 }

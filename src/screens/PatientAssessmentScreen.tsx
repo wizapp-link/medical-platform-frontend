@@ -1,9 +1,12 @@
+import { createTheme, ThemeProvider, colors} from '@mui/material';
 import { Box, Typography } from '@mui/material';
 import * as React from 'react';
+import { patientTheme } from '../Themes';
 
 export default function PatientAssessmentScreen(props: any) {
-	return <Box>
-		<Typography paragraph>
+	return <ThemeProvider theme={patientTheme}>
+	<Box>
+		<Typography paragraph color={'primary.contrastText'}>
 			Patient Assessment Screen
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
 			tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
@@ -19,4 +22,5 @@ export default function PatientAssessmentScreen(props: any) {
 			sapien faucibus et molestie ac.
 		</Typography>
 	</Box>
+	</ThemeProvider>
 }
