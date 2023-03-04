@@ -11,6 +11,7 @@ import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { baseTheme } from '../Themes';
 import { selectUserLogIn, logIn } from '../features/auth/userLogInSlice';
 import { roleToPosition } from '../constants/PositionRoleMap';
+import { red } from '@mui/material/colors';
 
 export default function LogInScreen() {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -76,7 +77,7 @@ export default function LogInScreen() {
 								autoComplete="current-password"
 								required
 							/>
-
+							{userLogIn.error && <Typography color={red[500]}>{userLogIn.errorMessage}</Typography>}
 							<Stack direction="row" spacing={5}>
 								<Stack>
 									<Link component={RouterLink} to={`/Register`} color='primary'>

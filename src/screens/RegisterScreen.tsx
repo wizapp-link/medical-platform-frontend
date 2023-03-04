@@ -15,12 +15,14 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { baseTheme } from '../Themes';
-import { register, selectUserRegister } from "../features/auth/userRegisterSlice";
+import { register, selectUserRegister, userRegisterReset } from "../features/auth/userRegisterSlice";
+import { red } from "@mui/material/colors";
 
 export default function RegisterScreen() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	let initPosition = searchParams.get("position");
 	if (!initPosition) initPosition = "patient";
+	const navigate = useNavigate();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -40,6 +42,15 @@ export default function RegisterScreen() {
 		e.preventDefault();
 		dispatch(register(position, name, email, password, phoneNumber, registrationNumber, dob, addr));
 	};
+
+	useEffect(() => {
+		if (userRegister.success) {
+			setTimeout(() => {
+				dispatch(userRegisterReset());
+				navigate("/signin");
+			}, 5000);
+		}
+	}, [userRegister.success])
 
 	return (
 		<ThemeProvider theme={baseTheme}>
@@ -73,7 +84,6 @@ export default function RegisterScreen() {
 										<MenuItem value="patient">Patient</MenuItem>
 										<MenuItem value="doctor">Doctor</MenuItem>
 										<MenuItem value="counselor">Counselor</MenuItem>
-										<MenuItem value="manager">Manager</MenuItem>
 									</Select>
 								</FormControl>
 
@@ -291,18 +301,13 @@ export default function RegisterScreen() {
 									</Stack>
 								</div>
 							)}
-							{position === 'manager' && (
-								<div>
-									<h2>Manager Registration Form</h2>
-									{/* Add Manager-specific form fields here */}
-								</div>
-							)}
-
-							<Stack direction="row" alignItems="baseline" spacing={5}>
+							{userRegister.error && <Typography color={red[500]}>{userRegister.errorMessage}</Typography>}
+							{userRegister.success && <Typography color="primary">Registeration Successful! Redirect to Log In Page in 5 Seconds...</Typography>}
+							<Stack direction="row" alignItems="baseline" spacing={5} justifyContent="space-between">
 								<Link component={RouterLink} to={`/signin?position=${position}`}>
 									Have an account? Log in!
 								</Link>
-								<Button variant="contained" color="primary" type="submit">
+								<Button variant="contained" color="primary" type="submit" disabled={userRegister.success || userRegister.loading}>
 									Register now!
 								</Button>
 							</Stack>
