@@ -8,18 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 
 
-//id: "6400e5813cb00827c1c8bdde",
-//     email: "shubhankar@gmail.com",
-//     password: null,
-//     role: "ROLE_PATIENT",
-//     name: "Shubhankar Kulkarni",
-//     address: "ch de la cote-des-neiges",
-//     dob: "22-03-1998",
-//     phone: "4379860077",
-//     registrationNo: null,
-//     status: "VERIFIED"
-
-
 export default function DoctorProfileScreen() {
   const doctor = useSelector((state:RootState) => state.doctor)
   const dispatch = useDispatch()
