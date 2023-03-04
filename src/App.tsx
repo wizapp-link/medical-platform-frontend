@@ -31,7 +31,7 @@ import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
 import MangerHomeScreen from './screens/MangerHomeScreen';
 import ManagerAppointmentScreen from './screens/ManagerAppointmentScreen';
 import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
-// import ManagerProfileScreen from './screens/ManagerProfileScreen';
+import ManagerProfileScreen from './screens/ManagerProfileScreen';
 import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
 
 
@@ -81,7 +81,7 @@ function App() {
 						<Route index element={<ManagerDashboardScreen />} />
 						<Route path="dashboard" element={<ManagerDashboardScreen />} />
 						<Route path="appointments" element={<ManagerAppointmentScreen />} />
-						{/* <Route path="profile" element={<ManagerProfileScreen />} /> */}
+						<Route path="profile" element={<ManagerProfileScreen />} />
 						<Route path="settings" element={<ManagerSettingsScreen />} />
 					</Route>
 
