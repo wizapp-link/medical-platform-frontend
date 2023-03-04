@@ -26,6 +26,15 @@ import CounselorProfileScreen from './screens/CounselorProfileScreen';
 import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
 
 
+
+{/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/}
+import MangerHomeScreen from './screens/MangerHomeScreen';
+import ManagerAppointmentScreen from './screens/ManagerAppointmentScreen';
+import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
+// import ManagerProfileScreen from './screens/ManagerProfileScreen';
+import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
+
+
 function App() {
 	return (
 		<Router>
@@ -43,6 +52,8 @@ function App() {
 						<Route path="profile" element={<PatientProfileScreen />} />
 						<Route path="settings" element={<PatientSettingsScreen />} />
 					</Route>
+
+
 					<Route path="doctor" element={<DoctorHomeScreen />}>
 						<Route index element={<DoctorDashboardScreen />} />
 						<Route path="dashboard" element={<DoctorDashboardScreen />} />
@@ -50,6 +61,8 @@ function App() {
 						<Route path="profile" element={<DoctorProfileScreen />} />
 						<Route path="settings" element={<DoctorSettingsScreen />} />
 					</Route>
+
+
 					{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
 					<Route path="counselor" element={<CounselorHomeScreen />}>
 						<Route index element={<CounselorDashboardScreen />} />
@@ -58,9 +71,20 @@ function App() {
 						<Route path="profile" element={<CounselorProfileScreen />} />
 						<Route path="settings" element={<CounselorSettingsScreen />} />
 					</Route>
+
 					{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
 					<Route path="patientregister" element={<PatientRegisterScreen />} />
 					<Route path="register" element={<RegisterScreen />} />
+
+					{/* ~~~~~~~~~~this is for MANAGER ~~~~~~~~~~*/}
+					<Route path="manager" element={<MangerHomeScreen />}>
+						<Route index element={<ManagerDashboardScreen />} />
+						<Route path="dashboard" element={<ManagerDashboardScreen />} />
+						<Route path="appointments" element={<ManagerAppointmentScreen />} />
+						{/* <Route path="profile" element={<ManagerProfileScreen />} /> */}
+						<Route path="settings" element={<ManagerSettingsScreen />} />
+					</Route>
+
 				</Routes>
 			</div>
 		</Router>
