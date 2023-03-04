@@ -1,49 +1,57 @@
 import { Box, Button, Container, makeStyles, Stack, TextField, Typography } from "@mui/material";
 import * as React from "react";
 import { FormEvent, useState } from "react";
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { doctorTheme } from '../Themes';
+import { doctorState, profileUpdate } from "../features/doctor/doctorSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
-type DoctorProfile = {
-  name: string;
-  address: string;
-  phone: string;
-  specialty: string;
-  doctorRegistrationNumber: string;
-  dateOfBirth: string;
-  email: string;
 
-};
+//id: "6400e5813cb00827c1c8bdde",
+//     email: "shubhankar@gmail.com",
+//     password: null,
+//     role: "ROLE_PATIENT",
+//     name: "Shubhankar Kulkarni",
+//     address: "ch de la cote-des-neiges",
+//     dob: "22-03-1998",
+//     phone: "4379860077",
+//     registrationNo: null,
+//     status: "VERIFIED"
 
-const initialDoctorProfile = {
-  name: "Sherlock",
-  address: "Montreal",
-  dateOfBirth: "01/01/1970",
-  phone: "555-555-5555",
-  doctorRegistrationNumber: "12345",
-  specialty: "Cardiology",
-  email:"Sherlock@gmail.com"
-
-};
 
 export default function DoctorProfileScreen() {
-
-
-
-  const [editableProfile, setEditableProfile] = useState<DoctorProfile>(initialDoctorProfile);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setEditableProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: value
-    }));
-  };
+  const doctor = useSelector((state:RootState) => state.doctor)
+  const dispatch = useDispatch()
 
   const handleSave = (e: FormEvent) => {
     e.preventDefault()
+    dispatch(profileUpdate({
+      name,
+      dob,
+      phone,
+      address,
+      registrationNo,
+      email
+    }))
     // TODO: Save profile
   };
+  //      state.email = email;
+  //       state.name = name;
+  //       state.dob = dob;
+  //       state.phone = phone;
+  //       state.address = address;
+  const [name, setName] = useState(doctor.name)
+  const [dob, setDob] = useState(doctor.dob)
+  const [phone, setPhone] = useState(doctor.phone)
+  const [address, setAddress] = useState(doctor.address)
+  const [registrationNo, setRegistrationNo] = useState(doctor.registrationNo)
+  const [email, setEmail] = useState(doctor.email);
+
+
 
   return (
+    <ThemeProvider theme={doctorTheme}>
     <Box>
       <Container>
         <>
@@ -54,52 +62,51 @@ export default function DoctorProfileScreen() {
               <Typography variant="h4">Profile</Typography>
               <TextField
                 fullWidth
-                variant="filled"
                 label="Email"
                 name="email"
-                value={editableProfile.email}
+                value={email}
+                disabled
+                required
               />
               <TextField
                 fullWidth
                 label="Name"
                 name="name"
-                value={editableProfile.name}
-                onChange={handleChange}
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
               />
               <TextField
                 fullWidth
                 label="Date Of Birth"
                 name="dateOfBirth"
-                value={editableProfile.dateOfBirth}
-                onChange={handleChange}
+                value={dob}
+                onChange={e => setDob(e.target.value)}
+                required
               />
               <TextField
                 fullWidth
                 label="Phone"
                 name="phone"
-                value={editableProfile.phone}
-                onChange={handleChange}
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                required
               />
               <TextField
                 fullWidth
                 label="Address"
                 name="address"
-                value={editableProfile.address}
-                onChange={handleChange}
-              />
-              <TextField
-                fullWidth
-                label="Specialty"
-                name="specialty"
-                value={editableProfile.specialty}
-                onChange={handleChange}
+                value={address}
+                onChange={e => setAddress(e.target.value)}
+                required
               />
               <TextField
                 fullWidth
                 label="Doctor Registration Number"
                 name="doctorRegistrationNumber"
-                value={editableProfile.doctorRegistrationNumber}
-                onChange={handleChange}
+                value={registrationNo}
+                onChange={e => setRegistrationNo(e.target.value)}
+                required
               />
               <Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
@@ -114,6 +121,6 @@ export default function DoctorProfileScreen() {
         </>
       </Container>
     </Box>
-
+    </ThemeProvider>
   );
 }

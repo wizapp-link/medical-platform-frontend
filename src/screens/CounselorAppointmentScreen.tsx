@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
+import { createTheme, ThemeProvider, colors } from '@mui/material';
+import { counselorTheme } from '../Themes';
 
 export default function CounselorAppointmentScreen(props: any) {
   const [patients, setPatients] = useState<Patient[]>([
@@ -37,16 +39,6 @@ export default function CounselorAppointmentScreen(props: any) {
       emailAddress: "Ben@gmail.com",
       doctorRegistrationNumber: "77777777"
     },
-    // {
-    //   id: 3,
-    //   name: "Alex",
-    //   selfAssessmentResults: ["Alex selfAssessmentResults", "Alex selfAssessmentResults2"],
-    //   address: "address3",
-    //   dob: "1998/01/03",
-    //   phoneNumber: "5140000002",
-    //   emailAddress: "Alex@gmail.com",
-    //   doctorRegistrationNumber: "99999999"
-    // }
   ]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   // const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
@@ -81,26 +73,35 @@ export default function CounselorAppointmentScreen(props: any) {
 
 
   return (
-    <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        Accepted Patients
-      </Typography>
-      <List>
-        {patients.map((patient) => (
-          <ListItem key={patient.id} disablePadding>
-            <ListItemAvatar>
-              <Avatar alt="patient" src="" />
-            </ListItemAvatar>
-            <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-            <Stack direction={"row"} spacing={2}>
-              <Button variant="contained">Assign</Button>
-              <Button variant="outlined" color="secondary">Remove</Button>
-            </Stack>
+    <ThemeProvider theme={counselorTheme}>
+      <Box sx={{ padding: 2 }}>
 
-          </ListItem>
-        ))}
-      </List>
-      {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
+        <Typography variant="h4" gutterBottom>
+          Appointment List
+          <List>
+            {patients.map((patient) => (
+              <ListItem key={patient.id} disablePadding>
+                <ListItemAvatar>
+                  <Avatar alt="patient" src="" />
+                </ListItemAvatar>
+                <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
+                  style={{ flexBasis: "40%", flexGrow: 0, flexShrink: 0 }} />
+                <ListItemAvatar>
+                  <Avatar alt="doctor" src="/static/images/doctor/sampleDoctor.jpg" />
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Dr. Gregory House"
+                  secondary="Date: 2023-02-12 "
+                  style={{ flexBasis: "40%", flexGrow: 0, flexShrink: 0 }}
+                >
+                  {" - 16:00 to 17:00"}
+                </ListItemText>
+                <Button variant="outlined" color="secondary">Remove</Button>
+              </ListItem>
+            ))}
+          </List>
+        </Typography>
+        {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
         <DialogTitle>{selectedPatient?.name}</DialogTitle>
         <DialogContent>
           <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
@@ -115,7 +116,7 @@ export default function CounselorAppointmentScreen(props: any) {
           </List>
         </DialogContent>
       </Dialog> */}
-      {/* <Dialog open={showDetailDialog} onClose={handleClose}>
+        {/* <Dialog open={showDetailDialog} onClose={handleClose}>
         <DialogTitle>{selectedPatient?.name}</DialogTitle>
         <DialogContent>
           <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
@@ -131,6 +132,7 @@ export default function CounselorAppointmentScreen(props: any) {
         </DialogContent>
       </Dialog> */}
 
-    </Box>
+      </Box>
+    </ThemeProvider>
   );
 }

@@ -3,11 +3,17 @@ import { Box, Typography, Stack, Button, Divider, List, ListItem, ListItemText, 
 import * as React from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { doctorTheme } from '../Themes';
+import {RootState} from "../app/store";
+import { useSelector } from "react-redux";
 
 export default function DoctorDashboardScreen(props: any) {
-	return <Stack padding={2} spacing={2}>
+	const doctor = useSelector((state:RootState) => state.doctor)
+	return <ThemeProvider theme={doctorTheme}>
+	<Stack padding={2} spacing={2}>
 		<Typography variant='h3'>
-			Good day! Doctor!
+			Good day! {doctor.name}!
 		</Typography>
 		<Typography variant='h5'>
 			How can we help you?
@@ -31,7 +37,7 @@ export default function DoctorDashboardScreen(props: any) {
 							spacing={1}
 						>
 							<Button variant="contained">Accept</Button>
-							<Button variant="outlined" color="secondary">Reject</Button>
+							<Button variant="contained" color="secondary">Reject</Button>
 							{/* <IconButton color="primary"><CheckCircleIcon /></IconButton>
 						<IconButton color="secondary"><CancelIcon /></IconButton> */}
 						</Stack>
@@ -53,4 +59,5 @@ export default function DoctorDashboardScreen(props: any) {
 
 		</Stack>
 	</Stack>
+	</ThemeProvider> 
 }
