@@ -56,7 +56,9 @@ export const logIn = (email: string, password: string) => async (dispatch: AppDi
     dispatch(userLogInSuccess(data));
     // localStorage.setItem('userData', JSON.stringify(data));
   } catch (err: any) {
-    dispatch(userLogInFail(err.response ? err.response.data.message : err.message));
+    const errorMessage = err.response ? err.response.data.response : err.message
+    console.log(errorMessage);
+    dispatch(userLogInFail(errorMessage));
   }
 };
 export const logOut = () => (dispatch: AppDispatch) => {

@@ -11,6 +11,7 @@ import { positionToRole } from '../../constants/PositionRoleMap';
 const initialState: UserRegisterState = {
 	loading: false,
 	error: false,
+  success: false,
 	errorMessage: "",
 };
 
@@ -18,6 +19,7 @@ export type UserRegisterState = {
 	loading: boolean,
 	error: boolean,
 	errorMessage: string,
+  success: boolean,
 }
 const userRegisterSlice = createSlice({
   name: 'userRegister',
@@ -34,12 +36,19 @@ const userRegisterSlice = createSlice({
     userRegisterSuccess: (state) => {
       state.loading = false;
       state.error = false;
+      state.success = true;
     },
+    userRegisterReset: (state) => {
+      state.loading = initialState.loading
+      state.error = initialState.error;
+      state.success = initialState.success;
+      state.errorMessage = initialState.errorMessage;
+    }
   },
 });
 
 // eslint-disable-next-line max-len
-export const { userRegisterFail, userRegisterRequest, userRegisterSuccess } = userRegisterSlice.actions;
+export const { userRegisterFail, userRegisterRequest, userRegisterSuccess, userRegisterReset } = userRegisterSlice.actions;
 
 export const register = (position: string, name: string, email: string, password: string, phoneNumber: string, registrationNumber: string, dob: string, address: string) => async (dispatch: AppDispatch) => {
 
@@ -53,18 +62,16 @@ export const register = (position: string, name: string, email: string, password
   try {
     const res = await axios.post(`/api/v1/signup`, { name, email, password, role, phone: Number(phoneNumber), registrationNo: Number(registrationNumber), dob, address});
 
-		if(res.status === 200){
-			console.log(`${position} successfully registered!`)
-			console.log(`Backend Message: `)
-      console.log(res.data)
-			dispatch(userRegisterSuccess());
-		} else{
-			console.error(`Uncaught Error in ${position} registration!\nBackend Messsage: ${res.data}`);
-		}
+    console.log(`${position} successfully registered!`)
+    console.log(`Backend Message: `)
+    console.log(res.data)
+    dispatch(userRegisterSuccess());
     // dispatch(userSigninSuccess(data));
     // localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (err: any) {
-    dispatch(userRegisterFail(err.response ? err.response.data.message : err.message));
+    const errorMessage = err.response ? err.response.data.response : err.message
+    console.log(errorMessage);
+    dispatch(userRegisterFail(errorMessage));
   }
 };
 

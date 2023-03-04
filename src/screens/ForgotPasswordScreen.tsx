@@ -26,9 +26,6 @@ export default function ForgotPasswordScreen() {
 		e.preventDefault();
 	};
 
-	const handleReturnToLogIn = () => {
-		navigate('/');
-	}
 
 	return (
 		<Box>
@@ -83,10 +80,10 @@ export default function ForgotPasswordScreen() {
 							type="password"
 							required
 						/>
-						<Stack direction="row" alignItems="baseline" spacing={5}>
-							<Button variant="contained" color="secondary" onClick={handleReturnToLogIn}>
+						<Stack direction="row" alignItems="baseline" spacing={5} justifyContent="space-between">
+							<Link component={RouterLink} to={`/signin`} color='primary'>
 								Return to Log In
-							</Button>
+							</Link>
 							<Button variant="contained" color="primary" type="submit">
 								Submit
 							</Button>
