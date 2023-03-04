@@ -26,7 +26,6 @@ export default function LogInScreen() {
 	// const [email, setEmail] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [position, setPosition] = useState(initPosition);
 
 
 	const handleSubmit = (e: FormEvent) => {
@@ -57,28 +56,6 @@ export default function LogInScreen() {
 					<form onSubmit={handleSubmit}>
 						<Stack spacing={5} padding={5}>
 							<Typography variant="h4">Log In</Typography>
-							<div>
-								<FormControl fullWidth>
-									<InputLabel variant="outlined" htmlFor="position">
-										Position
-									</InputLabel>
-									<Select
-										labelId="position-field"
-										id="position"
-										value={position}
-										onChange={e => setPosition(e.target.value)}
-										label="Position"
-										required
-										autoFocus
-									>
-										<MenuItem value="patient">Patient</MenuItem>
-										<MenuItem value="doctor">Doctor</MenuItem>
-										<MenuItem value="counselor">Counselor</MenuItem>
-										<MenuItem value="manager">Manager</MenuItem>
-									</Select>
-								</FormControl>
-
-							</div>
 							<TextField
 								id="email-field"
 								label="Email"
@@ -102,7 +79,7 @@ export default function LogInScreen() {
 
 							<Stack direction="row" spacing={5}>
 								<Stack>
-									<Link component={RouterLink} to={`/Register?position=${position}`} color='primary'>
+									<Link component={RouterLink} to={`/Register`} color='primary'>
 										New user? Sign up!
 									</Link>
 									<Link component={RouterLink} to={`/forgot_password`} color='primary'>
