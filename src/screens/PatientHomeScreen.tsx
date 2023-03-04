@@ -189,21 +189,6 @@ export default function PatientHomeScreen() {
 			)}
 		</List>
 
-	const breadcrumbs = [
-		<Link underline="hover" key="1" color="inherit" to="/patient" component={RouterLink}>
-			Home
-		</Link>,
-		<Link
-			underline="hover"
-			key="2"
-			color="inherit"
-			to="/patient/dashboard"
-			component={RouterLink}
-		>
-			Dashboard
-		</Link>
-	];
-
 	const handleDrawerOpen = () => {
 		setOpen(true);
 	};
@@ -230,13 +215,10 @@ export default function PatientHomeScreen() {
 						>
 							<MenuIcon />
 						</IconButton>
-						<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "baseline" }}>
+						<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
 							<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
 								Depression Care
 							</Typography>
-							{/* <Breadcrumbs separator="›" aria-label="breadcrumb" color="primary.contrastText">
-								{breadcrumbs}
-							</Breadcrumbs> */}
 							<UserProfileMenu />
 						</Stack>
 					</Toolbar>
