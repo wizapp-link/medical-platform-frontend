@@ -28,10 +28,10 @@ import DrawerOptionTextIconsType from '../types/DrawerOptionTextIconsType';
 import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
 import PatientDashboardScreen from './PatientDashboardScreen';
 import PatientProfileScreen from './PatientProfileScreen';
-import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { counselorTheme } from '../Themes';
-
-
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
+import { useAppSelector } from '../app/hooks';
 
 const drawerWidth = 240;
 const backgroundColor = '#C8F8EA';
@@ -191,43 +191,43 @@ export default function CounselorHomeScreen() {
 
 	return (
 		<ThemeProvider theme={counselorTheme}>
-		<Box sx={{ display: 'flex' }}>
-			<CssBaseline />
-			<AppBar position="fixed" open={open}>
-				<Toolbar>
-					<IconButton
-						color="inherit"
-						aria-label="open drawer"
-						onClick={handleDrawerOpen}
-						edge="start"
-						sx={{
-							marginRight: 5,
-							...(open && { display: 'none' }),
-						}}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant="h6" noWrap component="div">
-						Depression Care
-					</Typography>
-				</Toolbar>
-			</AppBar>
-			<Drawer variant="permanent" open={open}>
-				<DrawerHeader>
-					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-					</IconButton>
-				</DrawerHeader>
-				<Divider />
-				{drawerUserOptionsList}
-				<Divider />
-				{drawerAccountOptionsList}
-			</Drawer>
-			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-				<DrawerHeader />
-				<Outlet />
+			<Box sx={{ display: 'flex' }}>
+				<CssBaseline />
+				<AppBar position="fixed" open={open}>
+					<Toolbar>
+						<IconButton
+							color="inherit"
+							aria-label="open drawer"
+							onClick={handleDrawerOpen}
+							edge="start"
+							sx={{
+								marginRight: 5,
+								...(open && { display: 'none' }),
+							}}
+						>
+							<MenuIcon />
+						</IconButton>
+						<Typography variant="h6" noWrap component="div">
+							Depression Care
+						</Typography>
+					</Toolbar>
+				</AppBar>
+				<Drawer variant="permanent" open={open}>
+					<DrawerHeader>
+						<IconButton onClick={handleDrawerClose}>
+							{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+						</IconButton>
+					</DrawerHeader>
+					<Divider />
+					{drawerUserOptionsList}
+					<Divider />
+					{drawerAccountOptionsList}
+				</Drawer>
+				<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+					<DrawerHeader />
+					<Outlet />
+				</Box>
 			</Box>
-		</Box>
 		</ThemeProvider>
 	);
 }
