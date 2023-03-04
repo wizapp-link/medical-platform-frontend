@@ -36,6 +36,7 @@ import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { patientTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppSelector } from '../app/hooks';
+import UserProfileMenu from '../components/UserProfileMenu';
 
 
 const drawerWidth = 240;
@@ -120,6 +121,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function PatientHomeScreen() {
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
+	// console.log(window.location.href.split("/"));
+
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 	const navigate = useNavigate();
@@ -157,7 +160,7 @@ export default function PatientHomeScreen() {
 				)
 			)}
 		</List>
-	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }, { text: "Sign Out", icon: LogoutIcon }]
+	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }]
 	const drawerAccountOptionsList =
 		<List>
 			{drawerAccountOptionsTextIcons.map(
@@ -231,9 +234,10 @@ export default function PatientHomeScreen() {
 							<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
 								Depression Care
 							</Typography>
-							<Breadcrumbs separator="›" aria-label="breadcrumb" color="primary.contrastText">
+							{/* <Breadcrumbs separator="›" aria-label="breadcrumb" color="primary.contrastText">
 								{breadcrumbs}
-							</Breadcrumbs>
+							</Breadcrumbs> */}
+							<UserProfileMenu />
 						</Stack>
 					</Toolbar>
 				</AppBar>

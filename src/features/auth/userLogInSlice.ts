@@ -59,8 +59,8 @@ export const logIn = (email: string, password: string) => async (dispatch: AppDi
     dispatch(userLogInFail(err.response ? err.response.data.message : err.message));
   }
 };
-export const signOut = () => (dispatch: AppDispatch) => {
-  localStorage.removeItem('userData');
+export const logOut = () => (dispatch: AppDispatch) => {
+  // localStorage.removeItem('userData');
   dispatch(userLogOut());
 };
 

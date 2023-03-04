@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import SigninScreen from './screens/LogInScreen';
+import LogInScreen from './screens/LogInScreen';
+import LogOutScreen from './screens/LogOutScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import PatientHomeScreen from './screens/PatientHomeScreen';
 import PatientDashboardScreen from './screens/PatientDashboardScreen';
@@ -23,6 +24,13 @@ import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
 import CounselorDashboardScreen from './screens/CounselorDashboardScreen';
 import CounselorProfileScreen from './screens/CounselorProfileScreen';
 import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
+{/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/ }
+import MangerHomeScreen from './screens/MangerHomeScreen';
+import ManagerAppointmentScreen from './screens/ManagerAppointmentScreen';
+import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
+// import ManagerProfileScreen from './screens/ManagerProfileScreen';
+import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
+
 
 const patientTheme = createTheme({
 	palette: {
@@ -39,12 +47,7 @@ const patientTheme = createTheme({
 })
 
 
-{/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/}
-import MangerHomeScreen from './screens/MangerHomeScreen';
-import ManagerAppointmentScreen from './screens/ManagerAppointmentScreen';
-import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
-// import ManagerProfileScreen from './screens/ManagerProfileScreen';
-import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
+
 
 
 function App() {
@@ -54,8 +57,9 @@ function App() {
 				style={{ minHeight: "100vh" }}
 			>
 				<Routes>
-					<Route path="signin" element={<SigninScreen />} />
-					<Route path="/" element={<SigninScreen />} />
+					<Route path="signin" element={<LogInScreen />} />
+					<Route path="signout" element={<LogOutScreen />} />
+					<Route path="/" element={<LogInScreen />} />
 
 					<Route path="patient" element={<PatientHomeScreen />}>
 						<Route index element={<PatientDashboardScreen />} />
