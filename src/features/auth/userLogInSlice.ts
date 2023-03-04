@@ -1,10 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import type {UserData, UserInfo} from '../../types/UserDataType';
+import type { UserData, UserInfo} from '../../types/UserDataType';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 import type { AppDispatch } from '../../app/store';
-import { useAppSelector } from '../../app/hooks';
 
 const initialState: UserLogInState = {
   userInfo: null,
