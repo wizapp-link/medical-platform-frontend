@@ -31,7 +31,10 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider, colors} from '@mui/material';
-import { doctorTheme } from '../Themes';
+import { doctorTheme, patientTheme } from "../Themes";
+import UserProfileMenu from '../components/UserProfileMenu';
+import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
 
 const drawerWidth = 240;
@@ -118,6 +121,7 @@ export default function DoctorHomeScreen() {
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 	const navigate = useNavigate();
+	const { userInfo } = useAppSelector(selectUserLogIn);
 
 	const handleIconButtonClicks = (text: string) => () => {
 		// change text to lower case and remove whitespace, nagigate to the destination
@@ -153,7 +157,7 @@ export default function DoctorHomeScreen() {
 				)
 			)}
 		</List>
-	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }, { text: "Sign Out", icon: LogoutIcon }]
+	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }]
 	const drawerAccountOptionsList =
 		<List>
 			{drawerAccountOptionsTextIcons.map(
@@ -207,54 +211,49 @@ export default function DoctorHomeScreen() {
 	};
 
 	return (
-		<ThemeProvider theme={doctorTheme}>
-		<Box sx={{ display: 'flex' }}>
-			<CssBaseline />
-			<AppBar position="fixed" open={open}>
-				<Toolbar>
-					<IconButton
-						color="inherit"
-						aria-label="open drawer"
-						onClick={handleDrawerOpen}
-						edge="start"
-						sx={{
-							marginRight: 5,
-							...(open && { display: 'none' }),
-							color: textColor
-						}}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "baseline" }}>
-						<Typography variant="h6" noWrap component="div">
-							DepressionCare
-						</Typography>
-						<Breadcrumbs separator="›" aria-label="breadcrumb" color="primary.contrastText">
-							{breadcrumbs}
-						</Breadcrumbs>
-					</Stack>
-				</Toolbar>
-			</AppBar>
-			<Drawer variant="permanent" open={open}>
-				<DrawerHeader sx={{ justifyContent: 'space-between' }}>
-					<Avatar>D</Avatar>
-					<Typography>Doctor</Typography>
-					<IconButton onClick={handleDrawerClose}
-					sx={{color: textColor}}
-					>
-						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-					</IconButton>
-				</DrawerHeader>
-				<Divider />
-				{drawerUserOptionsList}
-				<Divider />
-				{drawerAccountOptionsList}
-			</Drawer>
-			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-				<DrawerHeader />
-				<Outlet />
+		<ThemeProvider theme={patientTheme}>
+			<Box sx={{ display: 'flex' }}>
+				<CssBaseline />
+				<AppBar position="fixed" open={open}>
+					<Toolbar>
+						<IconButton
+							color="inherit"
+							aria-label="open drawer"
+							onClick={handleDrawerOpen}
+							edge="start"
+							sx={{
+								marginRight: 5,
+								...(open && { display: 'none' }),
+							}}
+						>
+							<MenuIcon />
+						</IconButton>
+						<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
+							<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
+								Depression Care
+							</Typography>
+							<UserProfileMenu />
+						</Stack>
+					</Toolbar>
+				</AppBar>
+				<Drawer variant="permanent" open={open}>
+					<DrawerHeader sx={{ justifyContent: 'space-between' }}>
+						<Avatar>{userInfo?.userData.name.charAt(0)}</Avatar>
+						<Typography>{userInfo?.userData.name}</Typography>
+						<IconButton onClick={handleDrawerClose}>
+							{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+						</IconButton>
+					</DrawerHeader>
+					<Divider />
+					{drawerUserOptionsList}
+					<Divider />
+					{drawerAccountOptionsList}
+				</Drawer>
+				<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+					<DrawerHeader />
+					<Outlet />
+				</Box>
 			</Box>
-		</Box>
 		</ThemeProvider>
 	);
 }

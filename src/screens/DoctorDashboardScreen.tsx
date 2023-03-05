@@ -7,13 +7,16 @@ import { createTheme, ThemeProvider, colors} from '@mui/material';
 import { doctorTheme } from '../Themes';
 import {RootState} from "../app/store";
 import { useSelector } from "react-redux";
+import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
 export default function DoctorDashboardScreen(props: any) {
 	const doctor = useSelector((state:RootState) => state.doctor)
+	const { userInfo } = useAppSelector(selectUserLogIn);
 	return <ThemeProvider theme={doctorTheme}>
 	<Stack padding={2} spacing={2}>
 		<Typography variant='h3'>
-			Good day! {doctor.name}!
+			Good day! {userInfo?.userData.name}!
 		</Typography>
 		<Typography variant='h5'>
 			How can we help you?
