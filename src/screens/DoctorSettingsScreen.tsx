@@ -6,12 +6,15 @@ import { doctorTheme } from '../Themes';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { passwordUpdate } from "../features/doctor/doctorSlice";
+import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
 export default function PatientSettingsScreen(props: any) {
 	const doctor = useSelector((state:RootState) => state.doctor)
+	const { userInfo } = useAppSelector(selectUserLogIn);
 	const dispatch = useDispatch()
 
-	const [email, setEmail] = useState(doctor.email);
+	const [email, setEmail] = useState(userInfo?.userData.email);
 	const [password, setPassword] = useState("");
 	const [newPassword1, setNewPassword1] = useState("");
 	const [newPassword2, setNewPassword2] = useState("");

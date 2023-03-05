@@ -6,10 +6,12 @@ import { doctorTheme } from '../Themes';
 import { doctorState, profileUpdate } from "../features/doctor/doctorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
+import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
 
 export default function DoctorProfileScreen() {
-  const doctor = useSelector((state:RootState) => state.doctor)
+  const { userInfo } = useAppSelector(selectUserLogIn);
   const dispatch = useDispatch()
 
   const handleSave = (e: FormEvent) => {
@@ -24,17 +26,12 @@ export default function DoctorProfileScreen() {
     }))
     // TODO: Save profile
   };
-  //      state.email = email;
-  //       state.name = name;
-  //       state.dob = dob;
-  //       state.phone = phone;
-  //       state.address = address;
-  const [name, setName] = useState(doctor.name)
-  const [dob, setDob] = useState(doctor.dob)
-  const [phone, setPhone] = useState(doctor.phone)
-  const [address, setAddress] = useState(doctor.address)
-  const [registrationNo, setRegistrationNo] = useState(doctor.registrationNo)
-  const [email, setEmail] = useState(doctor.email);
+  const [name, setName] = useState(userInfo?.userData.name)
+  const [dob, setDob] = useState(userInfo?.userData.dob)
+  const [phone, setPhone] = useState(userInfo?.userData.phone)
+  const [address, setAddress] = useState(userInfo?.userData.address)
+  const [registrationNo, setRegistrationNo] = useState(userInfo?.userData.registrationNo)
+  const [email, setEmail] = useState(userInfo?.userData.email);
 
 
 
