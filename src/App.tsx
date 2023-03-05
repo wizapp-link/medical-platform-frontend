@@ -23,6 +23,9 @@ import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
 import CounselorDashboardScreen from './screens/CounselorDashboardScreen';
 import CounselorProfileScreen from './screens/CounselorProfileScreen';
 import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
+{/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/ }
+import ManagerHomeScreen from './screens/ManagerHomeScreen';
+import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
 
 const patientTheme = createTheme({
 	palette: {
@@ -74,6 +77,12 @@ function App() {
 					{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
 					<Route path="forgot_password" element={<ForgotPasswordScreen />} />
 					<Route path="register" element={<RegisterScreen />} />
+					{/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/}
+					<Route path="manager" element={<ManagerHomeScreen />}>
+						<Route index element={<ManagerDashboardScreen />} />
+						<Route path="dashboard" element={<ManagerDashboardScreen />} />
+						
+					</Route>
 				</Routes>
 			</div>
 		</Router>
