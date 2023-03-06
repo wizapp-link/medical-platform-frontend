@@ -7,6 +7,7 @@ import type { RootState } from '../../app/store';
 import type { AppDispatch } from '../../app/store';
 import { useAppSelector } from '../../app/hooks';
 import { positionToRole } from '../../constants/PositionRoleMap';
+import libphonenumber from "google-libphonenumber";
 
 const initialState: UserRegisterState = {
 	loading: false,
@@ -27,6 +28,8 @@ const userRegisterSlice = createSlice({
   reducers: {
     userRegisterRequest: (state) => {
       state.loading = true;
+      state.error = false;
+      state.errorMessage = "";
     },
     userRegisterFail: (state, action: PayloadAction<string>) => {
       state.errorMessage = action.payload;
@@ -60,7 +63,26 @@ export const register = (position: string, name: string, email: string, password
 	
   dispatch(userRegisterRequest());
   try {
-    const res = await axios.post(`/api/v1/signup`, { name, email, password, role, phone: Number(phoneNumber), registrationNo: Number(registrationNumber), dob, address});
+    
+    const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
+    const parsedPhone = phoneUtil.parse(phoneNumber, "CA");
+    if(!phoneUtil.isValidNumberForRegion(parsedPhone, "CA")){
+      throw new Error("Impossible Canadian phone number!");
+    }
+    const phone = parsedPhone.getNationalNumber();
+
+    const registrationNo = Number(registrationNumber);
+    if(registrationNo.toString() !== registrationNumber || registrationNumber.length!=6) {
+      throw new Error("Invalid registration number!");
+    }
+
+    const dobDate = new Date(dob);
+    const nowDate = new Date();
+    if(dobDate>=nowDate){
+      throw new Error("Invalid Date of Birth!");
+    }
+
+    const res = await axios.post(`/api/v1/signup`, { name, email, password, role, phone, registrationNo: Number(registrationNumber), dob, address});
 
     console.log(`${position} successfully registered!`)
     console.log(`Backend Message: `)
