@@ -10,6 +10,8 @@ import { counselorTheme } from '../Themes';
 import { useSelector } from "react-redux";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
+import { flexbox } from '@mui/system';
+import { spacing } from '@mui/system';
 
 
 
@@ -85,65 +87,66 @@ export default function CounselorDashboardScreen(props: any) {
 			{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
 			<Button variant="contained" sx={{ backgroundColor: 'primary.dark', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>View Appointments</Button>
 			<Divider />
+			<Typography variant='h5' color={'primary.contrastText'}>
+				Recent Patient List
+			</Typography>
+
+			<List>
+				<ListItem>
+					<List >
+						{patients.map((patient) => (
+							<ListItem key={patient.id} disablePadding>
+								<ListItemAvatar>
+									<Avatar alt="patient" src="" />
+								</ListItemAvatar>
+								<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
+									sx={{
+										flexGrow: 0,
+										flexShrink: 0,
+										flexBasis: '5%'
+									}} />
+								<Button
+									sx={{
+										flexGrow: 0,
+										flexShrink: 0,
+										width: 180,
+										height: 40,
+										ml: 2,
+									}}
+									variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
 
 
-			<Stack>
-				<Typography variant='h5' color={'primary.contrastText'}>
-					Recent Patient List
-				</Typography>
-				<List>
-					<ListItem>
-						<List>
-							{patients.map((patient) => (
-								<ListItem key={patient.id} disablePadding>
-									<ListItemAvatar>
-										<Avatar alt="patient" src="" />
-									</ListItemAvatar>
-									<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
-										sx={{
-											flexGrow: 0,
-											flexShrink: 0,
-											flexBasis: '5%'
-										}} />
-									<Button
-										sx={{
-											flexGrow: 0,
-											flexShrink: 0,
-											width: 180,
-											height: 40,
-										}}
-										variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
-
-									<Stack direction={"row"} spacing={2} pl={100} justifyContent={'space-between'}>
+								<Stack direction = "row" spacing= {2} sx={{ flexDirection: 'row', justifyContent: 'flex-end', width: 950, mr: -10  }}>
 										<Button sx={{ height: 40 }} variant="contained">Assign</Button>
-										<Button sx={{ height: 40 }} variant="outlined" color="secondary">Reject</Button>
-									</Stack>
-								</ListItem>
-							))}
+										<Button sx={{ height: 40 }} variant="outlined" color="secondary">Reject</Button>			
+								</Stack>
 
-						</List>
+							</ListItem>
+						))}
 
-						<Dialog open={showAssessmentDialog} onClose={handleClose}>
-							<DialogTitle color={'primary.contrastText'}>{selectedPatient?.name}</DialogTitle>
-							<DialogContent>
-								<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
-								<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
-								<Typography variant="h6" color={'primary.contrastText'}>Self-Assessment Results</Typography>
-								<List>
-									{selectedPatient?.selfAssessmentResults.map((result) => (
-										<ListItem key={result} sx={{ color: 'primary.contrastText' }}>
-											<ListItemText primary={result} sx={{ color: 'primary.contrastText' }} />
-										</ListItem>
-									))}
-								</List>
-							</DialogContent>
-						</Dialog>
 
-						<Divider variant="inset" component="li" />
-					</ListItem>
-				</List>
 
-			</Stack>
+					</List>
+
+					<Dialog open={showAssessmentDialog} onClose={handleClose}>
+						<DialogTitle color={'primary.contrastText'}>{selectedPatient?.name}</DialogTitle>
+						<DialogContent>
+							<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
+							<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
+							<Typography variant="h6" color={'primary.contrastText'}>Self-Assessment Results</Typography>
+							<List>
+								{selectedPatient?.selfAssessmentResults.map((result) => (
+									<ListItem key={result} sx={{ color: 'primary.contrastText' }}>
+										<ListItemText primary={result} sx={{ color: 'primary.contrastText' }} />
+									</ListItem>
+								))}
+							</List>
+						</DialogContent>
+					</Dialog>
+
+					<Divider variant="inset" component="li" />
+				</ListItem>
+			</List>
 		</Stack>
 	</ThemeProvider>
 }
