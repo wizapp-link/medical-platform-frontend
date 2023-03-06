@@ -10,6 +10,7 @@ export default function PatientProfileScreen(props: any) {
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
 	const [name, setName] = useState(userInfo?.userData.name);
+	const [email, setEmail] = useState(userInfo?.userData.email);
 	const [phoneNumber, setPhoneNumber] = useState(userInfo?.userData.phone);
 	const [addr, setAddr] = useState(userInfo?.userData.address);
 	const [dob, setDob] = useState(userInfo?.userData.dob);
@@ -25,6 +26,17 @@ export default function PatientProfileScreen(props: any) {
 					<form onSubmit={handleSubmit}>
 						<Stack spacing={5} padding={5}>
 							<Typography variant="h4">Profile</Typography>
+							<TextField
+								id="email-field"
+								label="E-mail"
+								variant="outlined"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								autoComplete="email"
+								required
+								disabled
+								color='secondary'
+							/>
 							<TextField
 								id="name-field"
 								label="Name"
