@@ -76,8 +76,8 @@ export const register = (position: string, name: string, email: string, password
     }
     const phone = parsedPhone.getNationalNumber();
 
-    const registrationNo = Number(registrationNumber);
-    if(position !== "patient" && (registrationNo.toString() !== registrationNumber || registrationNumber.length!=6)) {
+    if(position !== "patient" && (Number.isNaN(Number(registrationNumber)) || registrationNumber.length!=6)) {
+      console.log(`Registration number string: ${registrationNumber}`);
       throw new Error("Invalid registration number!");
     }
 
@@ -87,7 +87,7 @@ export const register = (position: string, name: string, email: string, password
       throw new Error("Invalid Date of Birth!");
     }
 
-    const res = await axios.post(`/api/v1/signup`, { name, email, password, role, phone, registrationNo: Number(registrationNumber), dob, address});
+    const res = await axios.post(`/api/v1/signup`, { name, email, password, role, phone, registrationNo: registrationNumber, dob, address});
 
     console.log(`${position} successfully registered!`)
     console.log(`Backend Message: `)
