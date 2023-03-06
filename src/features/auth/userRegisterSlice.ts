@@ -8,6 +8,7 @@ import type { AppDispatch } from '../../app/store';
 import { useAppSelector } from '../../app/hooks';
 import { positionToRole } from '../../constants/PositionRoleMap';
 import libphonenumber from "google-libphonenumber";
+import * as emailValidator from "email-validator";
 
 const initialState: UserRegisterState = {
 	loading: false,
@@ -64,6 +65,10 @@ export const register = (position: string, name: string, email: string, password
   dispatch(userRegisterRequest());
   try {
     
+    if(!emailValidator.validate(email)){
+      throw new Error("Invalid Email!");
+    }
+
     const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
     const parsedPhone = phoneUtil.parse(phoneNumber, "CA");
     if(!phoneUtil.isValidNumberForRegion(parsedPhone, "CA")){
@@ -72,7 +77,7 @@ export const register = (position: string, name: string, email: string, password
     const phone = parsedPhone.getNationalNumber();
 
     const registrationNo = Number(registrationNumber);
-    if(registrationNo.toString() !== registrationNumber || registrationNumber.length!=6) {
+    if(position !== "patient" && (registrationNo.toString() !== registrationNumber || registrationNumber.length!=6)) {
       throw new Error("Invalid registration number!");
     }
 
