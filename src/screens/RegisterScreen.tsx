@@ -308,7 +308,7 @@ export default function RegisterScreen() {
 									Have an account? Log in!
 								</Link>
 								<Button variant="contained" color="primary" type="submit" disabled={userRegister.success || userRegister.loading}>
-									Register now!
+									Sign Up
 								</Button>
 							</Stack>
 						</Stack>
