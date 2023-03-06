@@ -125,7 +125,7 @@ export default function RegisterScreen() {
 										<TextField
 											id="number-field"
 											variant="outlined"
-											label="Number"
+											label="Phone Number"
 											value={phoneNumber}
 											onChange={(e) => setPhoneNumber(e.target.value)}
 											required
@@ -190,7 +190,7 @@ export default function RegisterScreen() {
 										<TextField
 											id="number-field"
 											variant="outlined"
-											label="Number"
+											label="Phone Number"
 											value={phoneNumber}
 											onChange={(e) => setPhoneNumber(e.target.value)}
 											required
@@ -262,6 +262,14 @@ export default function RegisterScreen() {
 											required
 										/>
 										<TextField
+											id="phoneNumber"
+											label="Phone Number"
+											value={phoneNumber}
+											onChange={e => setPhoneNumber(e.target.value)}
+											variant="outlined"
+											required
+										/>
+										<TextField
 											id="dateOfBirth"
 											label="Date of Birth"
 											type="date"
@@ -280,14 +288,6 @@ export default function RegisterScreen() {
 											onChange={e => setAddr(e.target.value)}
 											variant="outlined"
 											fullWidth
-											required
-										/>
-										<TextField
-											id="phoneNumber"
-											label="PhoneNumber"
-											value={phoneNumber}
-											onChange={e => setPhoneNumber(e.target.value)}
-											variant="outlined"
 											required
 										/>
 										<TextField
