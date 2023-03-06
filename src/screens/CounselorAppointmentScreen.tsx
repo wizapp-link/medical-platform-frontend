@@ -86,6 +86,7 @@ export default function CounselorAppointmentScreen(props: any) {
                 </ListItemAvatar>
                 <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
                   style={{ flexBasis: "40%", flexGrow: 0, flexShrink: 0 }} />
+                
                 <ListItemAvatar>
                   <Avatar alt="doctor" src="/static/images/doctor/sampleDoctor.jpg" />
                 </ListItemAvatar>
@@ -96,6 +97,8 @@ export default function CounselorAppointmentScreen(props: any) {
                 >
                   {" - 16:00 to 17:00"}
                 </ListItemText>
+                
+                
                 <Button variant="outlined" color="secondary">Remove</Button>
               </ListItem>
             ))}

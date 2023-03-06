@@ -4,11 +4,12 @@ import * as React from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from "react";
-
 import { height } from '@mui/system';
-
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { counselorTheme } from '../Themes';
+import { useSelector } from "react-redux";
+import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
 
 
 
@@ -67,13 +68,14 @@ export default function CounselorDashboardScreen(props: any) {
 		setShowAssessmentDialog(false);
 		// setShowDetailDialog((false));
 	};
+	const { userInfo } = useAppSelector(selectUserLogIn);
 
 
 
 	return <ThemeProvider theme={counselorTheme}>
 		<Stack padding={2} spacing={2}>
 			<Typography variant='h3' color={'primary.contrastText'}>
-				Good day! Counselor!
+				Good day! {userInfo?.userData.name}!
 			</Typography>
 			<Typography variant='h5' color={'primary.contrastText'}>
 				How can we help you?
@@ -112,7 +114,7 @@ export default function CounselorDashboardScreen(props: any) {
 										}}
 										variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
 
-									<Stack direction={"row"} spacing={2} pl={90}>
+									<Stack direction={"row"} spacing={2} pl={100} justifyContent={'space-between'}>
 										<Button sx={{ height: 40 }} variant="contained">Assign</Button>
 										<Button sx={{ height: 40 }} variant="outlined" color="secondary">Reject</Button>
 									</Stack>
