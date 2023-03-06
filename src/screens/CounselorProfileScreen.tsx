@@ -4,48 +4,38 @@ import { FormEvent, useState } from "react";
 
 import { createTheme, ThemeProvider, colors} from '@mui/material';
 import { counselorTheme } from '../Themes';
-type DoctorProfile = {
-  name: string;
-  address: string;
-  phone: string;
-//   specialty: string;
-  counselorRegistrationNumber: string;
-  dateOfBirth: string;
-  email: string;
-
-};
-
-const initialDoctorProfile = {
-  name: "Sherlock",
-  address: "Montreal",
-  dateOfBirth: "01/01/1970",
-  phone: "555-555-5555",
-  counselorRegistrationNumber: "12345",
-//   specialty: "Cardiology",
-  email:"Sherlock@gmail.com"
-
-};
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
 export default function CounselorProfileScreen() {
-
-
-
-  const [editableProfile, setEditableProfile] = useState<DoctorProfile>(initialDoctorProfile);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setEditableProfile((prevProfile) => ({
-      ...prevProfile,
-      [name]: value
-    }));
-  };
+  const { userInfo } = useAppSelector(selectUserLogIn);
+  const dispatch = useDispatch()
 
   const handleSave = (e: FormEvent) => {
     e.preventDefault()
+    // dispatch(profileUpdate({
+    //   name,
+    //   dob,
+    //   phone,
+    //   address,
+    //   registrationNo,
+    //   email
+    // }))
     // TODO: Save profile
   };
+  const [name, setName] = useState(userInfo?.userData.name)
+  const [dob, setDob] = useState(userInfo?.userData.dob)
+  const [phone, setPhone] = useState(userInfo?.userData.phone)
+  const [address, setAddress] = useState(userInfo?.userData.address)
+  const [registrationNo, setRegistrationNo] = useState(userInfo?.userData.registrationNo)
+  const [email, setEmail] = useState(userInfo?.userData.email);
+
+
 
   return (
+    <ThemeProvider theme={counselorTheme}>
     <Box>
       <Container>
         <>
@@ -56,64 +46,57 @@ export default function CounselorProfileScreen() {
               <Typography variant="h4">Profile</Typography>
               <TextField
                 fullWidth
-                variant="filled"
                 label="Email"
                 name="email"
-                value={editableProfile.email}
-                color='secondary'
+                value={email}
+                disabled
+                required
               />
               <TextField
                 fullWidth
                 label="Name"
                 name="name"
-                value={editableProfile.name}
-                onChange={handleChange}
-                color='secondary'
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
               />
               <TextField
                 fullWidth
                 label="Date Of Birth"
                 name="dateOfBirth"
-                value={editableProfile.dateOfBirth}
-                onChange={handleChange}
-                color='secondary'
+                value={dob}
+                onChange={e => setDob(e.target.value)}
+                required
               />
               <TextField
                 fullWidth
                 label="Phone"
                 name="phone"
-                value={editableProfile.phone}
-                onChange={handleChange}
-                color='secondary'
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                required
               />
               <TextField
                 fullWidth
                 label="Address"
                 name="address"
-                value={editableProfile.address}
-                onChange={handleChange}
-                color='secondary'
+                value={address}
+                onChange={e => setAddress(e.target.value)}
+                required
               />
-              {/* <TextField
-                fullWidth
-                label="Specialty"
-                name="specialty"
-                value={editableProfile.specialty}
-                onChange={handleChange}
-              /> */}
               <TextField
                 fullWidth
                 label="Counselor Registration Number"
-                name="counselorRegistrationNumber"
-                value={editableProfile.counselorRegistrationNumber}
-                onChange={handleChange}
-                color='secondary'
+                name="counselorrRegistrationNumber"
+                value={registrationNo}
+                onChange={e => setRegistrationNo(e.target.value)}
+                required
               />
               <Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="contained" sx={{backgroundColor:'primary.dark',":hover":{backgroundColor: 'primary.light'}}} onClick={() => { window.location.reload() }}>
+                <Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
                   Discard
                 </Button>
-                <Button variant="contained" color="primary" type="submit"  onClick={handleSave}>
+                <Button variant="contained" color="primary" type="submit" onClick={handleSave}>
                   Submit
                 </Button>
               </Stack>
@@ -122,6 +105,6 @@ export default function CounselorProfileScreen() {
         </>
       </Container>
     </Box>
-
+    </ThemeProvider>
   );
 }
