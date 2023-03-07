@@ -32,9 +32,11 @@ import PatientProfileScreen from './PatientProfileScreen';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { patientTheme } from '../Themes';
-
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
+import { useAppSelector } from '../app/hooks';
+import UserProfileMenu from '../components/UserProfileMenu';
 
 
 const drawerWidth = 240;
@@ -113,10 +115,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 			'& .MuiDrawer-paper': closedMixin(theme),
 		}),
 	}),
-	
+
 );
 
 export default function PatientHomeScreen() {
+	const { userInfo } = useAppSelector(selectUserLogIn);
+
+	// console.log(window.location.href.split("/"));
+
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 	const navigate = useNavigate();
@@ -154,7 +160,7 @@ export default function PatientHomeScreen() {
 				)
 			)}
 		</List>
-	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }, { text: "Sign Out", icon: LogoutIcon }]
+	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }]
 	const drawerAccountOptionsList =
 		<List>
 			{drawerAccountOptionsTextIcons.map(
@@ -183,21 +189,6 @@ export default function PatientHomeScreen() {
 			)}
 		</List>
 
-	const breadcrumbs = [
-		<Link underline="hover" key="1" color="inherit" to="/patient" component={RouterLink}>
-			Home
-		</Link>,
-		<Link
-			underline="hover"
-			key="2"
-			color="inherit"
-			to="/patient/dashboard"
-			component={RouterLink}
-		>
-			Dashboard
-		</Link>
-	];
-
 	const handleDrawerOpen = () => {
 		setOpen(true);
 	};
@@ -208,50 +199,48 @@ export default function PatientHomeScreen() {
 
 	return (
 		<ThemeProvider theme={patientTheme}>
-		<Box sx={{ display: 'flex' }}>
-			<CssBaseline />
-			<AppBar position="fixed" open={open}>
-				<Toolbar>
-					<IconButton
-						color="inherit"
-						aria-label="open drawer"
-						onClick={handleDrawerOpen}
-						edge="start"
-						sx={{
-							marginRight: 5,
-							...(open && { display: 'none' }),
-						}}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "baseline" }}>
-						<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
-							Depression Care
-						</Typography>
-						<Breadcrumbs separator="›" aria-label="breadcrumb" color="primary.contrastText">
-							{breadcrumbs}
-						</Breadcrumbs>
-					</Stack>
-				</Toolbar>
-			</AppBar>
-			<Drawer variant="permanent" open={open}>
-				<DrawerHeader sx={{ justifyContent: 'space-between' }}>
-					<Avatar>P</Avatar>
-					<Typography>Patient</Typography>
-					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-					</IconButton>
-				</DrawerHeader>
-				<Divider />
-				{drawerUserOptionsList}
-				<Divider />
-				{drawerAccountOptionsList}
-			</Drawer>
-			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-				<DrawerHeader />
-				<Outlet />
+			<Box sx={{ display: 'flex' }}>
+				<CssBaseline />
+				<AppBar position="fixed" open={open}>
+					<Toolbar>
+						<IconButton
+							color="inherit"
+							aria-label="open drawer"
+							onClick={handleDrawerOpen}
+							edge="start"
+							sx={{
+								marginRight: 5,
+								...(open && { display: 'none' }),
+							}}
+						>
+							<MenuIcon />
+						</IconButton>
+						<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
+							<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
+								Depression Care
+							</Typography>
+							<UserProfileMenu />
+						</Stack>
+					</Toolbar>
+				</AppBar>
+				<Drawer variant="permanent" open={open}>
+					<DrawerHeader sx={{ justifyContent: 'space-between' }}>
+						<Avatar>{userInfo?.userData.name.charAt(0)}</Avatar>
+						<Typography>{userInfo?.userData.name}</Typography>
+						<IconButton onClick={handleDrawerClose}>
+							{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+						</IconButton>
+					</DrawerHeader>
+					<Divider />
+					{drawerUserOptionsList}
+					<Divider />
+					{drawerAccountOptionsList}
+				</Drawer>
+				<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+					<DrawerHeader />
+					<Outlet />
+				</Box>
 			</Box>
-		</Box>
 		</ThemeProvider>
 	);
 }

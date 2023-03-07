@@ -3,28 +3,43 @@ import {
 	Button, Paper, Stack, TextField, Link, Typography, Container, Box, FormControl, InputLabel, MenuItem, Select,
 } from '@mui/material';
 import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import backdrop from "./../assets/images/backdrop.jpg";
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { baseTheme } from '../Themes';
+import { selectUserLogIn, logIn } from '../features/auth/userLogInSlice';
+import { roleToPosition } from '../constants/PositionRoleMap';
+import { red } from '@mui/material/colors';
 
 export default function LogInScreen() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	let initPosition = searchParams.get("position");
 	if (!initPosition) initPosition = "patient";
 
+	const location = useLocation();
+	const navigate = useNavigate();
+	const userLogIn = useAppSelector(selectUserLogIn);
+	const { userInfo, loading, error, errorMessage } = userLogIn;
+	const dispatch = useAppDispatch();
+
 	// const [email, setEmail] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [position, setPosition] = useState(initPosition);
 
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+		dispatch(logIn(email, password));
 	};
+
+	useEffect(() => {
+		if (userInfo) {
+			const redirect = `/${roleToPosition.get(userInfo.userData.role)}`
+			navigate(redirect);
+		}
+	}, [userInfo]);
 
 	return (
 		<ThemeProvider theme={baseTheme}>
@@ -42,28 +57,6 @@ export default function LogInScreen() {
 					<form onSubmit={handleSubmit}>
 						<Stack spacing={5} padding={5}>
 							<Typography variant="h4">Log In</Typography>
-							<div>
-								<FormControl fullWidth>
-									<InputLabel variant="outlined" htmlFor="position">
-										Position
-									</InputLabel>
-									<Select
-										labelId="position-field"
-										id="position"
-										value={position}
-										onChange={e => setPosition(e.target.value)}
-										label="Position"
-										required
-										autoFocus
-									>
-										<MenuItem value="patient">Patient</MenuItem>
-										<MenuItem value="doctor">Doctor</MenuItem>
-										<MenuItem value="counselor">Counselor</MenuItem>
-										<MenuItem value="manager">Manager</MenuItem>
-									</Select>
-								</FormControl>
-
-							</div>
 							<TextField
 								id="email-field"
 								label="Email"
@@ -84,10 +77,10 @@ export default function LogInScreen() {
 								autoComplete="current-password"
 								required
 							/>
-
+							{userLogIn.error && <Typography color={red[500]}>{userLogIn.errorMessage}</Typography>}
 							<Stack direction="row" spacing={5}>
 								<Stack>
-									<Link component={RouterLink} to={`/Register?position=${position}`} color='primary'>
+									<Link component={RouterLink} to={`/Register`} color='primary'>
 										New user? Sign up!
 									</Link>
 									<Link component={RouterLink} to={`/forgot_password`} color='primary'>

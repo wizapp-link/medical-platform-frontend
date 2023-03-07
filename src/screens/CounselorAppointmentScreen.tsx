@@ -55,82 +55,52 @@ export default function CounselorAppointmentScreen(props: any) {
     doctorRegistrationNumber: string;
   };
 
-
-  // const handleAssessmentButtonClick = (patient: Patient) => {
-  //   setSelectedPatient(patient);
-  //   setShowAssessmentDialog(true);
-  // };
-
-  // const handleDetailButtonClick = (patient: Patient) => {
-  //   setSelectedPatient(patient);
-  //   setShowDetailDialog(true);
-  // };
-
-  // const handleClose = () => {
-  //   setShowAssessmentDialog(false);
-  //   setShowDetailDialog((false));
-  // };
-
-
   return (
     <ThemeProvider theme={counselorTheme}>
       <Box sx={{ padding: 2 }}>
 
         <Typography variant="h4" gutterBottom>
           Appointment List
-          <List>
+          <List sx={{ marginTop: 3 }}>
             {patients.map((patient) => (
               <ListItem key={patient.id} disablePadding>
-                <ListItemAvatar>
-                  <Avatar alt="patient" src="" />
-                </ListItemAvatar>
-                <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
-                  style={{ flexBasis: "40%", flexGrow: 0, flexShrink: 0 }} />
-                <ListItemAvatar>
-                  <Avatar alt="doctor" src="/static/images/doctor/sampleDoctor.jpg" />
-                </ListItemAvatar>
-                <ListItemText
-                  primary="Dr. Gregory House"
-                  secondary="Date: 2023-02-12 "
-                  style={{ flexBasis: "40%", flexGrow: 0, flexShrink: 0 }}
-                >
-                  {" - 16:00 to 17:00"}
-                </ListItemText>
-                <Button variant="outlined" color="secondary">Remove</Button>
+
+                <Box display="flex" justifyContent="space-between" flexGrow={1} alignItems="center">
+
+
+                  <Box display="flex" alignContent="center" justifyContent="space-between" width="20rem">
+                    <Box display="flex" alignContent="center" >
+                      <ListItemAvatar sx={{ display: "flex", justifyItems: "center", alignItems: "center" }}>
+                        <Avatar alt="patient" src="" />
+                      </ListItemAvatar>
+                      <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
+                      />
+                    </Box>
+
+                    <Box display="flex" alignContent="center">
+                      <ListItemAvatar sx={{ display: "flex", justifyItems: "center", alignItems: "center" }}>
+                        <Avatar alt="doctor" src="/static/images/doctor/sampleDoctor.jpg" />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary="Dr. Gregory House"
+                        secondary="Date: 2023-02-12 "
+                      >
+                        {" - 16:00 to 17:00"}
+                      </ListItemText>
+                    </Box>
+
+                  </Box>
+
+                  <Stack>
+                    <Button variant="outlined" color="secondary">Remove</Button>
+
+                  </Stack>
+                </Box>
+
               </ListItem>
             ))}
           </List>
         </Typography>
-        {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
-        <DialogTitle>{selectedPatient?.name}</DialogTitle>
-        <DialogContent>
-          <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
-          <Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
-          <Typography variant="h6">Self-Assessment Results</Typography>
-          <List>
-            {selectedPatient?.selfAssessmentResults.map((result) => (
-              <ListItem key={result}>
-                <ListItemText primary={result} />
-              </ListItem>
-            ))}
-          </List>
-        </DialogContent>
-      </Dialog> */}
-        {/* <Dialog open={showDetailDialog} onClose={handleClose}>
-        <DialogTitle>{selectedPatient?.name}</DialogTitle>
-        <DialogContent>
-          <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
-          <Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
-          <Typography variant="h6">Detailed Information</Typography>
-          <Typography variant="subtitle1">Address: {selectedPatient?.address}</Typography>
-          <Typography variant="subtitle1">Date of Birth: {selectedPatient?.dob}</Typography>
-          <Typography variant="subtitle1">Phone Number: {selectedPatient?.phoneNumber}</Typography>
-          <Typography variant="subtitle1">Email Address: {selectedPatient?.emailAddress}</Typography>
-          <Typography variant="subtitle1">
-            Doctor Registration Number: {selectedPatient?.doctorRegistrationNumber}
-          </Typography>
-        </DialogContent>
-      </Dialog> */}
 
       </Box>
     </ThemeProvider>

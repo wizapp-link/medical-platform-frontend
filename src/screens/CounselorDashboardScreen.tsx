@@ -4,11 +4,14 @@ import * as React from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useState } from "react";
-
 import { height } from '@mui/system';
-
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { counselorTheme } from '../Themes';
+import { useSelector } from "react-redux";
+import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
+import { flexbox } from '@mui/system';
+import { spacing } from '@mui/system';
 
 
 
@@ -67,13 +70,14 @@ export default function CounselorDashboardScreen(props: any) {
 		setShowAssessmentDialog(false);
 		// setShowDetailDialog((false));
 	};
+	const { userInfo } = useAppSelector(selectUserLogIn);
 
 
 
 	return <ThemeProvider theme={counselorTheme}>
 		<Stack padding={2} spacing={2}>
 			<Typography variant='h3' color={'primary.contrastText'}>
-				Good day! Counselor!
+				Good day! {userInfo?.userData.name}!
 			</Typography>
 			<Typography variant='h5' color={'primary.contrastText'}>
 				How can we help you?
@@ -83,6 +87,34 @@ export default function CounselorDashboardScreen(props: any) {
 			{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
 			<Button variant="contained" sx={{ backgroundColor: 'primary.dark', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>View Appointments</Button>
 			<Divider />
+			<Typography variant='h5' color={'primary.contrastText'}>
+				Recent Patient List
+			</Typography>
+
+			<List >
+				{patients.map((patient) => (
+					<ListItem key={patient.id} disablePadding>
+						<ListItemAvatar>
+							<Avatar alt="patient" src="" />
+						</ListItemAvatar>
+						<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
+							sx={{
+								flexGrow: 0,
+								flexShrink: 0,
+								flexBasis: '5%'
+							}} />
+						<Box display="flex" justifyContent="space-between" flexGrow={1}>
+							<Button variant="outlined" onClick=
+								{() => handleAssessmentButtonClick(patient)}>
+								Self-Assessment
+							</Button>
+
+
+							<Stack direction="row" spacing={2} sx={{ flexDirection: 'row', }}>
+								<Button variant="contained">Assign</Button>
+								<Button variant="outlined" color="secondary">Reject</Button>
+							</Stack>
+						</Box>
 
 
 			<Stack>
@@ -138,10 +170,30 @@ export default function CounselorDashboardScreen(props: any) {
 						</Dialog>
 
 						<Divider variant="inset" component="li" />
-					</ListItem>
-				</List>
 
-			</Stack>
+					</ListItem>
+				))}
+
+
+
+			</List>
+
+			<Dialog open={showAssessmentDialog} onClose={handleClose}>
+				<DialogTitle color={'primary.contrastText'}>{selectedPatient?.name}</DialogTitle>
+				<DialogContent>
+					<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
+					<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
+					<Typography variant="h6" color={'primary.contrastText'}>Self-Assessment Results</Typography>
+					<List>
+						{selectedPatient?.selfAssessmentResults.map((result) => (
+							<ListItem key={result} sx={{ color: 'primary.contrastText' }}>
+								<ListItemText primary={result} sx={{ color: 'primary.contrastText' }} />
+							</ListItem>
+						))}
+					</List>
+				</DialogContent>
+			</Dialog>
+
 		</Stack>
 	</ThemeProvider>
 }

@@ -1,478 +1,122 @@
-import { CheckBox, Fullscreen } from "@mui/icons-material";
-import {
-  Box,
-  Typography,
-  Stack,
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Paper,
-  Checkbox,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Tabs,
-  Tab,
-} from "@mui/material";
-import * as React from "react";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import CloseIcon from "@mui/icons-material/Close";
 
-import { height } from "@mui/system";
+import { CheckBox } from '@mui/icons-material';
+import { Box, Typography, Stack, Button, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, Checkbox, IconButton, Dialog, DialogTitle, DialogContent, Snackbar } from '@mui/material';
+import * as React from 'react';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { useState, useEffect } from "react";
+import { UserData } from '../types/UserDataType';
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
+import { selectPersonnelList, listAllPersonnel, updatePersonnel, listPersonnel } from '../features/manager/personnelsSlice';
+import { useAppSelector, useAppDispatch } from '../app/hooks';
+import { roleToPosition } from '../constants/PositionRoleMap';
+import PersonnelList from '../components/PersonnelList';
+import personnelStatus from '../constants/PersonnelStatus';
 
-import { createTheme, ThemeProvider, colors } from "@mui/material";
-import { counselorTheme } from "../Themes";
 
 export default function ManagerDashboardScreen(props: any) {
-  const [doctors, setDoctor] = useState<Doctor[]>([
-    {
-      name: "Alice",
-      address: "address",
-      dob: "1998/01/01",
-      phoneNumber: 5140000000,
-      emailAddress: "Alice@gmail.com",
-      doctorRegistrationNumber: "88888888",
-    },
-    {
-      name: "Ben",
-      address: "address2",
-      dob: "1998/01/02",
-      phoneNumber: 5140000001,
-      emailAddress: "Ben@gmail.com",
-      doctorRegistrationNumber: "77777777",
-    },
-    {
-      name: "Alex",
-      address: "address3",
-      dob: "1998/01/03",
-      phoneNumber: 5140000002,
-      emailAddress: "Alex@gmail.com",
-      doctorRegistrationNumber: "99999999",
-    },
-  ]);
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-  const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
+	const { userInfo } = useAppSelector(selectUserLogIn);
+	const personnelList = useAppSelector(selectPersonnelList);
+	const dispatch = useAppDispatch();
 
-  type Doctor = {
-    name: string;
-    emailAddress: string;
-    phoneNumber: number;
-    dob: string;
-    address: string;
-    doctorRegistrationNumber: string;
-  };
-  const handleAssessmentButtonClick = (doctor: Doctor) => {
-    setSelectedDoctor(doctor);
-    setShowAssessmentDialog(true);
-  };
-  const handleClose = () => {
-    setShowAssessmentDialog(false);
-    // setShowDetailDialog((false));
-  };
+	const [selectedPerson, setSelectedPerson] = useState<UserData | null>(null);
+	const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
+	const [personnelUpdateMessage, setPersonnelUpdateMessage] = useState(personnelList.personnelUpdateMessage);
 
-  const [tabIndex, setTabIndex] = useState(0);
-  const handleTabChange = (
-    event: any,
-    newTabIndex: React.SetStateAction<number>
-  ) => {
-    setTabIndex(newTabIndex);
-  };
+	const handleAssessmentButtonClick = (user: UserData) => {
+		setSelectedPerson(user);
+		setShowAssessmentDialog(true);
+	};
+	const handleClose = () => {
+		setShowAssessmentDialog(false);
+		// setShowDetailDialog((false));
+	};
 
-  return (
-    <ThemeProvider theme={counselorTheme}>
-      <Stack padding={2} spacing={2}>
-        <Typography variant="h3">Good day! Manager!</Typography>
-        {/* if the assessment is not completed */}
-        {/* <Button variant="contained">Complete the assessment</Button> */}
-        {/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
-        <Divider />
+	const handleAccept = (user: UserData) => {
+		dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.verified))
+		dispatch(listPersonnel(userInfo?.token, user.role, true))
+	}
 
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={tabIndex} onChange={handleTabChange} centered>
-            <Tab label="Doctors" sx={{ width: 500 }} />
-            <Tab label="Counselors" sx={{ width: 500 }} />
-            <Tab label="Patients" sx={{ width: 500 }} />
-          </Tabs>
-        </Box>
-        <Box>
-          {tabIndex === 0 && (
-            <Box>
-              <Stack>
-                <Typography variant="h5">Doctors</Typography>
-                <List>
-                  <ListItem>
-                    <List>
-                      {doctors.map((doctor) => (
-                        <ListItem
-                          key={doctor.doctorRegistrationNumber}
-                          disablePadding
-                        >
-                          <ListItemAvatar>
-                            <Avatar alt="doctor" src="" />
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={doctor.name}
-                            secondary={`ID: ${doctor.doctorRegistrationNumber}`}
-                            sx={{
-                              flexGrow: 0,
-                              flexShrink: 0,
-                              flexBasis: "5%",
-                            }}
-                          />
-                          <ListItemText primary="   " />
-                          <Button
-                            sx={{
-                              flexGrow: 0,
-                              flexShrink: 0,
-                              width: 80,
-                              height: 40,
-                            }}
-                            variant="outlined"
-                            onClick={() => handleAssessmentButtonClick(doctor)}
-                          >
-                            Details
-                          </Button>
+	const handleReject = (user: UserData) => {
+		dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined))
+		dispatch(listPersonnel(userInfo?.token, user.role, true))
+	}
 
-                          <Stack direction={"row"} spacing={2} pl={90}>
-                            <Button sx={{ height: 50 }} variant="contained">
-                              Accept
-                            </Button>
-                            <Button
-                              sx={{ height: 50 }}
-                              variant="outlined"
-                              color="secondary"
-                            >
-                              Reject
-                            </Button>
-                          </Stack>
-                        </ListItem>
-                      ))}
-                    </List>
+	// const [successfullyReject, setSuccessfullyReject] = useState(false)
+	// const [successfullyAccept, setSuccessfullyAccept] = useState(false)
+	// const [, setOpenChanged] = useState(false)
+	// const [openNotFilled, setOpenNotFilled] = useState(false)
 
-                    <Dialog
-                      open={showAssessmentDialog}
-                      onClose={handleClose}
-                      fullScreen
-                    >
-                      <DialogTitle color={"primary.contrastText"}>
-                        {selectedDoctor?.name}
-                      </DialogTitle>
-                      <DialogContent>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Name: {selectedDoctor?.name}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          ID: {selectedDoctor?.doctorRegistrationNumber}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Address: {selectedDoctor?.address}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Date of Birth: {selectedDoctor?.dob}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Phone Number: {selectedDoctor?.phoneNumber}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Email Address: {selectedDoctor?.emailAddress}
-                        </Typography>
-                        <DialogActions>
-                          <Stack direction={"row"} spacing={2} pl={90}>
-                            <Button sx={{ height: 40 }} variant="contained">
-                              Assign
-                            </Button>
-                            <Button
-                              sx={{ height: 40 }}
-                              variant="outlined"
-                              color="secondary"
-                            >
-                              Reject
-                            </Button>
-                          </Stack>
-                        </DialogActions>
-                      </DialogContent>
-                    </Dialog>
+	const handleSnackbarClose = () => {
+		setPersonnelUpdateMessage("")
+	};
 
-                    <Divider variant="inset" component="li" />
-                  </ListItem>
-                </List>
-              </Stack>
-            </Box>
-          )}
-          {tabIndex === 1 && (
-            <Box>
-              <Stack>
-                <Typography variant="h5">Counselors</Typography>
-                <List>
-                  <ListItem>
-                    <List>
-                      {doctors.map((doctor) => (
-                        <ListItem
-                          key={doctor.doctorRegistrationNumber}
-                          disablePadding
-                        >
-                          <ListItemAvatar>
-                            <Avatar alt="doctor" src="" />
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={doctor.name}
-                            secondary={`ID: ${doctor.doctorRegistrationNumber}`}
-                            sx={{
-                              flexGrow: 0,
-                              flexShrink: 0,
-                              flexBasis: "5%",
-                            }}
-                          />
-                          <ListItemText primary="   " />
-                          <Button
-                            sx={{
-                              flexGrow: 0,
-                              flexShrink: 0,
-                              width: 80,
-                              height: 40,
-                            }}
-                            variant="outlined"
-                            onClick={() => handleAssessmentButtonClick(doctor)}
-                          >
-                            Details
-                          </Button>
+	useEffect(() => {
+		dispatch(listAllPersonnel(userInfo?.token, true));
+	}, [])
 
-                          <Stack direction={"row"} spacing={2} pl={90}>
-                            <Button sx={{ height: 50 }} variant="contained">
-                              Accept
-                            </Button>
-                            <Button
-                              sx={{ height: 50 }}
-                              variant="outlined"
-                              color="secondary"
-                            >
-                              Reject
-                            </Button>
-                          </Stack>
-                        </ListItem>
-                      ))}
-                    </List>
+	return <Stack padding={2} spacing={2}>
+		<Typography variant='h3'>
+			Good day! Manager {userInfo?.userData.name}!
+		</Typography>
+		{/* <Typography variant='h5'>
+			How can we help you?
+		</Typography> */}
+		{/* if the assessment is not completed */}
+		{/* <Button variant="contained">Complete the assessment</Button> */}
+		{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
+		{/* <Button variant="contained">View Appointments</Button>
+		<Divider /> */}
 
-                    <Dialog
-                      open={showAssessmentDialog}
-                      onClose={handleClose}
-                      fullScreen
-                    >
-                      <DialogTitle color={"primary.contrastText"}>
-                        {selectedDoctor?.name}
-                      </DialogTitle>
-                      <DialogContent>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Name: {selectedDoctor?.name}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          ID: {selectedDoctor?.doctorRegistrationNumber}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Address: {selectedDoctor?.address}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Date of Birth: {selectedDoctor?.dob}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Phone Number: {selectedDoctor?.phoneNumber}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Email Address: {selectedDoctor?.emailAddress}
-                        </Typography>
-                        <DialogActions>
-                          <Stack direction={"row"} spacing={2} pl={90}>
-                            <Button sx={{ height: 40 }} variant="contained">
-                              Assign
-                            </Button>
-                            <Button
-                              sx={{ height: 40 }}
-                              variant="outlined"
-                              color="secondary"
-                            >
-                              Reject
-                            </Button>
-                          </Stack>
-                        </DialogActions>
-                      </DialogContent>
-                    </Dialog>
 
-                    <Divider variant="inset" component="li" />
-                  </ListItem>
-                </List>
-              </Stack>
-            </Box>
-          )}
-          {tabIndex === 2 && (
-            <Box>
-              <Stack>
-                <Typography variant="h5">Patients</Typography>
-                <List>
-                  <ListItem>
-                    <List>
-                      {doctors.map((doctor) => (
-                        <ListItem
-                          key={doctor.doctorRegistrationNumber}
-                          disablePadding
-                        >
-                          <ListItemAvatar>
-                            <Avatar alt="doctor" src="" />
-                          </ListItemAvatar>
-                          <ListItemText
-                            primary={doctor.name}
-                            secondary={`ID: ${doctor.doctorRegistrationNumber}`}
-                            sx={{
-                              flexGrow: 0,
-                              flexShrink: 0,
-                              flexBasis: "5%",
-                            }}
-                          />
-                          <ListItemText primary="   " />
-                          <Button
-                            sx={{
-                              flexGrow: 0,
-                              flexShrink: 0,
-                              width: 80,
-                              height: 40,
-                            }}
-                            variant="outlined"
-                            onClick={() => handleAssessmentButtonClick(doctor)}
-                          >
-                            Details
-                          </Button>
+		<Stack spacing={3}>
+			<Typography variant='h5'>
+				Recent list of requests
+			</Typography>
+			{personnelList.personnel &&
+				<Box>
+					{personnelList.personnel.pendingCounselors && <Typography variant='h6'>
+						Counselors
+					</Typography>}
+					<PersonnelList
+						users={personnelList.personnel.pendingCounselors} handleAssessmentButtonClick={handleAssessmentButtonClick}
+						handleAccept={handleAccept}
+						handleReject={handleReject}
+					/>
+					{personnelList.personnel.pendingDoctors && <Typography variant='h6'>
+						Doctors
+					</Typography>}
+					<PersonnelList
+						users={personnelList.personnel.pendingDoctors}
+						handleAssessmentButtonClick={handleAssessmentButtonClick}
+						handleAccept={handleAccept}
+						handleReject={handleReject}
+					/>
+				</Box>
 
-                          <Stack direction={"row"} spacing={2} pl={90}>
-                            <Button sx={{ height: 50 }} variant="contained">
-                              Accept
-                            </Button>
-                            <Button
-                              sx={{ height: 50 }}
-                              variant="outlined"
-                              color="secondary"
-                            >
-                              Reject
-                            </Button>
-                          </Stack>
-                        </ListItem>
-                      ))}
-                    </List>
+			}
 
-                    <Dialog
-                      open={showAssessmentDialog}
-                      onClose={handleClose}
-                      fullScreen
-                    >
-                      <DialogTitle color={"primary.contrastText"}>
-                        {selectedDoctor?.name}
-                      </DialogTitle>
-                      <DialogContent>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Name: {selectedDoctor?.name}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          ID: {selectedDoctor?.doctorRegistrationNumber}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Address: {selectedDoctor?.address}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Date of Birth: {selectedDoctor?.dob}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Phone Number: {selectedDoctor?.phoneNumber}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          color={"primary.contrastText"}
-                        >
-                          Email Address: {selectedDoctor?.emailAddress}
-                        </Typography>
-                        <DialogActions>
-                          <Stack direction={"row"} spacing={2} pl={90}>
-                            <Button sx={{ height: 40 }} variant="contained">
-                              Assign
-                            </Button>
-                            <Button
-                              sx={{ height: 40 }}
-                              variant="outlined"
-                              color="secondary"
-                            >
-                              Reject
-                            </Button>
-                          </Stack>
-                        </DialogActions>
-                      </DialogContent>
-                    </Dialog>
+		</Stack>
+		<Dialog open={showAssessmentDialog} onClose={handleClose}>
+			<DialogTitle>{selectedPerson?.name}</DialogTitle>
+			<DialogContent>
+				<Typography variant="subtitle1">ID: {selectedPerson?.id}</Typography>
+				<Typography variant="subtitle1">Name: {selectedPerson?.name}</Typography>
+				<Typography variant="h6">Registration Information</Typography>
+				<Typography variant="subtitle1">Address: {selectedPerson?.address}</Typography>
+				<Typography variant="subtitle1">DOB: {selectedPerson?.dob}</Typography>
+				<Typography variant="subtitle1">Phone Number: {selectedPerson?.phone}</Typography>
+				<Typography variant="subtitle1">Type: {selectedPerson ? roleToPosition.get(selectedPerson?.role) : null}</Typography>
+				<Typography variant="subtitle1">Email Address: {selectedPerson?.email}</Typography>
 
-                    <Divider variant="inset" component="li" />
-                  </ListItem>
-                </List>
-              </Stack>
-            </Box>
-          )}
-        </Box>
-      </Stack>
-    </ThemeProvider>
-  );
+
+			</DialogContent>
+		</Dialog>
+		<Snackbar
+			open={personnelUpdateMessage !== ""}
+			message={personnelUpdateMessage}
+			autoHideDuration={5000}
+			onClose={handleSnackbarClose}
+		/>
+	</Stack>
 }

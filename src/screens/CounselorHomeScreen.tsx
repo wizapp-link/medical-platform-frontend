@@ -5,6 +5,7 @@ import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
+import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -25,13 +26,15 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DrawerOptionTextIconsType from '../types/DrawerOptionTextIconsType';
-import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate, Link as RouterLink } from 'react-router-dom';
 import PatientDashboardScreen from './PatientDashboardScreen';
 import PatientProfileScreen from './PatientProfileScreen';
-import { createTheme, ThemeProvider, colors} from '@mui/material';
+import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { counselorTheme } from '../Themes';
-
-
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
+import { useAppSelector } from '../app/hooks';
+import UserProfileMenu from '../components/UserProfileMenu';
+import Stack from '@mui/material/Stack';
 
 const drawerWidth = 240;
 const backgroundColor = '#C8F8EA';
@@ -65,7 +68,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
-	justifyContent: 'flex-end',
+	justifyContent: 'space-between',
 	padding: theme.spacing(0, 1),
 	// necessary for content to be below app bar
 	...theme.mixins.toolbar,
@@ -113,6 +116,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function CounselorHomeScreen() {
+	const { userInfo } = useAppSelector(selectUserLogIn);
+
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 	const navigate = useNavigate();
@@ -151,7 +156,7 @@ export default function CounselorHomeScreen() {
 				)
 			)}
 		</List>
-	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }, { text: "Sign Out", icon: LogoutIcon }]
+	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }]
 	const drawerAccountOptionsList =
 		<List>
 			{drawerAccountOptionsTextIcons.map(
@@ -191,43 +196,48 @@ export default function CounselorHomeScreen() {
 
 	return (
 		<ThemeProvider theme={counselorTheme}>
-		<Box sx={{ display: 'flex' }}>
-			<CssBaseline />
-			<AppBar position="fixed" open={open}>
-				<Toolbar>
-					<IconButton
-						color="inherit"
-						aria-label="open drawer"
-						onClick={handleDrawerOpen}
-						edge="start"
-						sx={{
-							marginRight: 5,
-							...(open && { display: 'none' }),
-						}}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant="h6" noWrap component="div">
-						Depression Care
-					</Typography>
-				</Toolbar>
-			</AppBar>
-			<Drawer variant="permanent" open={open}>
-				<DrawerHeader>
-					<IconButton onClick={handleDrawerClose}>
-						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-					</IconButton>
-				</DrawerHeader>
-				<Divider />
-				{drawerUserOptionsList}
-				<Divider />
-				{drawerAccountOptionsList}
-			</Drawer>
-			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-				<DrawerHeader />
-				<Outlet />
+			<Box sx={{ display: 'flex' }}>
+				<CssBaseline />
+				<AppBar position="fixed" open={open}>
+					<Toolbar>
+						<IconButton
+							color="inherit"
+							aria-label="open drawer"
+							onClick={handleDrawerOpen}
+							edge="start"
+							sx={{
+								marginRight: 5,
+								...(open && { display: 'none' }),
+							}}
+						>
+							<MenuIcon />
+						</IconButton>
+						<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
+							<Typography variant="h6" noWrap component="div">
+								Depression Care
+							</Typography>
+							<UserProfileMenu />
+						</Stack>
+					</Toolbar>
+				</AppBar>
+				<Drawer variant="permanent" open={open}>
+					<DrawerHeader sx={{ justifyContent: 'space-between' }}>
+						<Avatar>{userInfo?.userData.name.charAt(0)}</Avatar>
+						<Typography>{userInfo?.userData.name}</Typography>
+						<IconButton onClick={handleDrawerClose}>
+							{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+						</IconButton>
+					</DrawerHeader>
+					<Divider />
+					{drawerUserOptionsList}
+					<Divider />
+					{drawerAccountOptionsList}
+				</Drawer>
+				<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+					<DrawerHeader />
+					<Outlet />
+				</Box>
 			</Box>
-		</Box>
 		</ThemeProvider>
 	);
 }

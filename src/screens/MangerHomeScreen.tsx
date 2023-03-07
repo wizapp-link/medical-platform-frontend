@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
-import Avatar from '@mui/material/Avatar';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
@@ -26,20 +25,14 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DrawerOptionTextIconsType from '../types/DrawerOptionTextIconsType';
-import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate, Link as RouterLink } from 'react-router-dom';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import { createTheme, ThemeProvider, colors} from '@mui/material';
-import { doctorTheme, patientTheme } from "../Themes";
+import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
 import UserProfileMenu from '../components/UserProfileMenu';
-import { useAppSelector } from "../app/hooks";
-import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import { Stack, Avatar } from '@mui/material';
+import { useAppSelector } from '../app/hooks';
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
 
 
 const drawerWidth = 240;
-const backgroundColor = '#7676FF';
-const textColor = '#FFFFFF';
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: drawerWidth,
@@ -48,8 +41,6 @@ const openedMixin = (theme: Theme): CSSObject => ({
 		duration: theme.transitions.duration.enteringScreen,
 	}),
 	overflowX: 'hidden',
-	color: textColor,
-	backgroundColor: backgroundColor
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -62,18 +53,15 @@ const closedMixin = (theme: Theme): CSSObject => ({
 	[theme.breakpoints.up('sm')]: {
 		width: `calc(${theme.spacing(8)} + 1px)`,
 	},
-	color: textColor,
-	backgroundColor: backgroundColor
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
-	justifyContent: 'space-between',
+	justifyContent: 'flex-end',
 	padding: theme.spacing(0, 1),
 	// necessary for content to be below app bar
 	...theme.mixins.toolbar,
-	
 }));
 
 interface AppBarProps extends MuiAppBarProps {
@@ -96,8 +84,6 @@ const AppBar = styled(MuiAppBar, {
 			duration: theme.transitions.duration.enteringScreen,
 		}),
 	}),
-	color: textColor,
-	backgroundColor: backgroundColor
 }));
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -117,15 +103,20 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 	}),
 );
 
-export default function DoctorHomeScreen() {
+export default function ManagerHomeScreen() {
+	const { userInfo } = useAppSelector(selectUserLogIn);
+
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 	const navigate = useNavigate();
-	const { userInfo } = useAppSelector(selectUserLogIn);
 
 	const handleIconButtonClicks = (text: string) => () => {
 		// change text to lower case and remove whitespace, nagigate to the destination
-		navigate(text.toLowerCase().replace(/\s/g, ''));
+		if (text === "Sign Out") {
+			navigate("/signout");
+		} else {
+			navigate(text.toLowerCase().replace(/\s/g, ''));
+		}
 	}
 
 	const drawerUserOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Dashboard", icon: HomeIcon }, { text: "Appointments", icon: CalendarMonthIcon }, { text: "Profile", icon: AccountBoxIcon }];
@@ -139,14 +130,13 @@ export default function DoctorHomeScreen() {
 							justifyContent: open ? 'initial' : 'center',
 							px: 2.5
 						}}
-														onClick={handleIconButtonClicks(item.text)}
+							onClick={handleIconButtonClicks(item.text)}
 						>
 							<ListItemIcon
 								sx={{
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
-									color: textColor
 								}}
 							>
 								<item.icon />
@@ -157,7 +147,7 @@ export default function DoctorHomeScreen() {
 				)
 			)}
 		</List>
-	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }]
+	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Settings", icon: SettingsIcon }, { text: "Sign Out", icon: LogoutIcon }]
 	const drawerAccountOptionsList =
 		<List>
 			{drawerAccountOptionsTextIcons.map(
@@ -168,14 +158,13 @@ export default function DoctorHomeScreen() {
 							justifyContent: open ? 'initial' : 'center',
 							px: 2.5
 						}}
-														onClick={handleIconButtonClicks(item.text)}
+							onClick={handleIconButtonClicks(item.text)}
 						>
 							<ListItemIcon
 								sx={{
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
-									color: textColor
 								}}
 							>
 								<item.icon />
@@ -187,21 +176,6 @@ export default function DoctorHomeScreen() {
 			)}
 		</List>
 
-	const breadcrumbs = [
-		<Link underline="hover" key="1" color="inherit" to="/doctor" component={RouterLink}>
-			Home
-		</Link>,
-		<Link
-			underline="hover"
-			key="2"
-			color="inherit"
-			to="/doctor/dashboard"
-			component={RouterLink}
-		>
-			Dashboard
-		</Link>
-	];
-
 	const handleDrawerOpen = () => {
 		setOpen(true);
 	};
@@ -211,49 +185,47 @@ export default function DoctorHomeScreen() {
 	};
 
 	return (
-		<ThemeProvider theme={patientTheme}>
-			<Box sx={{ display: 'flex' }}>
-				<CssBaseline />
-				<AppBar position="fixed" open={open}>
-					<Toolbar>
-						<IconButton
-							color="inherit"
-							aria-label="open drawer"
-							onClick={handleDrawerOpen}
-							edge="start"
-							sx={{
-								marginRight: 5,
-								...(open && { display: 'none' }),
-							}}
-						>
-							<MenuIcon />
-						</IconButton>
-						<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
-							<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
-								Depression Care
-							</Typography>
-							<UserProfileMenu />
-						</Stack>
-					</Toolbar>
-				</AppBar>
-				<Drawer variant="permanent" open={open}>
-					<DrawerHeader sx={{ justifyContent: 'space-between' }}>
-						<Avatar>{userInfo?.userData.name.charAt(0)}</Avatar>
-						<Typography>{userInfo?.userData.name}</Typography>
-						<IconButton onClick={handleDrawerClose}>
-							{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-						</IconButton>
-					</DrawerHeader>
-					<Divider />
-					{drawerUserOptionsList}
-					<Divider />
-					{drawerAccountOptionsList}
-				</Drawer>
-				<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-					<DrawerHeader />
-					<Outlet />
-				</Box>
+		<Box sx={{ display: 'flex' }}>
+			<CssBaseline />
+			<AppBar position="fixed" open={open}>
+				<Toolbar>
+					<IconButton
+						color="inherit"
+						aria-label="open drawer"
+						onClick={handleDrawerOpen}
+						edge="start"
+						sx={{
+							marginRight: 5,
+							...(open && { display: 'none' }),
+						}}
+					>
+						<MenuIcon />
+					</IconButton>
+					<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
+						<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
+							Depression Care
+						</Typography>
+						{/* <UserProfileMenu /> */}
+					</Stack>
+				</Toolbar>
+			</AppBar>
+			<Drawer variant="permanent" open={open}>
+				<DrawerHeader sx={{ justifyContent: 'space-between' }}>
+					{/* <Avatar>{userInfo?.userData.name.charAt(0)}</Avatar> */}
+					{/* <Typography>{userInfo?.userData.name}</Typography> */}
+					<IconButton onClick={handleDrawerClose}>
+						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+					</IconButton>
+				</DrawerHeader>
+				<Divider />
+				{drawerUserOptionsList}
+				<Divider />
+				{drawerAccountOptionsList}
+			</Drawer>
+			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+				<DrawerHeader />
+				<Outlet />
 			</Box>
-		</ThemeProvider>
+		</Box>
 	);
 }

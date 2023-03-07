@@ -5,15 +5,16 @@ import { patientTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppSelector } from '../app/hooks';
 
-export default function PatientProfileScreen(props: any) {
+export default function ManagerProfileScreen(props: any) {
 
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
 	const [name, setName] = useState(userInfo?.userData.name);
-	const [email, setEmail] = useState(userInfo?.userData.email);
 	const [phoneNumber, setPhoneNumber] = useState(userInfo?.userData.phone);
 	const [addr, setAddr] = useState(userInfo?.userData.address);
 	const [dob, setDob] = useState(userInfo?.userData.dob);
+	const [registrationNumber, setRegistrationNumber] = useState(userInfo?.userData.registrationNo);
+
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
@@ -26,17 +27,6 @@ export default function PatientProfileScreen(props: any) {
 					<form onSubmit={handleSubmit}>
 						<Stack spacing={5} padding={5}>
 							<Typography variant="h4">Profile</Typography>
-							<TextField
-								id="email-field"
-								label="E-mail"
-								variant="outlined"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-								autoComplete="email"
-								required
-								disabled
-								color='secondary'
-							/>
 							<TextField
 								id="name-field"
 								label="Name"
@@ -75,6 +65,16 @@ export default function PatientProfileScreen(props: any) {
 								label="Address"
 								value={addr}
 								onChange={e => setAddr(e.target.value)}
+								variant="outlined"
+								fullWidth
+								required
+								color='secondary'
+							/>
+							<TextField
+								id="registrationNo"
+								label="RegistrationNumber"
+								value={registrationNumber}
+								onChange={e => setRegistrationNumber(e.target.value)}
 								variant="outlined"
 								fullWidth
 								required
