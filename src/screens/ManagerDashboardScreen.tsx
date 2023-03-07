@@ -1,5 +1,5 @@
 import { CheckBox } from '@mui/icons-material';
-import { Box, Typography, Stack, Button, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, Checkbox, IconButton, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { Box, Typography, Stack, Button, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, Checkbox, IconButton, Dialog, DialogTitle, DialogContent, Snackbar } from '@mui/material';
 import * as React from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -20,6 +20,7 @@ export default function ManagerDashboardScreen(props: any) {
 
 	const [selectedPerson, setSelectedPerson] = useState<UserData | null>(null);
 	const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
+	const [personnelUpdateMessage, setPersonnelUpdateMessage] = useState(personnelList.personnelUpdateMessage);
 
 	const handleAssessmentButtonClick = (user: UserData) => {
 		setSelectedPerson(user);
@@ -39,6 +40,15 @@ export default function ManagerDashboardScreen(props: any) {
 		dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined))
 		dispatch(listPersonnel(userInfo?.token, user.role, true))
 	}
+
+	// const [successfullyReject, setSuccessfullyReject] = useState(false)
+	// const [successfullyAccept, setSuccessfullyAccept] = useState(false)
+	// const [, setOpenChanged] = useState(false)
+	// const [openNotFilled, setOpenNotFilled] = useState(false)
+
+	const handleSnackbarClose = () => {
+		setPersonnelUpdateMessage("")
+	};
 
 	useEffect(() => {
 		dispatch(listAllPersonnel(userInfo?.token, true));
@@ -101,5 +111,11 @@ export default function ManagerDashboardScreen(props: any) {
 
 			</DialogContent>
 		</Dialog>
+		<Snackbar
+			open={personnelUpdateMessage !== ""}
+			message={personnelUpdateMessage}
+			autoHideDuration={5000}
+			onClose={handleSnackbarClose}
+		/>
 	</Stack>
 }
