@@ -31,7 +31,6 @@ import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
 import ManagerProfileScreen from './screens/ManagerProfileScreen';
 import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
 
-
 const patientTheme = createTheme({
 	palette: {
 		primary: {
@@ -101,7 +100,6 @@ function App() {
 						<Route path="profile" element={<ManagerProfileScreen />} />
 						<Route path="settings" element={<ManagerSettingsScreen />} />
 					</Route>
-
 				</Routes>
 			</div>
 		</Router>

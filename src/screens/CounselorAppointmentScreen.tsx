@@ -64,6 +64,7 @@ export default function CounselorAppointmentScreen(props: any) {
           <List sx={{ marginTop: 3 }}>
             {patients.map((patient) => (
               <ListItem key={patient.id} disablePadding>
+
                 <Box display="flex" justifyContent="space-between" flexGrow={1} alignItems="center">
 
 
@@ -95,6 +96,7 @@ export default function CounselorAppointmentScreen(props: any) {
 
                   </Stack>
                 </Box>
+
               </ListItem>
             ))}
           </List>
