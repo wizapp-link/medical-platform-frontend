@@ -26,8 +26,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DrawerOptionTextIconsType from '../types/DrawerOptionTextIconsType';
 import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
-import PatientDashboardScreen from './PatientDashboardScreen';
-import PatientProfileScreen from './PatientProfileScreen';
+import UserProfileMenu from '../components/UserProfileMenu';
+import { Stack, Avatar } from '@mui/material';
+import { useAppSelector } from '../app/hooks';
+import { selectUserLogIn } from '../features/auth/userLogInSlice';
 
 
 const drawerWidth = 240;
@@ -102,13 +104,19 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function ManagerHomeScreen() {
+	const { userInfo } = useAppSelector(selectUserLogIn);
+
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 	const navigate = useNavigate();
 
 	const handleIconButtonClicks = (text: string) => () => {
 		// change text to lower case and remove whitespace, nagigate to the destination
-		navigate(text.toLowerCase().replace(/\s/g, ''));
+		if (text === "Sign Out") {
+			navigate("/signout");
+		} else {
+			navigate(text.toLowerCase().replace(/\s/g, ''));
+		}
 	}
 
 	const drawerUserOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Dashboard", icon: HomeIcon }, { text: "Appointments", icon: CalendarMonthIcon }, { text: "Profile", icon: AccountBoxIcon }];
@@ -193,13 +201,18 @@ export default function ManagerHomeScreen() {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography variant="h6" noWrap component="div">
-						DepressionCare
-					</Typography>
+					<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
+						<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
+							Depression Care
+						</Typography>
+						{/* <UserProfileMenu /> */}
+					</Stack>
 				</Toolbar>
 			</AppBar>
 			<Drawer variant="permanent" open={open}>
-				<DrawerHeader>
+				<DrawerHeader sx={{ justifyContent: 'space-between' }}>
+					{/* <Avatar>{userInfo?.userData.name.charAt(0)}</Avatar> */}
+					{/* <Typography>{userInfo?.userData.name}</Typography> */}
 					<IconButton onClick={handleDrawerClose}>
 						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
 					</IconButton>

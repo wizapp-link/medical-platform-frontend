@@ -78,8 +78,9 @@ const personnelListSlice = createSlice({
 				}
 			}
 		},
-		personnelUpdateSuccess: (state) => {
+		personnelUpdateSuccess: (state, action: PayloadAction<string>) => {
 			state.personnelUpdateLoading = false;
+			state.personnelUpdateMessage = action.payload;
 		}
 	},
 });
@@ -152,12 +153,12 @@ export const updatePersonnel = (token: string | undefined, user: UserData, newSt
 		dispatch(personnelUpdateRequest())
 		console.log("in updatePersonnel, token");
 		console.log(token);
-		await axios({
+		const { data } = await axios({
 			method: "put",
 			url: `/api/v1/manager/updateUser?userId=${user.id}&status=${newStatus}`,
 			headers: { 'Authorization': `Bearer ${token}` }
 		})
-		dispatch(personnelUpdateSuccess());
+		dispatch(personnelUpdateSuccess(data.response));
 	} catch (err: any) {
 		const errorMessage = err.response ? err.response.data.response : err.message
 		console.log(errorMessage);

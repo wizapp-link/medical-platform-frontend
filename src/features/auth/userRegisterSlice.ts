@@ -66,25 +66,29 @@ export const register = (position: string, name: string, email: string, password
   try {
     
     if(!emailValidator.validate(email)){
-      throw new Error("Invalid Email!");
+      throw new Error("Invalid Email, please check the format!");
+    }
+
+    if(password.length < 8){
+      throw new Error("Password length should be greater or equal than 8!");
     }
 
     const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
     const parsedPhone = phoneUtil.parse(phoneNumber, "CA");
     if(!phoneUtil.isValidNumberForRegion(parsedPhone, "CA")){
-      throw new Error("Impossible Canadian phone number!");
+      throw new Error("Impossible Canadian phone number, please re-check!");
     }
     const phone = parsedPhone.getNationalNumber();
 
     if(position !== "patient" && (Number.isNaN(Number(registrationNumber)) || registrationNumber.length!=6)) {
       console.log(`Registration number string: ${registrationNumber}`);
-      throw new Error("Invalid registration number!");
+      throw new Error("Registration number should be 6-digits!");
     }
 
     const dobDate = new Date(dob);
     const nowDate = new Date();
     if(dobDate>=nowDate){
-      throw new Error("Invalid Date of Birth!");
+      throw new Error("Date of birth cannot be in the future!");
     }
 
     const res = await axios.post(`/api/v1/signup`, { name, email, password, role, phone, registrationNo: registrationNumber, dob, address});
