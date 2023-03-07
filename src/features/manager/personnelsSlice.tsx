@@ -6,6 +6,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 import type { AppDispatch } from '../../app/store';
 import { positionToRole, roleToPosition } from '../../constants/PositionRoleMap';
+import roles from '../../constants/Roles';
 
 export type PersonnelListState = {
 	loading: boolean,
@@ -69,6 +70,12 @@ const personnelListSlice = createSlice({
 				if (action.payload.doctors) {
 					state.personnel.doctors = action.payload.doctors;
 				}
+				if (action.payload.pendingCounselors) {
+					state.personnel.pendingCounselors = action.payload.pendingCounselors;
+				}
+				if (action.payload.pendingDoctors) {
+					state.personnel.pendingDoctors = action.payload.pendingDoctors;
+				}
 			}
 		},
 		personnelUpdateSuccess: (state) => {
@@ -79,18 +86,22 @@ const personnelListSlice = createSlice({
 
 export const { personnelListRequest, personnelListFail, personnelListSuccess, personnelUpdateRequest, personnelUpdateFail, personnelUpdateSuccess } = personnelListSlice.actions;
 
-export const listPersonnel = (token: string | undefined, position: string, pendingOnly: boolean) => async (dispatch: AppDispatch) => {
+export const listPersonnel = (token: string | undefined, role: string, pendingOnly: boolean) => async (dispatch: AppDispatch) => {
 	dispatch(personnelListRequest);
 	try {
-		const role = positionToRole.get(position);
-		if (role == null || role == "") {
-			throw new Error(`Unexpected position: ${position}`);
-		}
+
+		// if (position == null || position == "") {
+		// 	throw new Error("Position cannot be null or empty!");
+		// }
+		// const role = positionToRole.get(position);
+		// if (role == null || role == "") {
+		// 	throw new Error(`Unexpected position: ${position}`);
+		// }
 
 		const queryStr = pendingOnly ? `pendingUsers?role=${role}` : `getAllUsers?role=${role}`;
 
 		const { data } =
-			await axios.get(`/api/v1/mamager/${queryStr}`,
+			await axios.get(`/api/v1/manager/${queryStr}`,
 				{ 'headers': { 'Authorization': `Bearer ${token}` } });
 
 		const personnel: Personnel = {
@@ -102,23 +113,25 @@ export const listPersonnel = (token: string | undefined, position: string, pendi
 		}
 
 		if (pendingOnly) {
-			if (position === "counselor") {
+			if (role === roles.counselor) {
 				personnel.pendingCounselors = data;
 			}
-			if (position === "doctor") {
+			if (role === roles.doctor) {
 				personnel.pendingDoctors = data;
 			}
 		} else {
-			if (position === "patient") {
+			if (role === roles.patient) {
 				personnel.patients = data;
 			}
-			if (position === "counselor") {
+			if (role === roles.counselor) {
 				personnel.counselors = data;
 			}
-			if (position === "doctor") {
+			if (role === roles.doctor) {
 				personnel.doctors = data;
 			}
 		}
+		console.log(data);
+		console.log(personnel);
 
 		dispatch(personnelListSuccess(personnel));
 	} catch (err: any) {
@@ -129,16 +142,21 @@ export const listPersonnel = (token: string | undefined, position: string, pendi
 }
 
 export const listAllPersonnel = (token: string | undefined, pendingOnly: boolean) => async (dispatch: AppDispatch) => {
-	dispatch(listPersonnel(token, "patient", pendingOnly));
-	dispatch(listPersonnel(token, "counselor", pendingOnly));
-	dispatch(listPersonnel(token, "doctor", pendingOnly))
+	dispatch(listPersonnel(token, roles.patient, pendingOnly));
+	dispatch(listPersonnel(token, roles.counselor, pendingOnly));
+	dispatch(listPersonnel(token, roles.doctor, pendingOnly))
 }
 
 export const updatePersonnel = (token: string | undefined, user: UserData, newStatus: string) => async (dispatch: AppDispatch) => {
 	try {
 		dispatch(personnelUpdateRequest())
-		await axios.put(`/api/v1/mamager/updateUser?userId=${user.id}&status=${newStatus}`,
-			{ 'headers': { 'Authorization': `Bearer ${token}` } });
+		console.log("in updatePersonnel, token");
+		console.log(token);
+		await axios({
+			method: "put",
+			url: `/api/v1/manager/updateUser?userId=${user.id}&status=${newStatus}`,
+			headers: { 'Authorization': `Bearer ${token}` }
+		})
 		dispatch(personnelUpdateSuccess());
 	} catch (err: any) {
 		const errorMessage = err.response ? err.response.data.response : err.message
