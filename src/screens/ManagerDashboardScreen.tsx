@@ -7,7 +7,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useState, useEffect } from "react";
 import { UserData } from '../types/UserDataType';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
-import { selectPersonnelList, listAllPersonnel, updatePersonnel, listPersonnel } from '../features/manager/personnelsSlice';
+import { selectPersonnelList, listAllPersonnel, updatePersonnel, listPersonnel, personnelUpdateMessageReset } from '../features/manager/personnelsSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { roleToPosition } from '../constants/PositionRoleMap';
 import PersonnelList from '../components/PersonnelList';
@@ -21,7 +21,7 @@ export default function ManagerDashboardScreen(props: any) {
 
 	const [selectedPerson, setSelectedPerson] = useState<UserData | null>(null);
 	const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
-	const [personnelUpdateMessage, setPersonnelUpdateMessage] = useState(personnelList.personnelUpdateMessage);
+	// const [personnelUpdateMessage, setPersonnelUpdateMessage] = useState(personnelList.personnelUpdateMessage);
 
 	const handleAssessmentButtonClick = (user: UserData) => {
 		setSelectedPerson(user);
@@ -34,12 +34,12 @@ export default function ManagerDashboardScreen(props: any) {
 
 	const handleAccept = (user: UserData) => {
 		dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.verified))
-		dispatch(listPersonnel(userInfo?.token, user.role, true))
+		// dispatch(listPersonnel(userInfo?.token, user.role, true))
 	}
 
 	const handleReject = (user: UserData) => {
 		dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined))
-		dispatch(listPersonnel(userInfo?.token, user.role, true))
+		// dispatch(listPersonnel(userInfo?.token, user.role, true))
 	}
 
 	// const [successfullyReject, setSuccessfullyReject] = useState(false)
@@ -48,7 +48,8 @@ export default function ManagerDashboardScreen(props: any) {
 	// const [openNotFilled, setOpenNotFilled] = useState(false)
 
 	const handleSnackbarClose = () => {
-		setPersonnelUpdateMessage("")
+		// setPersonnelUpdateMessage("")
+		dispatch(personnelUpdateMessageReset());
 	};
 
 	useEffect(() => {
@@ -113,8 +114,14 @@ export default function ManagerDashboardScreen(props: any) {
 			</DialogContent>
 		</Dialog>
 		<Snackbar
-			open={personnelUpdateMessage !== ""}
-			message={personnelUpdateMessage}
+			open={personnelList.personnelUpdateMessage !== ""}
+			message={personnelList.personnelUpdateMessage}
+			autoHideDuration={5000}
+			onClose={handleSnackbarClose}
+		/>
+		<Snackbar
+			open={personnelList.personnelUpdateLoading}
+			message={"Applying changes, please wait..."}
 			autoHideDuration={5000}
 			onClose={handleSnackbarClose}
 		/>
