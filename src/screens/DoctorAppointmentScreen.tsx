@@ -10,10 +10,11 @@ import {
   ListItemAvatar,
   Avatar,
   Paper,
-  Dialog, DialogTitle, DialogContent, Container
+  Dialog, DialogTitle, DialogContent, Container, ThemeProvider
 } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
+import { doctorTheme } from '../Themes';
 
 
 export default function DoctorAppointmentScreen(props: any) {
@@ -82,6 +83,7 @@ export default function DoctorAppointmentScreen(props: any) {
 
 
   return (
+    <ThemeProvider theme={doctorTheme}>
     <Box sx={{ padding: 2 }}>
       <Container>
         <>
@@ -97,10 +99,10 @@ export default function DoctorAppointmentScreen(props: any) {
                   </ListItemAvatar>
                   <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
                   <Stack direction={"row"} spacing={2}>
-                    <Button variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>
+                    <Button variant="contained" color = "primary" onClick={() => handleAssessmentButtonClick(patient)}>
                       Self-Assessment
                     </Button>
-                    <Button variant="outlined" color="secondary" onClick={() => handleDetailButtonClick(patient)}>
+                    <Button variant="contained" color="secondary" onClick={() => handleDetailButtonClick(patient)}>
                       View Details
                     </Button></Stack>
 
@@ -142,6 +144,6 @@ export default function DoctorAppointmentScreen(props: any) {
       </Container>
 
     </Box>
+    </ThemeProvider>
   );
 }
-

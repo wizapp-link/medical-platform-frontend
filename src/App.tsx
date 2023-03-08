@@ -26,7 +26,7 @@ import CounselorProfileScreen from './screens/CounselorProfileScreen';
 import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
 {/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/ }
 import MangerHomeScreen from './screens/MangerHomeScreen';
-import ManagerAppointmentScreen from './screens/ManagerAppointmentScreen';
+import ManagerMembersScreen from './screens/ManagerMembersScreen';
 import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
 import ManagerProfileScreen from './screens/ManagerProfileScreen';
 import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
@@ -53,7 +53,7 @@ function App() {
 	return (
 		<Router>
 			<div className="App"
-				style={{ minHeight: "100vh" }}
+				style={{ minHeight: "100vh"}}
 			>
 				<Routes>
 					<Route path="signin" element={<LogInScreen />} />
@@ -96,7 +96,7 @@ function App() {
 					<Route path="manager" element={<MangerHomeScreen />}>
 						<Route index element={<ManagerDashboardScreen />} />
 						<Route path="dashboard" element={<ManagerDashboardScreen />} />
-						<Route path="appointments" element={<ManagerAppointmentScreen />} />
+						<Route path="members" element={<ManagerMembersScreen />} />
 						<Route path="profile" element={<ManagerProfileScreen />} />
 						<Route path="settings" element={<ManagerSettingsScreen />} />
 					</Route>

@@ -17,8 +17,11 @@ import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { baseTheme } from '../Themes';
 import { register, selectUserRegister, userRegisterReset } from "../features/auth/userRegisterSlice";
 import { red } from "@mui/material/colors";
+import loginImage from "./../assets/images/loginImage.jpg";
 
 export default function RegisterScreen() {
+	
+	const textColor = '#6B6891';
 	const [searchParams, setSearchParams] = useSearchParams();
 	let initPosition = searchParams.get("position");
 	if (!initPosition) initPosition = "patient";
@@ -64,12 +67,14 @@ export default function RegisterScreen() {
 						flexDirection: 'column',
 						alignItems: 'center',
 					}}>
-					<form onSubmit={handleSubmit}>
+					<Stack direction={'row'} spacing={10} sx={{marginTop: 10}}>
+						<img src={loginImage} height={550} width={610}/>
+						<form onSubmit={handleSubmit}>
 						<Stack spacing={5} padding={5} mb={15}>
-							<Typography variant="h4">Register</Typography>
+							<Typography variant="h4" color="primary">Register</Typography>
 							<div>
 								<FormControl fullWidth>
-									<InputLabel variant="outlined" htmlFor="position">
+									<InputLabel variant="outlined" htmlFor="position" color= "primary">
 										Position
 									</InputLabel>
 									<Select
@@ -80,6 +85,7 @@ export default function RegisterScreen() {
 										label="Position"
 										required
 										autoFocus
+										color= "primary"
 									>
 										<MenuItem value="patient">Patient</MenuItem>
 										<MenuItem value="doctor">Doctor</MenuItem>
@@ -91,7 +97,7 @@ export default function RegisterScreen() {
 
 							{position === 'patient' && (
 								<div>
-									<h2>Patient Registration Form</h2>
+									<h2 style={{color: textColor}}>Patient Registration Form</h2>
 									<Stack spacing={5} padding={0}>
 										<TextField
 											id="name-field"
@@ -102,6 +108,7 @@ export default function RegisterScreen() {
 											required
 											autoFocus
 											autoComplete="name"
+											color= "primary"
 										/>
 										<TextField
 											id="email-field"
@@ -111,6 +118,7 @@ export default function RegisterScreen() {
 											onChange={(e) => setEmail(e.target.value)}
 											autoComplete="email"
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="password-field"
@@ -121,6 +129,7 @@ export default function RegisterScreen() {
 											type="password"
 											autoComplete="current-password"
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="number-field"
@@ -129,6 +138,7 @@ export default function RegisterScreen() {
 											value={phoneNumber}
 											onChange={(e) => setPhoneNumber(e.target.value)}
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="dateOfBirth"
@@ -138,6 +148,7 @@ export default function RegisterScreen() {
 											onChange={e => setDob(e.target.value)}
 											variant="outlined"
 											required
+											color= "primary"
 											InputLabelProps={{
 												shrink: true,
 											}}
@@ -150,13 +161,14 @@ export default function RegisterScreen() {
 											variant="outlined"
 											fullWidth
 											required
+											color= "primary"
 										/>
 									</Stack>
 								</div>
 							)}
 							{position === 'doctor' && (
 								<div>
-									<h2>Doctor Registration Form</h2>
+									<h2 style={{color: textColor}}>Doctor Registration Form</h2>
 									<Stack spacing={5} padding={0}>
 										<TextField
 											id="name-field"
@@ -167,6 +179,7 @@ export default function RegisterScreen() {
 											required
 											autoFocus
 											autoComplete="name"
+											color= "primary"
 										/>
 										<TextField
 											id="email-field"
@@ -176,6 +189,7 @@ export default function RegisterScreen() {
 											onChange={(e) => setEmail(e.target.value)}
 											autoComplete="email"
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="password-field"
@@ -186,6 +200,7 @@ export default function RegisterScreen() {
 											type="password"
 											autoComplete="current-password"
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="number-field"
@@ -194,6 +209,7 @@ export default function RegisterScreen() {
 											value={phoneNumber}
 											onChange={(e) => setPhoneNumber(e.target.value)}
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="dateOfBirth"
@@ -203,6 +219,7 @@ export default function RegisterScreen() {
 											onChange={e => setDob(e.target.value)}
 											variant="outlined"
 											required
+											color= "primary"
 											InputLabelProps={{
 												shrink: true,
 											}}
@@ -215,6 +232,7 @@ export default function RegisterScreen() {
 											variant="outlined"
 											fullWidth
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="doctorRegNumber"
@@ -223,13 +241,14 @@ export default function RegisterScreen() {
 											onChange={e => setRegistrationNumber(e.target.value)}
 											variant="outlined"
 											required
+											color= "primary"
 										/>
 									</Stack>
 								</div>
 							)}
 							{position === 'counselor' && (
 								<div>
-									<h2>Counselor Registration Form</h2>
+									<h2 style={{color: textColor}}>Counselor Registration Form</h2>
 									{/* Add Counselor-specific form fields here */}
 									<Stack spacing={5} padding={0}>
 										<TextField
@@ -241,6 +260,7 @@ export default function RegisterScreen() {
 											required
 											autoFocus
 											autoComplete="name"
+											color= "primary"
 										/>
 										<TextField
 											id="email-field"
@@ -250,6 +270,7 @@ export default function RegisterScreen() {
 											onChange={(e) => setEmail(e.target.value)}
 											autoComplete="email"
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="password-field"
@@ -260,6 +281,7 @@ export default function RegisterScreen() {
 											type="password"
 											autoComplete="current-password"
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="phoneNumber"
@@ -268,6 +290,7 @@ export default function RegisterScreen() {
 											onChange={e => setPhoneNumber(e.target.value)}
 											variant="outlined"
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="dateOfBirth"
@@ -277,6 +300,7 @@ export default function RegisterScreen() {
 											onChange={e => setDob(e.target.value)}
 											variant="outlined"
 											required
+											color= "primary"
 											InputLabelProps={{
 												shrink: true,
 											}}
@@ -289,6 +313,7 @@ export default function RegisterScreen() {
 											variant="outlined"
 											fullWidth
 											required
+											color= "primary"
 										/>
 										<TextField
 											id="counselorRegNumber"
@@ -297,6 +322,7 @@ export default function RegisterScreen() {
 											onChange={e => setRegistrationNumber(e.target.value)}
 											variant="outlined"
 											required
+											color= "primary"
 										/>
 									</Stack>
 								</div>
@@ -304,15 +330,16 @@ export default function RegisterScreen() {
 							{userRegister.error && <Typography color={red[500]}>{userRegister.errorMessage}</Typography>}
 							{userRegister.success && <Typography color="primary">Registeration Successful! Redirect to Log In Page in 5 Seconds...</Typography>}
 							<Stack direction="row" alignItems="baseline" spacing={5} justifyContent="space-between">
-								<Link component={RouterLink} to={`/signin?position=${position}`}>
+								<Link component={RouterLink} to={`/signin?position=${position}`} fontSize={18}>
 									Have an account? Log in!
 								</Link>
-								<Button variant="contained" color="primary" type="submit" disabled={userRegister.success || userRegister.loading}>
+								<Button variant="contained" color="primary" type="submit" disabled={userRegister.success || userRegister.loading} size={'large'}>
 									Sign Up
 								</Button>
 							</Stack>
 						</Stack>
 					</form>
+					</Stack>
 				</Container>
 				<Footer />
 			</Box >

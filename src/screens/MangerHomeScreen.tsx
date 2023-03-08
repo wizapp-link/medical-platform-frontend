@@ -19,6 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
+import People from '@mui/icons-material/People';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import QuizIcon from '@mui/icons-material/Quiz';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -33,6 +34,9 @@ import { selectUserLogIn } from '../features/auth/userLogInSlice';
 
 
 const drawerWidth = 240;
+const backgroundColor = '#388087';
+const textColor = '#FFFFFF';
+const text = '> Manager\'s Dashboard';
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: drawerWidth,
@@ -41,6 +45,8 @@ const openedMixin = (theme: Theme): CSSObject => ({
 		duration: theme.transitions.duration.enteringScreen,
 	}),
 	overflowX: 'hidden',
+	backgroundColor: backgroundColor,
+	color: textColor
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -53,6 +59,8 @@ const closedMixin = (theme: Theme): CSSObject => ({
 	[theme.breakpoints.up('sm')]: {
 		width: `calc(${theme.spacing(8)} + 1px)`,
 	},
+	backgroundColor: backgroundColor,
+	color: textColor
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -62,6 +70,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 	padding: theme.spacing(0, 1),
 	// necessary for content to be below app bar
 	...theme.mixins.toolbar,
+
 }));
 
 interface AppBarProps extends MuiAppBarProps {
@@ -84,6 +93,8 @@ const AppBar = styled(MuiAppBar, {
 			duration: theme.transitions.duration.enteringScreen,
 		}),
 	}),
+	backgroundColor: backgroundColor,
+	color: textColor
 }));
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -119,7 +130,7 @@ export default function ManagerHomeScreen() {
 		}
 	}
 
-	const drawerUserOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Dashboard", icon: HomeIcon }, { text: "Appointments", icon: CalendarMonthIcon }, { text: "Profile", icon: AccountBoxIcon }];
+	const drawerUserOptionsTextIcons: DrawerOptionTextIconsType[] = [{ text: "Dashboard", icon: HomeIcon }, { text: "Members", icon: People }];
 	const drawerUserOptionsList =
 		<List>
 			{drawerUserOptionsTextIcons.map(
@@ -128,7 +139,8 @@ export default function ManagerHomeScreen() {
 						<ListItemButton sx={{
 							minHeight: 48,
 							justifyContent: open ? 'initial' : 'center',
-							px: 2.5
+							px: 2.5,
+							color: textColor
 						}}
 							onClick={handleIconButtonClicks(item.text)}
 						>
@@ -137,6 +149,7 @@ export default function ManagerHomeScreen() {
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
+									color: textColor
 								}}
 							>
 								<item.icon />
@@ -156,7 +169,8 @@ export default function ManagerHomeScreen() {
 						<ListItemButton sx={{
 							minHeight: 48,
 							justifyContent: open ? 'initial' : 'center',
-							px: 2.5
+							px: 2.5,
+							color: textColor
 						}}
 							onClick={handleIconButtonClicks(item.text)}
 						>
@@ -165,11 +179,12 @@ export default function ManagerHomeScreen() {
 									minWidth: 0,
 									mr: open ? 3 : 'auto',
 									justifyContent: 'center',
+									color: textColor
 								}}
 							>
 								<item.icon />
 							</ListItemIcon>
-							<ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+							<ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 , color: textColor}} />
 						</ListItemButton>
 					</ListItem>
 				)
@@ -197,13 +212,17 @@ export default function ManagerHomeScreen() {
 						sx={{
 							marginRight: 5,
 							...(open && { display: 'none' }),
+							color: textColor
 						}}
 					>
 						<MenuIcon />
 					</IconButton>
-					<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
+					<Stack direction="row" sx={{ justifyContent: "start", flexGrow: 1, alignItems: "center" }}>
 						<Typography variant="h6" noWrap component="div" color={'primary.contrastText'}>
 							Depression Care
+						</Typography>
+						<Typography sx={{marginLeft: 1.5, marginTop: 0.25}}>
+							{text}
 						</Typography>
 						{/* <UserProfileMenu /> */}
 					</Stack>
@@ -213,7 +232,7 @@ export default function ManagerHomeScreen() {
 				<DrawerHeader sx={{ justifyContent: 'space-between' }}>
 					{/* <Avatar>{userInfo?.userData.name.charAt(0)}</Avatar> */}
 					{/* <Typography>{userInfo?.userData.name}</Typography> */}
-					<IconButton onClick={handleDrawerClose}>
+					<IconButton onClick={handleDrawerClose} sx={{color: textColor}}>
 						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
 					</IconButton>
 				</DrawerHeader>

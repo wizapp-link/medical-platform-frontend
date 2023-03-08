@@ -17,11 +17,10 @@ export default function Header() {
 
 	return (
 		<ThemeProvider theme={baseTheme}>
-		<AppBar position="fixed" color="primary">
+		<AppBar position="fixed" sx={{background: 'linear-gradient(to right, #6B6891, #388087, #6FB3B8,  #A9C39E, #BADFE7)'}}>
 			<Toolbar>
-				
 				<Typography variant="h6" flexGrow={1} align="center" fontSize={30}>
-					<Link to="/" component={RouterLink} justifyContent='center' sx={{ textDecoration: 'none', color: 'inherit'}}>
+					<Link to="/" component={RouterLink} justifyContent='center' sx={{ textDecoration: 'none', color: 'secondary.main'}}>
 						Depression Care
 					</Link>
 				</Typography>

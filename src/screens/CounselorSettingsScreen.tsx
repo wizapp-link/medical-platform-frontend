@@ -1,7 +1,7 @@
 import { Box, Button, Container, Stack, TextField, Typography } from '@mui/material';
 import React, { FormEvent, useState } from 'react';
 import { createTheme, ThemeProvider, colors } from '@mui/material';
-import { patientTheme } from '../Themes';
+import { counselorTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppSelector } from '../app/hooks';
 
@@ -19,7 +19,7 @@ export default function CounselorSettingsScreen(props: any) {
 	};
 
 	return (
-		<ThemeProvider theme={patientTheme}>
+		<ThemeProvider theme={counselorTheme}>
 			<Box>
 				<Container>
 					<form onSubmit={handleSubmit}>
@@ -34,7 +34,8 @@ export default function CounselorSettingsScreen(props: any) {
 								autoComplete="email"
 								required
 								disabled
-								color='secondary'
+								sx={{color:'secondary.main'}}
+								
 							/>
 							<TextField
 								id="password-field"
@@ -69,11 +70,11 @@ export default function CounselorSettingsScreen(props: any) {
 
 							/>
 							<Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-								<Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
+								<Button size={'large'} variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
 									Discard
 								</Button>
-								<Button variant="contained" type="submit" onClick={handleSubmit}
-									sx={{ backgroundColor: 'primary.dark', ":hover": { backgroundColor: 'primary.main' } }}
+								<Button size={'large'} variant="contained" type="submit" onClick={handleSubmit}
+									sx={{ backgroundColor: 'primary.main', ":hover": { backgroundColor: 'primary.dark' } }}
 								>
 									Submit
 								</Button>

@@ -37,7 +37,7 @@ import UserProfileMenu from '../components/UserProfileMenu';
 import Stack from '@mui/material/Stack';
 
 const drawerWidth = 240;
-const backgroundColor = '#C8F8EA';
+const backgroundColor = '#BADFE7';
 const textColor = '#0C293E';
 
 const openedMixin = (theme: Theme): CSSObject => ({

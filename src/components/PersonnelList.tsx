@@ -30,7 +30,7 @@ export default function PersonnelList(props: PropsType) {
 					<Stack direction={"row"} padding={2} spacing={2}>
 						<Button variant="outlined" onClick={() => handleAssessmentButtonClick(user)}>See-Infomation</Button>
 						<Button variant="contained" onClick={() => { handleAccept(user) }}>Accept</Button>
-						<Button variant="outlined" color="secondary" onClick={() => { handleReject(user) }}>Reject</Button>
+						<Button variant="contained" color="secondary" onClick={() => { handleReject(user) }}>Reject</Button>
 					</Stack>
 				</ListItem>
 			))}
