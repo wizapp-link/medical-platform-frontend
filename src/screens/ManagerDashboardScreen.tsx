@@ -32,12 +32,14 @@ import {
   listAllPersonnel,
   updatePersonnel,
   listPersonnel,
+  personnelUpdateMessageReset
 } from "../features/manager/personnelsSlice";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import PersonnelList from "../components/PersonnelList";
 import personnelStatus from "../constants/PersonnelStatus";
 import { managerTheme } from "../Themes";
+import PersonnelDetailDialog from "../components/PersonnelDetailDialog";
 
 export default function ManagerDashboardScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn);
@@ -46,9 +48,9 @@ export default function ManagerDashboardScreen(props: any) {
 
   const [selectedPerson, setSelectedPerson] = useState<UserData | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
-  const [personnelUpdateMessage, setPersonnelUpdateMessage] = useState(
-    personnelList.personnelUpdateMessage
-  );
+  // const [personnelUpdateMessage, setPersonnelUpdateMessage] = useState(
+  //   personnelList.personnelUpdateMessage
+  // );
 
   const handleAssessmentButtonClick = (user: UserData) => {
     setSelectedPerson(user);
@@ -61,12 +63,12 @@ export default function ManagerDashboardScreen(props: any) {
 
   const handleAccept = (user: UserData) => {
     dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.verified));
-    dispatch(listPersonnel(userInfo?.token, user.role, true));
+    // dispatch(listPersonnel(userInfo?.token, user.role, true));
   };
 
   const handleReject = (user: UserData) => {
     dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined));
-    dispatch(listPersonnel(userInfo?.token, user.role, true));
+    // dispatch(listPersonnel(userInfo?.token, user.role, true));
   };
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -83,7 +85,8 @@ export default function ManagerDashboardScreen(props: any) {
   // const [openNotFilled, setOpenNotFilled] = useState(false)
 
   const handleSnackbarClose = () => {
-    setPersonnelUpdateMessage("");
+    // setPersonnelUpdateMessage("");
+    dispatch(personnelUpdateMessageReset());
   };
 
   useEffect(() => {
@@ -110,7 +113,7 @@ export default function ManagerDashboardScreen(props: any) {
             <Tabs value={tabIndex} onChange={handleTabChange} centered>
               <Tab label="Doctors" sx={{ width: 500 }} />
               <Tab label="Counselors" sx={{ width: 500 }} />
-              <Tab label="Patients" sx={{ width: 500 }} />
+              {/* <Tab label="Patients" sx={{ width: 500 }} /> */}
             </Tabs>
           </Box>
           <Box>
@@ -138,14 +141,15 @@ export default function ManagerDashboardScreen(props: any) {
                 )}
               </Box>
             )}
-			{tabIndex === 2 && (
-				<Box>
-					<Typography>No Patients to remove</Typography>
-				</Box>
-			)}
+            {/* {tabIndex === 2 && (
+              <Box>
+                <Typography>No Patients to remove</Typography>
+              </Box>
+            )} */}
           </Box>
         </Stack>
-        <Dialog open={showAssessmentDialog} onClose={handleClose}>
+        <PersonnelDetailDialog open={showAssessmentDialog} onClose={handleClose} selectedPerson={selectedPerson} />
+        {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
           <DialogTitle>{selectedPerson?.name}</DialogTitle>
           <DialogContent>
             <Typography variant="subtitle1">
@@ -172,10 +176,16 @@ export default function ManagerDashboardScreen(props: any) {
               Email Address: {selectedPerson?.email}
             </Typography>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
         <Snackbar
-          open={personnelUpdateMessage !== ""}
-          message={personnelUpdateMessage}
+          open={personnelList.personnelUpdateMessage !== ""}
+          message={personnelList.personnelUpdateMessage}
+          autoHideDuration={5000}
+          onClose={handleSnackbarClose}
+        />
+        <Snackbar
+          open={personnelList.personnelUpdateLoading}
+          message={"Applying changes, please wait..."}
           autoHideDuration={5000}
           onClose={handleSnackbarClose}
         />
