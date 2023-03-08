@@ -19,7 +19,7 @@ export const patientTheme = createTheme({
 export const counselorTheme = createTheme({
 	palette:{
 		primary:{
-			main: '#F2AD9C',
+			main: '#BADFE7',
 			dark: '#C8F8EA',
 			contrastText: '#0C293E',
 			light:'#84EFD0'
@@ -35,8 +35,7 @@ export const counselorTheme = createTheme({
 export const doctorTheme = createTheme({
 	palette:{
 		primary:{
-			main: '#7676FF',
-			contrastText: '#FFFFFF',
+			main: '#6FB3B8',
 			light: '#D9D9FF'
 		},
 		secondary:{
@@ -45,15 +44,31 @@ export const doctorTheme = createTheme({
 	}
 })
 
+export const managerTheme = createTheme({
+	palette:{
+		primary:{
+			main: '#388087',
+			contrastText: '#FFFFFF'
+		},
+		secondary:{
+			main:'#FEFF89',
+		}
+		
+	}
+})
+
+
 export const baseTheme = createTheme({
 	palette:{
 		primary:{
 			main: '#6B6891',
-			contrastText: '#FFFFFF'
+			contrastText: '#FFFFFF',
+			dark: '#313131'
 			
 		},
 		secondary:{
 			main:'#FFFFFF',
+			dark: '#CB947A'
 		}
 	}
 })

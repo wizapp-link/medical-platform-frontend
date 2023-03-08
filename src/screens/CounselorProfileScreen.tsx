@@ -51,6 +51,7 @@ export default function CounselorProfileScreen() {
                 value={email}
                 disabled
                 required
+                color='secondary'
               />
               <TextField
                 fullWidth
@@ -59,6 +60,7 @@ export default function CounselorProfileScreen() {
                 value={name}
                 onChange={e => setName(e.target.value)}
                 required
+                color='secondary'
               />
               <TextField
                 fullWidth
@@ -67,6 +69,7 @@ export default function CounselorProfileScreen() {
                 value={dob}
                 onChange={e => setDob(e.target.value)}
                 required
+                color='secondary'
               />
               <TextField
                 fullWidth
@@ -75,6 +78,7 @@ export default function CounselorProfileScreen() {
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 required
+                color='secondary'
               />
               <TextField
                 fullWidth
@@ -83,6 +87,7 @@ export default function CounselorProfileScreen() {
                 value={address}
                 onChange={e => setAddress(e.target.value)}
                 required
+                color='secondary'
               />
               <TextField
                 fullWidth
@@ -91,12 +96,13 @@ export default function CounselorProfileScreen() {
                 value={registrationNo}
                 onChange={e => setRegistrationNo(e.target.value)}
                 required
+                color='secondary'
               />
               <Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
+                <Button size={'large'} variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
                   Discard
                 </Button>
-                <Button variant="contained" color="primary" type="submit" onClick={handleSave}>
+                <Button size={'large'} variant="contained" color="primary" type="submit" onClick={handleSave}>
                   Submit
                 </Button>
               </Stack>

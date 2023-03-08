@@ -12,6 +12,7 @@ import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { flexbox } from '@mui/system';
 import { spacing } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -70,6 +71,11 @@ export default function CounselorDashboardScreen(props: any) {
 		setShowAssessmentDialog(false);
 		// setShowDetailDialog((false));
 	};
+	const navigate = useNavigate();
+	const handleAppointments = () => {
+		navigate(`/counselor/appointments`);
+	}
+	
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
 
@@ -85,7 +91,13 @@ export default function CounselorDashboardScreen(props: any) {
 			{/* if the assessment is not completed */}
 			{/* <Button variant="contained">Complete the assessment</Button> */}
 			{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
-			<Button variant="contained" sx={{ backgroundColor: 'primary.dark', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>View Appointments</Button>
+			
+			<Button variant="contained" 
+			onClick={handleAppointments}
+			sx={{ backgroundColor: 'primary.main', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>
+				View Appointments
+				</Button>
+				
 			<Divider />
 			<Typography variant='h5' color={'primary.contrastText'}>
 				Recent Patient List
@@ -104,7 +116,7 @@ export default function CounselorDashboardScreen(props: any) {
 								flexBasis: '5%'
 							}} />
 						<Box display="flex" justifyContent="space-between" flexGrow={1}>
-							<Button variant="outlined" onClick=
+							<Button variant="contained" onClick=
 								{() => handleAssessmentButtonClick(patient)}>
 								Self-Assessment
 							</Button>
@@ -112,64 +124,10 @@ export default function CounselorDashboardScreen(props: any) {
 
 							<Stack direction="row" spacing={2} sx={{ flexDirection: 'row', }}>
 								<Button variant="contained">Assign</Button>
-								<Button variant="outlined" color="secondary">Reject</Button>
+								<Button variant="contained" color="secondary">Reject</Button>
 							</Stack>
 						</Box>
 
-
-			<Stack>
-				<Typography variant='h5' color={'primary.contrastText'}>
-					Recent Patient List
-				</Typography>
-				<List>
-					<ListItem>
-						<List>
-							{patients.map((patient) => (
-								<ListItem key={patient.id} disablePadding>
-									<ListItemAvatar>
-										<Avatar alt="patient" src="" />
-									</ListItemAvatar>
-									<ListItemText primary={patient.name} secondary={`ID: ${patient.id}`}
-										sx={{
-											flexGrow: 0,
-											flexShrink: 0,
-											flexBasis: '5%'
-										}} />
-									<Button
-										sx={{
-											flexGrow: 0,
-											flexShrink: 0,
-											width: 180,
-											height: 40,
-										}}
-										variant="outlined" onClick={() => handleAssessmentButtonClick(patient)}>Self-Assessment</Button>
-
-									<Stack direction={"row"} spacing={2} pl={90}>
-										<Button sx={{ height: 40 }} variant="contained">Assign</Button>
-										<Button sx={{ height: 40 }} variant="outlined" color="secondary">Reject</Button>
-									</Stack>
-								</ListItem>
-							))}
-
-						</List>
-
-						<Dialog open={showAssessmentDialog} onClose={handleClose}>
-							<DialogTitle color={'primary.contrastText'}>{selectedPatient?.name}</DialogTitle>
-							<DialogContent>
-								<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
-								<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
-								<Typography variant="h6" color={'primary.contrastText'}>Self-Assessment Results</Typography>
-								<List>
-									{selectedPatient?.selfAssessmentResults.map((result) => (
-										<ListItem key={result} sx={{ color: 'primary.contrastText' }}>
-											<ListItemText primary={result} sx={{ color: 'primary.contrastText' }} />
-										</ListItem>
-									))}
-								</List>
-							</DialogContent>
-						</Dialog>
-
-						<Divider variant="inset" component="li" />
 
 					</ListItem>
 				))}
@@ -183,7 +141,7 @@ export default function CounselorDashboardScreen(props: any) {
 				<DialogContent>
 					<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
 					<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
-					<Typography variant="h6" color={'primary.contrastText'}>Self-Assessment Results</Typography>
+					<Typography variant="h6">Self-Assessment Results</Typography>
 					<List>
 						{selectedPatient?.selfAssessmentResults.map((result) => (
 							<ListItem key={result} sx={{ color: 'primary.contrastText' }}>

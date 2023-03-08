@@ -20,6 +20,7 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import HomeIcon from '@mui/icons-material/Home';
+import People from '@mui/icons-material/People';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import QuizIcon from '@mui/icons-material/Quiz';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -38,8 +39,8 @@ import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
 
 const drawerWidth = 240;
-const backgroundColor = '#7676FF';
-const textColor = '#FFFFFF';
+const backgroundColor = '#6FB3B8';
+const textColor = '#000000';
 
 const openedMixin = (theme: Theme): CSSObject => ({
 	width: drawerWidth,

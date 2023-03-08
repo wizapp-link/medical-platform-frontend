@@ -6,7 +6,7 @@ import { Link as RouterLink, useLocation, useNavigate, useSearchParams } from 'r
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import backdrop from "./../assets/images/backdrop.jpg";
+import loginImage from "./../assets/images/loginImage.jpg";
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { baseTheme } from '../Themes';
 import { selectUserLogIn, logIn } from '../features/auth/userLogInSlice';
@@ -43,7 +43,7 @@ export default function LogInScreen() {
 
 	return (
 		<ThemeProvider theme={baseTheme}>
-			<Box sx={{ minHeight: '100vh' }}>
+			<Box sx={{ minHeight: '100vh'}}>
 				<Header />
 				<Container
 					sx={{
@@ -51,12 +51,14 @@ export default function LogInScreen() {
 						marginBottom: 8,
 						display: 'flex',
 						flexDirection: 'column',
-						alignItems: 'center',
+						alignItems: 'left',
 					}}
 				>
-					<form onSubmit={handleSubmit}>
+					<Stack direction={'row'} spacing={10} sx={{marginTop: 10}}>
+						<img src={loginImage} height={550} width={610}/>
+						<form onSubmit={handleSubmit}>
 						<Stack spacing={5} padding={5}>
-							<Typography variant="h4">Log In</Typography>
+							<Typography variant="h4" sx={{color: 'primary.main'}}>Log In</Typography>
 							<TextField
 								id="email-field"
 								label="Email"
@@ -66,6 +68,7 @@ export default function LogInScreen() {
 								autoComplete="email"
 								required
 								autoFocus
+								color= "primary"
 							/>
 							<TextField
 								id="password-field"
@@ -76,25 +79,28 @@ export default function LogInScreen() {
 								type="password"
 								autoComplete="current-password"
 								required
+								color='primary'
 							/>
 							{userLogIn.error && <Typography color={red[500]}>{userLogIn.errorMessage}</Typography>}
 							<Stack direction="row" spacing={5}>
 								<Stack>
-									<Link component={RouterLink} to={`/Register`} color='primary'>
+									<Link component={RouterLink} to={`/Register`} color='primary' fontSize={18}>
 										New user? Sign up!
 									</Link>
-									<Link component={RouterLink} to={`/forgot_password`} color='primary'>
+									<Link component={RouterLink} to={`/forgot_password`} color='primary' fontSize={18}>
 										Forgot password?
 									</Link>
 								</Stack>
 
-								<Button variant="contained" color="primary" type="submit">
+								<Button variant="contained" color="primary" type="submit" size="large" sx={{fontSize: '30'}}>
 									Log In
 								</Button>
 
 							</Stack>
 						</Stack>
 					</form>
+					</Stack>
+					
 
 				</Container>
 				<Footer />

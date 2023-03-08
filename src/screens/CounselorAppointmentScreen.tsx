@@ -92,7 +92,7 @@ export default function CounselorAppointmentScreen(props: any) {
                   </Box>
 
                   <Stack>
-                    <Button variant="outlined" color="secondary">Remove</Button>
+                    <Button variant="contained" color="secondary">Remove</Button>
 
                   </Stack>
                 </Box>

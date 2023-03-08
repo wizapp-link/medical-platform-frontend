@@ -9,10 +9,17 @@ import { RootState } from "../app/store";
 import { useSelector } from "react-redux";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import { useNavigate } from 'react-router-dom';
 
 export default function DoctorDashboardScreen(props: any) {
 	const doctor = useSelector((state: RootState) => state.doctor)
 	const { userInfo } = useAppSelector(selectUserLogIn);
+
+	const navigate = useNavigate();
+	const handleAppointments = () => {
+		navigate(`/doctor/appointments`);
+	}
+
 	return <ThemeProvider theme={doctorTheme}>
 		<Stack padding={2} spacing={2}>
 			<Typography variant='h3'>
@@ -24,7 +31,9 @@ export default function DoctorDashboardScreen(props: any) {
 			{/* if the assessment is not completed */}
 			{/* <Button variant="contained">Complete the assessment</Button> */}
 			{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
-			<Button variant="contained">View Appointments</Button>
+			<Button variant="contained"
+			onClick={handleAppointments}>
+				View Appointments</Button>
 			<Divider />
 
 
