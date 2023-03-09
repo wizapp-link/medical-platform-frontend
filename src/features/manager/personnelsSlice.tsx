@@ -14,6 +14,7 @@ export type PersonnelListState = {
 	errorMessage: string,
 	personnelUpdateLoading: boolean,
 	personnelUpdateError: boolean,
+	personnelUpdateSuccess: boolean,
 	personnelUpdateMessage: string,
 	personnel: Personnel | null,
 }
@@ -32,6 +33,7 @@ const initialState: PersonnelListState = {
 	errorMessage: "",
 	personnelUpdateLoading: false,
 	personnelUpdateError: false,
+	personnelUpdateSuccess: false,
 	personnelUpdateMessage: "",
 	personnel: null,
 };
@@ -54,6 +56,7 @@ const personnelListSlice = createSlice({
 		personnelUpdateFail: (state, action: PayloadAction<string>) => {
 			state.personnelUpdateLoading = false;
 			state.personnelUpdateError = true;
+			state.personnelUpdateSuccess = false;
 			state.personnelUpdateMessage = action.payload;
 		},
 		personnelListSuccess: (state, action: PayloadAction<Personnel>) => {
@@ -81,11 +84,15 @@ const personnelListSlice = createSlice({
 		personnelUpdateSuccess: (state, action: PayloadAction<string>) => {
 			state.personnelUpdateLoading = false;
 			state.personnelUpdateMessage = action.payload;
+			state.personnelUpdateSuccess = true;
+		},
+		personnelUpdateMessageReset: (state) => {
+			state.personnelUpdateMessage = "";
 		}
 	},
 });
 
-export const { personnelListRequest, personnelListFail, personnelListSuccess, personnelUpdateRequest, personnelUpdateFail, personnelUpdateSuccess } = personnelListSlice.actions;
+export const { personnelListRequest, personnelListFail, personnelListSuccess, personnelUpdateRequest, personnelUpdateFail, personnelUpdateSuccess, personnelUpdateMessageReset } = personnelListSlice.actions;
 
 export const listPersonnel = (token: string | undefined, role: string, pendingOnly: boolean) => async (dispatch: AppDispatch) => {
 	dispatch(personnelListRequest);
@@ -159,10 +166,14 @@ export const updatePersonnel = (token: string | undefined, user: UserData, newSt
 			headers: { 'Authorization': `Bearer ${token}` }
 		})
 		dispatch(personnelUpdateSuccess(data.response));
+		dispatch(listPersonnel(token, user.role, true));
+		dispatch(listPersonnel(token, user.role, false));
 	} catch (err: any) {
 		const errorMessage = err.response ? err.response.data.response : err.message
 		console.log(errorMessage);
 		dispatch(personnelUpdateFail(errorMessage));
+		dispatch(listPersonnel(token, user.role, true));
+		dispatch(listPersonnel(token, user.role, false));
 	}
 }
 

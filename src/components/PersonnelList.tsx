@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { roleToPosition } from '../constants/PositionRoleMap';
 import { Stack } from '@mui/system';
 import { UserData } from '../types/UserDataType';
+import personnelStatus from '../constants/PersonnelStatus';
 
 interface PropsType {
 	users: UserData[] | null,
@@ -18,6 +19,7 @@ interface PropsType {
 
 export default function PersonnelList(props: PropsType) {
 	const { users, handleAssessmentButtonClick, handleAccept, handleReject } = props;
+
 	return (
 		<List>
 			{users && users.map((user) => (
@@ -26,11 +28,20 @@ export default function PersonnelList(props: PropsType) {
 						<Avatar alt={user.name} src="" />
 					</ListItemAvatar>
 
-					<ListItemText primary={user.name} secondary={`Type: ${roleToPosition.get(user.role)}`} />
+					<ListItemText primary={user.name} secondary={`Email: ${user.email}`} />
 					<Stack direction={"row"} padding={2} spacing={2}>
 						<Button variant="outlined" onClick={() => handleAssessmentButtonClick(user)}>See-Infomation</Button>
-						<Button variant="contained" onClick={() => { handleAccept(user) }}>Accept</Button>
-						<Button variant="contained" color="secondary" onClick={() => { handleReject(user) }}>Reject</Button>
+						<Button variant="contained" onClick={() => { handleAccept(user) }}
+							disabled={user.status === personnelStatus.verified}
+						>
+							{user.status === personnelStatus.verified ? "Accepted" : "Accept"}
+						</Button>
+						<Button variant="contained" color="secondary"
+							onClick={() => { handleReject(user) }}
+							disabled={user.status === personnelStatus.declined}
+						>
+							{user.status === personnelStatus.declined ? "Rejected" : "Reject"}
+						</Button>
 					</Stack>
 				</ListItem>
 			))}

@@ -6,6 +6,7 @@ import { logOut, selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { roleToPosition } from '../constants/PositionRoleMap';
 import { Stack } from '@mui/system';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export default function UserProfileMenu() {
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -51,6 +52,7 @@ export default function UserProfileMenu() {
 						<Stack direction="row" spacing={2} alignItems="center" >
 							<Avatar>{userInfo?.userData.name.charAt(0)}</Avatar>
 							<Typography sx={{ color: 'primary.contrastText' }}>{userInfo?.userData.name}</Typography>
+							<ArrowDropDownIcon sx={{ color: "primary.contrastText" }} />
 						</Stack>
 					</Button>
 					<Menu
