@@ -20,6 +20,8 @@ import {
   ThemeProvider,
   Tabs,
   Tab,
+  Card,
+  CardContent
 } from "@mui/material";
 import * as React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";

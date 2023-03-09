@@ -67,10 +67,10 @@ export default function RegisterScreen() {
 						flexDirection: 'column',
 						alignItems: 'center',
 					}}>
-					<Stack direction={'row'} spacing={10} sx={{ marginTop: 8 }}>
+					<Stack direction={'row'} spacing={10} sx={{ marginTop: 6 }}>
 						<img src={loginImage} height={550} width={610} />
 						<form onSubmit={handleSubmit}>
-							<Stack spacing={5} padding={5} mb={15}>
+							<Stack spacing={2} padding={5} mb={15}>
 								<Typography variant="h4" color="primary">Register</Typography>
 								<div>
 									<FormControl fullWidth>
@@ -98,7 +98,7 @@ export default function RegisterScreen() {
 								{position === 'patient' && (
 									<div style={{ marginTop: 0 }}>
 										<h2 style={{ color: textColor }}>Patient Registration Form</h2>
-										<Stack spacing={5} padding={0}>
+										<Stack spacing={2} padding={0}>
 											<TextField
 												id="name-field"
 												label="Name"
