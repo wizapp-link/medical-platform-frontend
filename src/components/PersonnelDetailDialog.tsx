@@ -19,7 +19,7 @@ export default function PersonnelDetailDialog(props: Props) {
 
 	return (
 		<Dialog open={open} onClose={onClose}>
-			<DialogTitle>{selectedPerson?.name}</DialogTitle>
+			<DialogTitle sx={{ fontWeight: "bold" }}>{selectedPerson?.name}</DialogTitle>
 			<DialogContent>
 				<Typography variant="subtitle1">
 					ID: {selectedPerson?.id}
@@ -27,7 +27,7 @@ export default function PersonnelDetailDialog(props: Props) {
 				<Typography variant="subtitle1">
 					Name: {selectedPerson?.name}
 				</Typography>
-				<Typography variant="h6">Registration Information</Typography>
+				<Typography variant="h6" sx={{ fontWeight: "bold" }}>Registration Information</Typography>
 				<Typography variant="subtitle1">
 					Address: {selectedPerson?.address}
 				</Typography>

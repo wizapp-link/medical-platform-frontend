@@ -20,9 +20,6 @@ interface PropsType {
 export default function PersonnelList(props: PropsType) {
 	const { users, handleAssessmentButtonClick, handleAccept, handleReject } = props;
 
-	// const [canAccept, setCanAccept] = useState(false);
-	// const [canReject, setCanReject] = useState(false);
-
 	return (
 		<List>
 			{users && users.map((user) => (

@@ -75,7 +75,7 @@ export default function CounselorDashboardScreen(props: any) {
 	const handleAppointments = () => {
 		navigate(`/counselor/appointments`);
 	}
-	
+
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
 
@@ -91,13 +91,13 @@ export default function CounselorDashboardScreen(props: any) {
 			{/* if the assessment is not completed */}
 			{/* <Button variant="contained">Complete the assessment</Button> */}
 			{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
-			
-			<Button variant="contained" 
-			onClick={handleAppointments}
-			sx={{ backgroundColor: 'primary.main', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>
+
+			<Button variant="contained"
+				onClick={handleAppointments}
+				sx={{ backgroundColor: 'primary.main', color: 'primary.contrastText', ":hover": { backgroundColor: 'primary.light' } }}>
 				View Appointments
-				</Button>
-				
+			</Button>
+
 			<Divider />
 			<Typography variant='h5' color={'primary.contrastText'}>
 				Recent Patient List
@@ -137,11 +137,11 @@ export default function CounselorDashboardScreen(props: any) {
 			</List>
 
 			<Dialog open={showAssessmentDialog} onClose={handleClose}>
-				<DialogTitle color={'primary.contrastText'}>{selectedPatient?.name}</DialogTitle>
+				<DialogTitle color={'primary.contrastText'} sx={{ fontWeight: "bold" }}>{selectedPatient?.name}</DialogTitle>
 				<DialogContent>
 					<Typography variant="subtitle1" color={'primary.contrastText'}>ID: {selectedPatient?.id}</Typography>
 					<Typography variant="subtitle1" color={'primary.contrastText'}>Name: {selectedPatient?.name}</Typography>
-					<Typography variant="h6">Self-Assessment Results</Typography>
+					<Typography variant="h6" sx={{ fontWeight: "bold" }}>Self-Assessment Results</Typography>
 					<List>
 						{selectedPatient?.selfAssessmentResults.map((result) => (
 							<ListItem key={result} sx={{ color: 'primary.contrastText' }}>
