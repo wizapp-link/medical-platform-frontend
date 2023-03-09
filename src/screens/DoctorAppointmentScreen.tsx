@@ -106,29 +106,33 @@ export default function DoctorAppointmentScreen(props: any) {
               <Box sx={{ width: "100%" }}>
                 <Card sx={{ boxShadow: 3, marginTop: 1 }}>
                   <CardContent>
-                    <Stack direction={"row"}>
-                      <ListItemAvatar>
-                        <Avatar alt="patient" src="" />
-                      </ListItemAvatar>
-                      <Stack direction={"column"} marginRight={"67%"}>
-                        <Typography>{patient.name}</Typography>
-                        <Typography>{`ID: ${patient.id}`}2</Typography>
+                    <Stack direction={"row"} justifyContent={"space-between"}>
+                      <Stack direction={"row"}>
+                        <ListItemAvatar>
+                          <Avatar alt="patient" src="" />
+                        </ListItemAvatar>
+                        <Stack direction={"column"}>
+                          <Typography>{patient.name}</Typography>
+                          <Typography>{`ID: ${patient.id}`}2</Typography>
+                        </Stack>
                       </Stack>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleAssessmentButtonClick(patient)}
-                        sx={{marginRight: 2}}
-                      >
-                        Self-Assessment
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleDetailButtonClick(patient)}
-                      >
-                        View Details
-                      </Button>
+                      <Stack direction={"row"}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleAssessmentButtonClick(patient)}
+                          sx={{ marginRight: 2 }}
+                        >
+                          Self-Assessment
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleDetailButtonClick(patient)}
+                        >
+                          View Details
+                        </Button>
+                      </Stack>
                     </Stack>
                   </CardContent>
                 </Card>

@@ -58,21 +58,27 @@ export default function DoctorDashboardScreen(props: any) {
               <Box width={"100%"}>
                 <Card sx={{ boxShadow: 3, marginTop: 1 }}>
                   <CardContent>
-                    <Stack direction={"row"}>
-                      <ListItemAvatar>
-                        <Avatar
-                          alt="Jack Napier"
-                          src="/static/images/doctor/samplePatient.jpg"
-                        />
-                      </ListItemAvatar>
-                      <Stack direction={"column"} marginRight={'70%'}>
-                        <Typography>Jack Niper</Typography>
-                        <Typography>Date: 2023-02-12</Typography>
+                    <Stack direction={"row"} justifyContent={"space-between"}>
+                      <Stack direction={"row"}>
+                        <ListItemAvatar>
+                          <Avatar
+                            alt="Jack Napier"
+                            src="/static/images/doctor/samplePatient.jpg"
+                          />
+                        </ListItemAvatar>
+                        <Stack direction={"column"}>
+                          <Typography>Jack Niper</Typography>
+                          <Typography>Date: 2023-02-12</Typography>
+                        </Stack>
                       </Stack>
-                      <Button variant="contained" sx={{marginRight: 2}}>Accept</Button>
-                      <Button variant="contained" color="secondary">
-                        Reject
-                      </Button>
+                      <Stack direction={"row"}>
+                        <Button variant="contained" sx={{ marginRight: 2 }}>
+                          Accept
+                        </Button>
+                        <Button variant="contained" color="secondary">
+                          Reject
+                        </Button>
+                      </Stack>
                     </Stack>
                   </CardContent>
                 </Card>

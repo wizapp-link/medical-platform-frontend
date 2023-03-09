@@ -76,39 +76,41 @@ export default function CounselorAppointmentScreen(props: any) {
                 <Box sx={{ width: "100%" }}>
                   <Card sx={{ boxShadow: 3, marginTop: 1 }}>
                     <CardContent>
-                      <Stack direction={"row"}>
-                      <ListItemAvatar
-                        sx={{
-                          display: "flex",
-                          justifyItems: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Avatar alt="patient" src="" />
-                      </ListItemAvatar>
-                      <Stack direction={"column"} marginRight= {'2%'}>
-                        <Typography>{patient.name}</Typography>
-                        <Typography>{`ID: ${patient.id}`}2</Typography>
-                      </Stack>
-                      <ListItemAvatar
-                        sx={{
-                          display: "flex",
-                          justifyItems: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Avatar
-                          alt="doctor"
-                          src="/static/images/doctor/sampleDoctor.jpg"
-                        />
-                      </ListItemAvatar>
-                      <Stack direction={"column"} marginRight= {'70%'}>
-                        <Typography>Dr. Gregory House</Typography>
-                        <Typography>Date: 2023-02-12</Typography>
-                      </Stack>
-                      <Button variant="contained" color="secondary">
-                        Remove
-                      </Button>
+                      <Stack direction={"row"} justifyContent={"space-between"}>
+                        <Stack direction={"row"}>
+                          <ListItemAvatar
+                            sx={{
+                              display: "flex",
+                              justifyItems: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Avatar alt="patient" src="" />
+                          </ListItemAvatar>
+                          <Stack direction={"column"} sx={{marginRight: 6}}>
+                            <Typography>{patient.name}</Typography>
+                            <Typography>{`ID: ${patient.id}`}2</Typography>
+                          </Stack>
+                          <ListItemAvatar
+                            sx={{
+                              display: "flex",
+                              justifyItems: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Avatar
+                              alt="doctor"
+                              src="/static/images/doctor/sampleDoctor.jpg"
+                            />
+                          </ListItemAvatar>
+                          <Stack direction={"column"} >
+                            <Typography>Dr. Gregory House</Typography>
+                            <Typography>Date: 2023-02-12</Typography>
+                          </Stack>
+                        </Stack>
+                        <Button variant="contained" color="secondary">
+                          Remove
+                        </Button>
                       </Stack>
                     </CardContent>
                   </Card>

@@ -63,41 +63,45 @@ export default function PatientDashboardScreen(props: any) {
           <List>
             <ListItem>
               <Box sx={{ width: "100%" }}>
-                <Card sx={{ marginTop: 2 ,boxShadow: 3 }}>
+                <Card sx={{ marginTop: 2, boxShadow: 3 }}>
                   <CardContent>
-                    <Stack direction="row">
-                      <ListItemAvatar>
-                        <Avatar
-                          alt="doctor"
-                          src="/static/images/doctor/sampleDoctor.jpg"
-                        />
-                      </ListItemAvatar>
-                      <Stack direction={"column"} marginRight={"70%"}>
-                        <Typography>Dr. Gregory House</Typography>
-                        <Typography>Date: 2023-02-12</Typography>
+                    <Stack direction="row" justifyContent="space-between">
+                      <Stack direction="row">
+                        <ListItemAvatar>
+                          <Avatar
+                            alt="doctor"
+                            src="/static/images/doctor/sampleDoctor.jpg"
+                          />
+                        </ListItemAvatar>
+                        <Stack direction={"column"}>
+                          <Typography>Dr. Gregory House</Typography>
+                          <Typography>Date: 2023-02-12</Typography>
+                        </Stack>
                       </Stack>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          marginRight: 2,
-                          backgroundColor: "primary.dark",
-                          color: "primary.contrastText",
-                          ":hover": { backgroundColor: "primary.main" },
-                        }}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        sx={{
-                          color: "primary.contrastText",
-                          borderColor: "secondary.dark",
-                          ":hover": { backgroundColor: "secondary.dark" },
-                        }}
-                      >
-                        Reject
-                      </Button>
+                      <Stack direction={"row"}>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            marginRight: 2,
+                            backgroundColor: "primary.dark",
+                            color: "primary.contrastText",
+                            ":hover": { backgroundColor: "primary.main" },
+                          }}
+                        >
+                          Accept
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          sx={{
+                            color: "primary.contrastText",
+                            borderColor: "secondary.dark",
+                            ":hover": { backgroundColor: "secondary.dark" },
+                          }}
+                        >
+                          Reject
+                        </Button>
+                      </Stack>
                     </Stack>
                   </CardContent>
                 </Card>

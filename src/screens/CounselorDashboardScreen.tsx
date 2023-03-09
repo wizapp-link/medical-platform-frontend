@@ -135,36 +135,41 @@ export default function CounselorDashboardScreen(props: any) {
 
         <List>
           {patients.map((patient) => (
-              <ListItem key={patient.id}>
-                <Box sx={{ width: "100%" }}>
-                  <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                    <CardContent>
+            <ListItem key={patient.id}>
+              <Box sx={{ width: "100%" }}>
+                <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+                  <CardContent>
+                    <Stack direction="row" justifyContent={"space-between"}>
                       <Stack direction="row">
                         <ListItemAvatar>
                           <Avatar alt="patient" src="" />
                         </ListItemAvatar>
-                        <Stack direction={"column"} marginRight={"2%"}>
+                        <Stack direction={"column"} sx={{marginRight: 3}}>
                           <Typography>{patient.name}</Typography>
                           <Typography>{`ID: ${patient.id}`}2</Typography>
                         </Stack>
                         <Button
                           variant="contained"
-                          onClick={() => handleAssessmentButtonClick(patient)}  
+                          onClick={() => handleAssessmentButtonClick(patient)}
                         >
                           Self-Assessment
                         </Button>
-
-                        <Stack direction={"row"} spacing={2} marginLeft={"60%"} sx={{ flexDirection: "row" }}>
-                          <Button variant="contained">Assign</Button>
-                          <Button variant="contained" color="secondary">
-                            Reject
-                          </Button>
-                        </Stack>
                       </Stack>
-                    </CardContent>
-                  </Card>
-                </Box>
-              </ListItem>
+                      <Stack
+                        direction={"row"}
+                        spacing={2}
+                        sx={{ flexDirection: "row" }}
+                      >
+                        <Button variant="contained">Assign</Button>
+                        <Button variant="contained" color="secondary">
+                          Reject
+                        </Button>
+                      </Stack>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Box>
+            </ListItem>
           ))}
         </List>
 
