@@ -7,9 +7,14 @@ import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { patientTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppSelector } from '../app/hooks';
+import { useNavigate } from 'react-router-dom';
 
 export default function PatientDashboardScreen(props: any) {
 	const { userInfo } = useAppSelector(selectUserLogIn);
+	const navigate = useNavigate();
+	const handleAppointments = () => {
+		navigate(`/patient/appointments`);
+	}
 
 	return <ThemeProvider theme={patientTheme}>
 		<Stack padding={2} spacing={2}>
@@ -22,7 +27,11 @@ export default function PatientDashboardScreen(props: any) {
 			{/* if the assessment is not completed */}
 			{/* <Button variant="contained">Complete the assessment</Button> */}
 			{/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
-			<Button variant="contained" sx={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}>View Appointments</Button>
+			<Button variant="contained" 
+			onClick={handleAppointments}
+			sx={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}>
+				View Appointments
+				</Button>
 			<Divider />
 
 
