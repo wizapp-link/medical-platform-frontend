@@ -108,8 +108,8 @@ export default function DoctorAppointmentScreen(props: any) {
                   <CardContent>
                     <Stack direction={"row"} justifyContent={"space-between"}>
                       <Stack direction={"row"}>
-                        <ListItemAvatar>
-                          <Avatar alt="patient" src="" />
+                        <ListItemAvatar sx={{ display: "flex" }}>
+                          <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
                         </ListItemAvatar>
                         <Stack direction={"column"}>
                           <Typography>{patient.name}</Typography>

@@ -60,8 +60,8 @@ export default function DoctorDashboardScreen(props: any) {
                   <CardContent>
                     <Stack direction={"row"} justifyContent={"space-between"}>
                       <Stack direction={"row"}>
-                        <ListItemAvatar>
-                          <Avatar
+                        <ListItemAvatar sx={{ display: "flex" }}>
+                          <Avatar sx={{ alignSelf: "center" }}
                             alt="Jack Napier"
                             src="/static/images/doctor/samplePatient.jpg"
                           />

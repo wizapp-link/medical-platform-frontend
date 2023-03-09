@@ -67,11 +67,10 @@ export default function PatientDashboardScreen(props: any) {
                   <CardContent>
                     <Stack direction="row" justifyContent="space-between">
                       <Stack direction="row">
-                        <ListItemAvatar>
-                          <Avatar
-                            alt="doctor"
+                        <ListItemAvatar sx={{ display: "flex" }}>
+                          <Avatar alt="doctor"
                             src="/static/images/doctor/sampleDoctor.jpg"
-                          />
+                            sx={{ alignSelf: "center" }} />
                         </ListItemAvatar>
                         <Stack direction={"column"}>
                           <Typography>Dr. Gregory House</Typography>

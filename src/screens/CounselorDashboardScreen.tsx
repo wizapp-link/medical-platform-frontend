@@ -141,10 +141,10 @@ export default function CounselorDashboardScreen(props: any) {
                   <CardContent>
                     <Stack direction="row" justifyContent={"space-between"}>
                       <Stack direction="row">
-                        <ListItemAvatar>
-                          <Avatar alt="patient" src="" />
+                        <ListItemAvatar sx={{ display: "flex" }}>
+                          <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
                         </ListItemAvatar>
-                        <Stack direction={"column"} sx={{marginRight: 3}}>
+                        <Stack direction={"column"} sx={{ marginRight: 3 }}>
                           <Typography>{patient.name}</Typography>
                           <Typography>{`ID: ${patient.id}`}2</Typography>
                         </Stack>

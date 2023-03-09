@@ -40,57 +40,58 @@ export default function PersonnelList(props: PropsType) {
           <ListItem key={user.id}>
             <Box width={"100%"}>
               <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                <CardContent>
-                  <Stack direction={"row"} justifyContent="space-between">
-                    <Stack direction={"row"}>
-                      <ListItemAvatar>
-                        <Avatar alt={user.name} src="" />
-                      </ListItemAvatar>
-                      <Stack direction={"column"}>
-                        <Typography>{user.name}</Typography>
-                        <Typography>{`Email: ${user.email}`}2</Typography>
-                      </Stack>
-                    </Stack>
-                    <Stack justifyContent="flex-end" direction={"row"}>
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleAssessmentButtonClick(user)}
-                        sx={{ marginRight: 2 }}
-                      >
-                        See-Infomation
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          handleAccept(user);
-                        }}
-                        disabled={user.status === personnelStatus.verified}
-                        sx={{ marginRight: 2 }}
-                      >
-                        {user.status === personnelStatus.verified
-                          ? "Accepted"
-                          : "Accept"}
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => {
-                          handleReject(user);
-                        }}
-                        disabled={user.status === personnelStatus.declined}
-                        sx={{ marginRight: 2 }}
-                      >
-                        {user.status === personnelStatus.declined
-                          ? "Rejected"
-                          : "Reject"}
-                      </Button>
+                <CardContent sx={{ display: "flex", justifyContent: "space-between" }}>
+                  {/* <Box > */}
+                  <Stack direction={"row"}>
+                    <ListItemAvatar sx={{ display: "flex" }}>
+                      <Avatar alt={user.name} src="" sx={{ alignSelf: "center" }} />
+                    </ListItemAvatar>
+                    <Stack direction={"column"}>
+                      <Typography>{user.name}</Typography>
+                      <Typography>{`Email: ${user.email}`}</Typography>
                     </Stack>
                   </Stack>
+                  <Stack direction={"row"}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleAssessmentButtonClick(user)}
+                      sx={{ marginRight: 2 }}
+                    >
+                      See-Infomation
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        handleAccept(user);
+                      }}
+                      disabled={user.status === personnelStatus.verified}
+                      sx={{ marginRight: 2 }}
+                    >
+                      {user.status === personnelStatus.verified
+                        ? "Accepted"
+                        : "Accept"}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => {
+                        handleReject(user);
+                      }}
+                      disabled={user.status === personnelStatus.declined}
+                      sx={{ marginRight: 2 }}
+                    >
+                      {user.status === personnelStatus.declined
+                        ? "Rejected"
+                        : "Reject"}
+                    </Button>
+                  </Stack>
+                  {/* </Box> */}
                 </CardContent>
               </Card>
             </Box>
           </ListItem>
-        ))}
-    </List>
+        ))
+      }
+    </List >
   );
 }
