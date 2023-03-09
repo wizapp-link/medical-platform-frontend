@@ -10,45 +10,59 @@ import {
   ListItemAvatar,
   Avatar,
   Paper,
-  Dialog, DialogTitle, DialogContent, Container, ThemeProvider
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Container,
+  ThemeProvider,
+  CardContent,
+  Card,
 } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
-import { doctorTheme } from '../Themes';
-
+import { doctorTheme } from "../Themes";
 
 export default function DoctorAppointmentScreen(props: any) {
   const [patients, setPatients] = useState<Patient[]>([
     {
       id: 1,
       name: "Alice",
-      selfAssessmentResults: ["Alice selfAssessmentResults", "Alice selfAssessmentResults2"],
+      selfAssessmentResults: [
+        "Alice selfAssessmentResults",
+        "Alice selfAssessmentResults2",
+      ],
       address: "address",
       dob: "1998/01/01",
       phoneNumber: "5140000000",
       emailAddress: "Alice@gmail.com",
-      doctorRegistrationNumber: "88888888"
+      doctorRegistrationNumber: "88888888",
     },
     {
       id: 2,
       name: "Ben",
-      selfAssessmentResults: ["Ben selfAssessmentResults", "Ben selfAssessmentResults2"],
+      selfAssessmentResults: [
+        "Ben selfAssessmentResults",
+        "Ben selfAssessmentResults2",
+      ],
       address: "address2",
       dob: "1998/01/02",
       phoneNumber: "5140000001",
       emailAddress: "Ben@gmail.com",
-      doctorRegistrationNumber: "77777777"
+      doctorRegistrationNumber: "77777777",
     },
     {
       id: 3,
       name: "Alex",
-      selfAssessmentResults: ["Alex selfAssessmentResults", "Alex selfAssessmentResults2"],
+      selfAssessmentResults: [
+        "Alex selfAssessmentResults",
+        "Alex selfAssessmentResults2",
+      ],
       address: "address3",
       dob: "1998/01/03",
       phoneNumber: "5140000002",
       emailAddress: "Alex@gmail.com",
-      doctorRegistrationNumber: "99999999"
-    }
+      doctorRegistrationNumber: "99999999",
+    },
   ]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
@@ -65,7 +79,6 @@ export default function DoctorAppointmentScreen(props: any) {
     doctorRegistrationNumber: string;
   };
 
-
   const handleAssessmentButtonClick = (patient: Patient) => {
     setSelectedPatient(patient);
     setShowAssessmentDialog(true);
@@ -78,71 +91,106 @@ export default function DoctorAppointmentScreen(props: any) {
 
   const handleClose = () => {
     setShowAssessmentDialog(false);
-    setShowDetailDialog((false));
+    setShowDetailDialog(false);
   };
-
 
   return (
     <ThemeProvider theme={doctorTheme}>
       <Box sx={{ padding: 2 }}>
-        <Container>
-          <>
-            <Stack spacing={5} padding={5}>
-              <Typography variant="h4" gutterBottom>
-                Assigned Patients
-              </Typography>
-              <List>
-                {patients.map((patient) => (
-                  <ListItem key={patient.id} disablePadding>
-                    <ListItemAvatar>
-                      <Avatar alt="patient" src="" />
-                    </ListItemAvatar>
-                    <ListItemText primary={patient.name} secondary={`ID: ${patient.id}`} />
-                    <Stack direction={"row"} spacing={2}>
-                      <Button variant="contained" color="primary" onClick={() => handleAssessmentButtonClick(patient)}>
+        <Typography variant="h4" gutterBottom>
+          Assigned Patients
+        </Typography>
+        <List>
+          {patients.map((patient) => (
+            <ListItem key={patient.id}>
+              <Box sx={{ width: "100%" }}>
+                <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+                  <CardContent>
+                    <Stack direction={"row"}>
+                      <ListItemAvatar>
+                        <Avatar alt="patient" src="" />
+                      </ListItemAvatar>
+                      <Stack direction={"column"} marginRight={"67%"}>
+                        <Typography>{patient.name}</Typography>
+                        <Typography>{`ID: ${patient.id}`}2</Typography>
+                      </Stack>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleAssessmentButtonClick(patient)}
+                        sx={{marginRight: 2}}
+                      >
                         Self-Assessment
                       </Button>
-                      <Button variant="contained" color="secondary" onClick={() => handleDetailButtonClick(patient)}>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleDetailButtonClick(patient)}
+                      >
                         View Details
-                      </Button></Stack>
-
-                  </ListItem>
-                ))}
-              </List>
-            </Stack>
-            <Dialog open={showAssessmentDialog} onClose={handleClose}>
-              <DialogTitle sx={{ fontWeight: "bold" }}>{selectedPatient?.name}</DialogTitle>
-              <DialogContent>
-                <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
-                <Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Self-Assessment Results</Typography>
-                <List>
-                  {selectedPatient?.selfAssessmentResults.map((result) => (
-                    <ListItem key={result}>
-                      <ListItemText primary={result} />
-                    </ListItem>
-                  ))}
-                </List>
-              </DialogContent>
-            </Dialog>
-            <Dialog open={showDetailDialog} onClose={handleClose}>
-              <DialogTitle sx={{ fontWeight: "bold" }}>{selectedPatient?.name}</DialogTitle>
-              <DialogContent>
-                <Typography variant="subtitle1">ID: {selectedPatient?.id}</Typography>
-                <Typography variant="subtitle1">Name: {selectedPatient?.name}</Typography>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Detailed Information</Typography>
-                <Typography variant="subtitle1">Address: {selectedPatient?.address}</Typography>
-                <Typography variant="subtitle1">Date of Birth: {selectedPatient?.dob}</Typography>
-                <Typography variant="subtitle1">Phone Number: {selectedPatient?.phoneNumber}</Typography>
-                <Typography variant="subtitle1">Email Address: {selectedPatient?.emailAddress}</Typography>
-                <Typography variant="subtitle1">
-                  Doctor Registration Number: {selectedPatient?.doctorRegistrationNumber}
-                </Typography>
-              </DialogContent>
-            </Dialog>
-          </>
-        </Container>
-
+                      </Button>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Box>
+            </ListItem>
+          ))}
+        </List>
+        <Dialog open={showAssessmentDialog} onClose={handleClose}>
+          <DialogTitle sx={{ fontWeight: "bold" }}>
+            {selectedPatient?.name}
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="subtitle1">
+              ID: {selectedPatient?.id}
+            </Typography>
+            <Typography variant="subtitle1">
+              Name: {selectedPatient?.name}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Self-Assessment Results
+            </Typography>
+            <List>
+              {selectedPatient?.selfAssessmentResults.map((result) => (
+                <ListItem key={result}>
+                  <ListItemText primary={result} />
+                </ListItem>
+              ))}
+            </List>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={showDetailDialog} onClose={handleClose}>
+          <DialogTitle sx={{ fontWeight: "bold" }}>
+            {selectedPatient?.name}
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="subtitle1">
+              ID: {selectedPatient?.id}
+            </Typography>
+            <Typography variant="subtitle1">
+              Name: {selectedPatient?.name}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Detailed Information
+            </Typography>
+            <Typography variant="subtitle1">
+              Address: {selectedPatient?.address}
+            </Typography>
+            <Typography variant="subtitle1">
+              Date of Birth: {selectedPatient?.dob}
+            </Typography>
+            <Typography variant="subtitle1">
+              Phone Number: {selectedPatient?.phoneNumber}
+            </Typography>
+            <Typography variant="subtitle1">
+              Email Address: {selectedPatient?.emailAddress}
+            </Typography>
+            <Typography variant="subtitle1">
+              Doctor Registration Number:{" "}
+              {selectedPatient?.doctorRegistrationNumber}
+            </Typography>
+          </DialogContent>
+        </Dialog>
       </Box>
     </ThemeProvider>
   );
