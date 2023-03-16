@@ -4,6 +4,7 @@ import doctorReducer from "../features/doctor/doctorSlice";
 import userRegisterReducer from "../features/auth/userRegisterSlice"
 import userLogInReducer from '../features/auth/userLogInSlice';
 import personnelListReducer from "../features/manager/personnelsSlice"
+import assessmentReducer from "../features/patient/assessmentSlice"
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     userRegister: userRegisterReducer,
     userLogIn: userLogInReducer,
     personnelList: personnelListReducer,
+    assessment: assessmentReducer,
   },
 });
 
