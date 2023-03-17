@@ -1,4 +1,14 @@
-import { createTheme, ThemeProvider, colors, Container, Paper, Stack } from "@mui/material";
+import {
+  createTheme,
+  ThemeProvider,
+  colors,
+  Container,
+  Paper,
+  Stack,
+  FormControl,
+  RadioGroup,
+  FormControlLabel, Radio
+} from "@mui/material";
 import * as React from "react";
 import { patientTheme } from "../Themes";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,20 +17,59 @@ import { setCurrentQuestionIndex, setAnswer, submitAssessment } from "../feature
 import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
 const questions = [
-  { id: 1, text: "Question 1" },
-  { id: 2, text: "Question 2" },
-  { id: 3, text: "Question 3" }
+  {
+    id: 1,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Little interest or pleasure in doing things?"
+  },
+  {
+    id: 2,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling down, depressed or hopeless?"
+  },
+  {
+    id: 3,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Trouble falling asleep, staying asleep, or sleeping too much?"
+  },
+  {
+    id: 4,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling tired or having little energy?"
+  },
+  {
+    id: 5,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Poor appetite or overeating?"
+  },
+  {
+    id: 6,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling bad about yourself - or that you're a failure or have let yourself or your family down?"
+  },
+  {
+    id: 7,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Trouble concentrating on things, such as reading the newspaper or watching television?"
+  },
+  {
+    id: 8,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Moving or speaking so slowly that other people could have noticed. Or, the opposite - being so fidgety or restless that you have been moving around a lot more than usual?"
+  },
+  {
+    id: 9,
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Thoughts that you would be better off dead or of hurting yourself in some way?"
+  }
+
 ];
+
+const ansList = ["Not At all", "Several Days", "More Than Half the Days", "Nearly Every Day"];
 export default function PatientAssessmentScreen(props: any) {
+  const {userInfo} = useAppSelector(selectUserLogIn)
   const dispatch: AppDispatch = useDispatch();
-  const assessment = useAppSelector((state: RootState) => state.assessment)
+  const assessment = useAppSelector((state: RootState) => state.assessment);
   const { currentQuestionIndex, answers, errorMessage, loading, error } = assessment;
   const [showSummary, setShowSummary] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
   const [answer, setAnswerText] = useState(answers[currentQuestion.id] || "");
+
 
   const onAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswerText(event.target.value);
@@ -37,15 +86,12 @@ export default function PatientAssessmentScreen(props: any) {
   };
 
   const onSubmit = () => {
-    dispatch(
-      submitAssessment(
-        questions.map((question) => ({
-          questionId: question.id,
-          answer: answers[question.id],
-        }))
-      )
-    );
-    // if(error == false)
+    if(userInfo){
+      const email = userInfo.userData.email; // Replace this with the user's actual email
+      const assessmentOptionsSelected = questions.map((question) => answers[question.id]);
+
+      dispatch(submitAssessment({ email, assessmentOptionsSelected }));
+    }
 
   };
 
@@ -62,66 +108,83 @@ export default function PatientAssessmentScreen(props: any) {
     if (showSummary) {
       return (
         <Box>
-          <Typography variant="h4" mb={2}>Summary</Typography>
+          <Typography variant="h4" my={5}>Summary</Typography>
           <Stack spacing={2}>
             {questions.map((question) => (
               <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
-                <Typography variant="body1">{answers[question.id]}</Typography>
+                <Typography
+                  variant="body1">{`${answers[question.id]}. ${ansList[answers[question.id].charCodeAt(0) - 97]}`}</Typography>
               </Paper>
             ))}
           </Stack>
           <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
-            <Button variant="contained" color="primary" onClick={onSubmit} sx={{ textTransform: 'none' }}>
-              Submit
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => {
-                setShowSummary(false);
-              }}
-              sx={{ textTransform: 'none' }}
-            >
-              Edit Answers
-            </Button>
-          </Stack>
-        </Box>
-      );
+            <Button variant="contained"
+                    color="primary"
+                    onClick={onSubmit}
+                    sx={{ textTransform: "none" }}>
+                    Submit
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => {
+              setShowSummary(false);
+            }}
+            sx={{ textTransform: "none" }}
+          >
+            Edit Answers
+          </Button>
+        </Stack>
+    </Box>
+    )
+      ;
     }
-      return (
-        <Box>
-          <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
-            <CardContent>
-              <Typography variant="h5">{currentQuestion.text}</Typography>
-              <TextField
-                label="Answer"
-                multiline
-                rows={4}
+    return (
+      <Box>
+        <Typography variant="h4" my={5}>Self-Assessment Form</Typography>
+        <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+          <CardContent>
+            <FormControl component="fieldset">
+              <Typography variant="h5" pb={3}>{currentQuestion.text}</Typography>
+              <RadioGroup
+                name={`question-${currentQuestion.id}`}
                 value={answer}
-                onChange={onAnswerChange}
-                fullWidth
-                variant="outlined"
-                margin="normal"
-              />
-            </CardContent>
-          </Paper>
-          <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
-            <Button variant="outlined" color="secondary" onClick={onPrevious} disabled={currentQuestionIndex === 0} sx={{ textTransform: 'none' }}>
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={currentQuestionIndex === questions.length - 1 ? onReview : onNext}
-              sx={{ textTransform: 'none' }}
-            >
-              {currentQuestionIndex === questions.length - 1 ? "Review" : "Next"}
-            </Button>
-          </Stack>
-        </Box>
-      );
-  }
+                onChange={(event) => onAnswerChange(event)}
+              >
+                {ansList.map((option, index) => (
+                  <FormControlLabel
+                    key={index}
+                    value={String.fromCharCode(97 + index)}
+                    control={<Radio />}
+                    label={`${String.fromCharCode(97 + index).toUpperCase()}. ${option}`}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </CardContent>
+        </Paper>
+        <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
+          <Button variant="outlined"
+                  color="secondary"
+                  onClick={onPrevious}
+                  disabled={currentQuestionIndex === 0}
+                  sx={{ textTransform: "none" }}>
+            Previous
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={currentQuestionIndex === questions.length - 1 ? onReview : onNext}
+            sx={{ textTransform: "none" }}
+            disabled={!answer}
+          >
+            {currentQuestionIndex === questions.length - 1 ? "Review" : "Next"}
+          </Button>
+        </Stack>
+      </Box>
+    );
+  };
 
   return (
     <ThemeProvider theme={patientTheme}>
@@ -130,7 +193,6 @@ export default function PatientAssessmentScreen(props: any) {
       </Container>
     </ThemeProvider>
   );
-
 
 
 }
