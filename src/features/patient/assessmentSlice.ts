@@ -47,16 +47,16 @@ export const assessmentSlice = createSlice({
   },
 });
 
-export const submitAssessment = (questionAnswers: { questionId: number; answer: string }[] ) => async (dispatch: AppDispatch) => {
+export const submitAssessment = (questionAnswers: { email: string, assessmentOptionsSelected: string[]}) => async (dispatch: AppDispatch) => {
   dispatch(submitRequest());
   try {
-    await axios.post('/api/v1/assessment', { questionAnswers });
+    await axios.post('/api/v1/addAssessDetails', { questionAnswers });
     dispatch(submitSuccess());
     // localStorage.setItem('userData', JSON.stringify(data));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
     console.log(errorMessage);
-    dispatch(userLogInFail(errorMessage));
+    dispatch(submitFail(errorMessage));
   }
 };
 
