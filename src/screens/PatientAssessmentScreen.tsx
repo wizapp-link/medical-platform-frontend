@@ -7,7 +7,7 @@ import {
   Stack,
   FormControl,
   RadioGroup,
-  FormControlLabel, Radio
+  FormControlLabel, Radio, Snackbar
 } from "@mui/material";
 import * as React from "react";
 import { patientTheme } from "../Themes";
@@ -18,6 +18,10 @@ import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/mate
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import { redirect } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { roleToPosition } from "../constants/PositionRoleMap";
+import { userRegisterReset } from "../features/auth/userRegisterSlice";
 
 const questions = [
   {
@@ -70,6 +74,14 @@ export default function PatientAssessmentScreen(props: any) {
   const currentQuestion = questions[currentQuestionIndex];
   const [answer, setAnswerText] = useState(answers[currentQuestion.id] || "");
 
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitFail, setSubmitFail] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSnackbarClose = () => {
+    setSubmitSuccess(false);
+    setSubmitFail(false);
+  }
 
   const onAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswerText(event.target.value);
@@ -89,8 +101,12 @@ export default function PatientAssessmentScreen(props: any) {
     if(userInfo){
       const email = userInfo.userData.email; // Replace this with the user's actual email
       const assessmentOptionsSelected = questions.map((question) => answers[question.id]);
-
       dispatch(submitAssessment({ email, assessmentOptionsSelected }));
+      if(error){
+        setSubmitFail(true)
+      }else {
+        setSubmitSuccess(true)
+      }
     }
 
   };
@@ -103,6 +119,14 @@ export default function PatientAssessmentScreen(props: any) {
   useEffect(() => {
     setAnswerText(answers[currentQuestion.id] || "");
   }, [currentQuestionIndex, answers]);
+
+  useEffect(() => {
+    if (submitSuccess || submitFail) {
+      setTimeout(() => {
+        navigate("/patient/dashboard");
+      }, 4000);
+    }
+  }, [submitSuccess, submitFail])
   const renderContent = () => {
 
     if (showSummary) {
@@ -114,7 +138,7 @@ export default function PatientAssessmentScreen(props: any) {
               <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
                 <Typography
-                  variant="body1">{`${answers[question.id]}. ${ansList[answers[question.id].charCodeAt(0) - 97]}`}</Typography>
+                  variant="body1">{`${answers[question.id].toUpperCase()}. ${ansList[answers[question.id].charCodeAt(0) - 97]}`}</Typography>
               </Paper>
             ))}
           </Stack>
@@ -190,6 +214,18 @@ export default function PatientAssessmentScreen(props: any) {
     <ThemeProvider theme={patientTheme}>
       <Container>
         {renderContent()}
+        <Snackbar
+          open={submitSuccess}
+          message="SUBMIT SUCCESSFUL, REDIRECT TO DASHBOARD."
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+        />
+        <Snackbar
+          open={submitFail}
+          message={errorMessage}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+        />
       </Container>
     </ThemeProvider>
   );
