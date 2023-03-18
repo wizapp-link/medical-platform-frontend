@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Typography, Chip, RadioGroup, FormControl, FormLabel, FormControlLabel, Radio, Card, CardContent, Avatar, CardActions, Button, Box, Stepper, Step, StepLabel, Paper, Stack } from "@mui/material";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { DatePickerToolbar, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import timeslots from "../constants/Timeslots";
 import { UserData } from "../types/UserDataType";
+import { display, style } from "@mui/system";
 
 
 export default function CounselorAssignmentScreen() {
@@ -67,7 +68,13 @@ export default function CounselorAssignmentScreen() {
 							</Grid>
 							<Grid item>
 								<LocalizationProvider dateAdapter={AdapterDayjs}>
-									<StaticDatePicker orientation="landscape" disablePast />
+									<StaticDatePicker orientation="landscape" disablePast
+										slotProps={{
+											actionBar: {
+												actions: undefined
+											}
+										}}
+									/>
 								</LocalizationProvider>
 							</Grid>
 
