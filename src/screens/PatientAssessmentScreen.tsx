@@ -68,7 +68,7 @@ export default function PatientAssessmentScreen(props: any) {
   const {userInfo} = useAppSelector(selectUserLogIn)
   const dispatch: AppDispatch = useDispatch();
   const assessment = useAppSelector((state: RootState) => state.assessment);
-  const { currentQuestionIndex, answers, errorMessage, loading, error } = assessment;
+  const { currentQuestionIndex, answers, errorMessage, loading, error, success } = assessment;
   const [showSummary, setShowSummary] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -102,10 +102,10 @@ export default function PatientAssessmentScreen(props: any) {
       const email = userInfo.userData.email; // Replace this with the user's actual email
       const assessmentOptionsSelected = questions.map((question) => answers[question.id]);
       dispatch(submitAssessment({ email, assessmentOptionsSelected }));
-      if(error){
-        setSubmitFail(true)
-      }else {
-        setSubmitSuccess(true)
+      if(success){
+        setSubmitSuccess(true);
+      }else{
+        setSubmitFail(true);
       }
     }
 
@@ -115,6 +115,7 @@ export default function PatientAssessmentScreen(props: any) {
     dispatch(setAnswer({ index: currentQuestion.id, answer }));
     setShowSummary(true);
   };
+
 
   useEffect(() => {
     setAnswerText(answers[currentQuestion.id] || "");
