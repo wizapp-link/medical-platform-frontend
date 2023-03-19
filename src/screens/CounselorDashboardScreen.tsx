@@ -18,6 +18,7 @@ import {
   DialogContent,
   Card,
   CardContent,
+  Grid,
 } from "@mui/material";
 import * as React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -129,49 +130,102 @@ export default function CounselorDashboardScreen(props: any) {
         </Button>
 
         <Divider />
-        <Typography variant="h5" color={"primary.contrastText"}>
-          Recent Patient List
-        </Typography>
 
-        <List>
-          {patients.map((patient) => (
-            <ListItem key={patient.id}>
-              <Box sx={{ width: "100%" }}>
-                <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                  <CardContent>
-                    <Stack direction="row" justifyContent={"space-between"}>
-                      <Stack direction="row">
-                        <ListItemAvatar sx={{ display: "flex" }}>
-                          <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
-                        </ListItemAvatar>
-                        <Stack direction={"column"} sx={{ marginRight: 3 }}>
-                          <Typography>{patient.name}</Typography>
-                          <Typography>{`ID: ${patient.id}`}2</Typography>
+
+        <Grid container direction="row">
+          <Grid item container md={12} lg={6} direction="column">
+            <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
+              Unassigned Patient List
+            </Typography>
+            <List sx={{ flexGrow: 1 }}>
+              {patients.map((patient) => (
+                <ListItem key={patient.id}>
+                  <Box sx={{ width: "100%" }}>
+                    <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent={"space-between"}>
+                          <Stack direction="row">
+                            <ListItemAvatar sx={{ display: "flex" }}>
+                              <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
+                            </ListItemAvatar>
+                            <Stack direction={"column"} sx={{ marginRight: 3 }}>
+                              <Typography>{patient.name}</Typography>
+                              <Typography>{`ID: ${patient.id}`}2</Typography>
+                            </Stack>
+                            <Button
+                              variant="contained"
+                              onClick={() => handleAssessmentButtonClick(patient)}
+                            >
+                              Self-Assessment
+                            </Button>
+                          </Stack>
+                          <Stack
+                            direction={"row"}
+                            spacing={2}
+                            sx={{ flexDirection: "row" }}
+                          >
+                            <Button variant="contained"
+                              onClick={() => { navigate(`../assignment?patientId=${patient.id}`) }}
+                            >Assign</Button>
+                            <Button variant="contained" color="secondary">
+                              Reject
+                            </Button>
+                          </Stack>
                         </Stack>
-                        <Button
-                          variant="contained"
-                          onClick={() => handleAssessmentButtonClick(patient)}
-                        >
-                          Self-Assessment
-                        </Button>
-                      </Stack>
-                      <Stack
-                        direction={"row"}
-                        spacing={2}
-                        sx={{ flexDirection: "row" }}
-                      >
-                        <Button variant="contained">Assign</Button>
-                        <Button variant="contained" color="secondary">
-                          Reject
-                        </Button>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          <Grid item container md={12} lg={6} direction="column">
+            <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
+              Pending Appointments for Me
+            </Typography>
+            <List sx={{ flexGrow: 1 }}>
+              {patients.map((patient) => (
+                <ListItem key={patient.id}>
+                  <Box sx={{ width: "100%" }}>
+                    <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent={"space-between"}>
+                          <Stack direction="row">
+                            <ListItemAvatar sx={{ display: "flex" }}>
+                              <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
+                            </ListItemAvatar>
+                            <Stack direction={"column"} sx={{ marginRight: 3 }}>
+                              <Typography>{patient.name}</Typography>
+                              <Typography>{`ID: ${patient.id}`}2</Typography>
+                            </Stack>
+                            <Button
+                              variant="contained"
+                              onClick={() => handleAssessmentButtonClick(patient)}
+                            >
+                              Self-Assessment
+                            </Button>
+                          </Stack>
+                          <Stack
+                            direction={"row"}
+                            spacing={2}
+                            sx={{ flexDirection: "row" }}
+                          >
+                            <Button variant="contained"
+                            >Accept</Button>
+                            <Button variant="contained" color="secondary">
+                              Reject
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+        </Grid>
+
 
         <Dialog open={showAssessmentDialog} onClose={handleClose}>
           <DialogTitle
