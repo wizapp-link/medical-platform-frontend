@@ -9,7 +9,9 @@ interface AssessmentState {
   currentQuestionIndex: number;
   loading: boolean,
   error: boolean,
+  success: boolean,
   errorMessage: string,
+  successMessage: string,
 
 }
 
@@ -18,7 +20,9 @@ const initialState: AssessmentState = {
   currentQuestionIndex: 0,
   loading: false,
   error: false,
-  errorMessage: ""
+  success: false,
+  errorMessage: "",
+  successMessage: "",
 };
 
 export const assessmentSlice = createSlice({
@@ -33,10 +37,14 @@ export const assessmentSlice = createSlice({
     },
     submitRequest: (state) => {
       state.loading = true;
+      state.error = false;
     },
-    submitSuccess: (state) => {
+    submitSuccess: (state, action) => {
       state.loading = false;
       state.error = false;
+      state.success = true;
+      state.successMessage = action.payload;
+
     },
     submitFail: (state, action: PayloadAction<string>) => {
       state.loading = false;
@@ -49,9 +57,11 @@ export const assessmentSlice = createSlice({
 
 export const submitAssessment = (questionAnswers: { email: string, assessmentOptionsSelected: string[]}) => async (dispatch: AppDispatch) => {
   dispatch(submitRequest());
+  console.log(questionAnswers)
   try {
-    await axios.post('/api/v1/addAssessDetails', { questionAnswers });
-    dispatch(submitSuccess());
+    const { data } = await axios.post(`/api/v1/patient/addAssessDetails`, questionAnswers);
+    dispatch(submitSuccess(data.response));
+    console.log(data.response);
     // localStorage.setItem('userData', JSON.stringify(data));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
