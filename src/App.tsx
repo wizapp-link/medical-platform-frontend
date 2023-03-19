@@ -24,12 +24,14 @@ import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
 import CounselorDashboardScreen from './screens/CounselorDashboardScreen';
 import CounselorProfileScreen from './screens/CounselorProfileScreen';
 import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
+import CounselorAssignmentScreen from './screens/CounselorAssignmentScreen';
 {/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/ }
 import MangerHomeScreen from './screens/MangerHomeScreen';
 import ManagerMembersScreen from './screens/ManagerMembersScreen';
 import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
 import ManagerProfileScreen from './screens/ManagerProfileScreen';
 import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
+
 
 const patientTheme = createTheme({
 	palette: {
@@ -53,7 +55,7 @@ function App() {
 	return (
 		<Router>
 			<div className="App"
-				style={{ minHeight: "100vh"}}
+				style={{ minHeight: "100vh" }}
 			>
 				<Routes>
 					<Route path="signin" element={<LogInScreen />} />
@@ -84,6 +86,7 @@ function App() {
 						<Route index element={<CounselorDashboardScreen />} />
 						<Route path="dashboard" element={<CounselorDashboardScreen />} />
 						<Route path="appointments" element={<CounselorAppointmentScreen />} />
+						<Route path="assignment" element={<CounselorAssignmentScreen />} />
 						<Route path="profile" element={<CounselorProfileScreen />} />
 						<Route path="settings" element={<CounselorSettingsScreen />} />
 					</Route>
