@@ -65,7 +65,7 @@ const questions = [
 
 const ansList = ["Not At all", "Several Days", "More Than Half the Days", "Nearly Every Day"];
 export default function PatientAssessmentScreen(props: any) {
-  const {userInfo} = useAppSelector(selectUserLogIn)
+  const { userInfo } = useAppSelector(selectUserLogIn)
   const dispatch: AppDispatch = useDispatch();
   const assessment = useAppSelector((state: RootState) => state.assessment);
   const { currentQuestionIndex, answers, errorMessage, loading, error, success } = assessment;
@@ -76,11 +76,13 @@ export default function PatientAssessmentScreen(props: any) {
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitFail, setSubmitFail] = useState(false);
+  const [cancel, setCancel] = useState(false);
   const navigate = useNavigate();
 
   const handleSnackbarClose = () => {
     setSubmitSuccess(false);
     setSubmitFail(false);
+    setCancel(false);
   }
 
   const onAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,18 +100,21 @@ export default function PatientAssessmentScreen(props: any) {
   };
 
   const onSubmit = () => {
-    if(userInfo){
+    if (userInfo) {
       const email = userInfo.userData.email; // Replace this with the user's actual email
       const assessmentOptionsSelected = questions.map((question) => answers[question.id]);
       dispatch(submitAssessment({ email, assessmentOptionsSelected }));
-      if(success){
+      if (success) {
         setSubmitSuccess(true);
-      }else{
+      } else {
         setSubmitFail(true);
       }
     }
 
   };
+  const onCancel = () => {
+     setSubmitFail(true);
+  }
 
   const onReview = () => {
     dispatch(setAnswer({ index: currentQuestion.id, answer }));
@@ -145,25 +150,31 @@ export default function PatientAssessmentScreen(props: any) {
           </Stack>
           <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
             <Button variant="contained"
-                    color="primary"
-                    onClick={onSubmit}
-                    sx={{ textTransform: "none" }}>
-                    Submit
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => {
-              setShowSummary(false);
-            }}
-            sx={{ textTransform: "none" }}
-          >
-            Edit Answers
-          </Button>
-        </Stack>
-    </Box>
-    )
-      ;
+              color="primary"
+              onClick={onSubmit}
+              sx={{ textTransform: "none" }}>
+              Submit
+            </Button>
+            <Button variant="contained"
+              color="primary"
+              onClick={onCancel}
+              sx={{ textTransform: "none" }}>
+              Cancel
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => {
+                setShowSummary(false);
+              }}
+              sx={{ textTransform: "none" }}
+            >
+              Edit Answers
+            </Button>
+          </Stack>
+        </Box>
+      )
+        ;
     }
     return (
       <Box>
@@ -191,10 +202,10 @@ export default function PatientAssessmentScreen(props: any) {
         </Paper>
         <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
           <Button variant="outlined"
-                  color="secondary"
-                  onClick={onPrevious}
-                  disabled={currentQuestionIndex === 0}
-                  sx={{ textTransform: "none" }}>
+            color="secondary"
+            onClick={onPrevious}
+            disabled={currentQuestionIndex === 0}
+            sx={{ textTransform: "none" }}>
             Previous
           </Button>
           <Button
@@ -218,6 +229,12 @@ export default function PatientAssessmentScreen(props: any) {
         <Snackbar
           open={submitSuccess}
           message="SUBMIT SUCCESSFUL, REDIRECT TO DASHBOARD."
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+        />
+         <Snackbar
+          open={cancel}
+          message="CANCEL SUCCESSFUL, REDIRECT TO DASHBOARD."
           autoHideDuration={3000}
           onClose={handleSnackbarClose}
         />
