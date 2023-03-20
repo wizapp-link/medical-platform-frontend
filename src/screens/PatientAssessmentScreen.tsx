@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { userRegisterReset } from "../features/auth/userRegisterSlice";
 
-const questions = [
+export const questions = [
   {
     id: 1,
     text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Little interest or pleasure in doing things?"
@@ -63,7 +63,7 @@ const questions = [
 
 ];
 
-const ansList = ["Not At all", "Several Days", "More Than Half the Days", "Nearly Every Day"];
+export const ansList = ["Not At all", "Several Days", "More Than Half the Days", "Nearly Every Day"];
 export default function PatientAssessmentScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn)
   const dispatch: AppDispatch = useDispatch();
