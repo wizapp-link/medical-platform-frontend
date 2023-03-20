@@ -21,50 +21,55 @@ import * as React from "react";
 import { useState } from "react";
 import { createTheme, ThemeProvider, colors } from "@mui/material";
 import { counselorTheme } from "../Themes";
+import { useAppSelector } from "../app/hooks";
+import { selectDoctor } from "../features/doctor/doctorSlice";
+import { Patient } from "../types/PatientDataType";
 
 export default function CounselorAppointmentScreen(props: any) {
-  const [patients, setPatients] = useState<Patient[]>([
-    {
-      id: 1,
-      name: "Alice",
-      selfAssessmentResults: [
-        "Alice selfAssessmentResults",
-        "Alice selfAssessmentResults2",
-      ],
-      address: "address",
-      dob: "1998/01/01",
-      phoneNumber: "5140000000",
-      emailAddress: "Alice@gmail.com",
-      doctorRegistrationNumber: "88888888",
-    },
-    {
-      id: 2,
-      name: "Ben",
-      selfAssessmentResults: [
-        "Ben selfAssessmentResults",
-        "Ben selfAssessmentResults2",
-      ],
-      address: "address2",
-      dob: "1998/01/02",
-      phoneNumber: "5140000001",
-      emailAddress: "Ben@gmail.com",
-      doctorRegistrationNumber: "77777777",
-    },
-  ]);
+  const { patients } = useAppSelector(selectDoctor);
+
+  // const [patients, setPatients] = useState<Patient[]>([
+  //   {
+  //     id: 1,
+  //     name: "Alice",
+  //     selfAssessmentResults: [
+  //       "Alice selfAssessmentResults",
+  //       "Alice selfAssessmentResults2",
+  //     ],
+  //     address: "address",
+  //     dob: "1998/01/01",
+  //     phoneNumber: "5140000000",
+  //     emailAddress: "Alice@gmail.com",
+  //     doctorRegistrationNumber: "88888888",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Ben",
+  //     selfAssessmentResults: [
+  //       "Ben selfAssessmentResults",
+  //       "Ben selfAssessmentResults2",
+  //     ],
+  //     address: "address2",
+  //     dob: "1998/01/02",
+  //     phoneNumber: "5140000001",
+  //     emailAddress: "Ben@gmail.com",
+  //     doctorRegistrationNumber: "77777777",
+  //   },
+  // ]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   // const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   // const [showDetailDialog, setShowDetailDialog] = useState(false);
 
-  type Patient = {
-    id: number;
-    name: string;
-    selfAssessmentResults: string[];
-    address: string;
-    dob: string;
-    phoneNumber: string;
-    emailAddress: string;
-    doctorRegistrationNumber: string;
-  };
+  // type Patient = {
+  //   id: number;
+  //   name: string;
+  //   selfAssessmentResults: string[];
+  //   address: string;
+  //   dob: string;
+  //   phoneNumber: string;
+  //   emailAddress: string;
+  //   doctorRegistrationNumber: string;
+  // };
 
   return (
     <ThemeProvider theme={counselorTheme}>
