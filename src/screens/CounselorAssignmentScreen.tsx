@@ -179,7 +179,10 @@ export default function CounselorAssignmentScreen() {
 								</Stack>
 							</Paper>
 						</Grid>
-
+						<Grid item container>
+							<Button variant="outlined" color="secondary" sx={{ flexGrow: 1, marginRight: "1rem" }}>Back</Button>
+							<Button disabled variant="contained" sx={{ flexGrow: 1, marginLeft: "1rem" }}>Finish</Button>
+						</Grid>
 					</Grid>
 				</Grid>
 			</Grid>
