@@ -76,6 +76,7 @@ export default function DoctorAppointmentScreen(props: any) {
                           color="primary"
                           onClick={() => handleAssessmentButtonClick(patient)}
                           sx={{ marginRight: 2 }}
+                          disabled={patient.assessmentOptionsSelected.length === 0}
                         >
                           Self-Assessment
                         </Button>

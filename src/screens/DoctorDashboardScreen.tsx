@@ -36,8 +36,8 @@ export default function DoctorDashboardScreen(props: any) {
   const { patients } = useAppSelector(selectDoctor);
 
   const [open, setOpen] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState<Patient|null>(null);
-  const [reason, setReason] = useState('');
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [reason, setReason] = useState("");
   const handleClickOpen = (patient: any) => {
     setSelectedPatient(patient);
     setOpen(true);
@@ -59,7 +59,7 @@ export default function DoctorDashboardScreen(props: any) {
   };
 
   const handleReject = () => {
-    if(selectedPatient)
+    if (selectedPatient)
       dispatch(updatePatientStatus(selectedPatient.email, "REJECT_PATIENT", reason));
     setReason("");
     setOpen(false);
@@ -92,10 +92,10 @@ export default function DoctorDashboardScreen(props: any) {
           <List>
             <ListItem>
               <Box width={"100%"}>
-                <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                  {patients.map(
-                    patient => (
-                      <CardContent key={patient.id}>
+                {patients.map(
+                  patient => (
+                    <Card sx={{ boxShadow: 3, marginTop: 1 }} key={patient.id}>
+                      <CardContent>
                         <Stack direction={"row"} justifyContent={"space-between"}>
                           <Stack direction={"row"}>
                             <ListItemAvatar sx={{ display: "flex" }}>
@@ -122,9 +122,10 @@ export default function DoctorDashboardScreen(props: any) {
                           </Stack>
                         </Stack>
                       </CardContent>
-                    )
-                  )}
-                </Card>
+                    </Card>
+                  )
+                )}
+
 
                 <Dialog open={open} onClose={handleClose}>
                   <DialogTitle>Reject Patient {selectedPatient?.name}</DialogTitle>
@@ -146,7 +147,7 @@ export default function DoctorDashboardScreen(props: any) {
                     <Button onClick={handleClose} color="primary">
                       Cancel
                     </Button>
-                    <Button onClick={handleReject}  color="error">
+                    <Button onClick={handleReject} color="error">
                       Reject
                     </Button>
                   </DialogActions>

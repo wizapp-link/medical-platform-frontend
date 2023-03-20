@@ -27,8 +27,33 @@ const TestPatient: Patient[] = [{
   role: "",
   status: "",
   verificationAttempts: null
+},
+  {
+    address: "Addr2",
+    assessmentOptionsSelected:  [],
+    assessmentTaken: false,
+    counsellingComment: "",
+    counsellingDone: false,
+    counsellorAssigned: "",
+    creationDate: "2000-00-00",
+    dob: "2003-00-00",
+    doctorAssigned: null,
+    doctorComment: null,
+    doctoringDone: false,
+    email: "Rui@123.456",
+    id: "888888",
+    name: "Rui",
+    otp: null,
+    otpExpiryDate: null,
+    password: "",
+    patientQueue: null,
+    phone: "5140000000",
+    registrationNo: null,
+    role: "",
+    status: "",
+    verificationAttempts: null
 
-},]
+  }]
 
 interface DoctorState {
   updatingPatientStatus: boolean;
