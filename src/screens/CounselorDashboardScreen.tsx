@@ -18,65 +18,80 @@ import {
   DialogContent,
   Card,
   CardContent,
+  Snackbar,
+  Tab,
+  Tabs
 } from "@mui/material";
 import * as React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { height } from "@mui/system";
 import { createTheme, ThemeProvider, colors } from "@mui/material";
 import { counselorTheme } from "../Themes";
 import { useSelector } from "react-redux";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { flexbox } from "@mui/system";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import {
+  selectPersonnelList,
+  listAllPersonnel,
+  updatePersonnel,
+  listPersonnel,
+  personnelUpdateMessageReset
+} from "../features/manager/personnelsSlice";
+import { UserData } from "../types/UserDataType";
+import personnelStatus from "../constants/PersonnelStatus";
+import PersonnelList from "../components/PersonnelList";
+import PatientPersonnelList from "../components/PatientPersonnelList";
+import PersonnelDetailDialog from "../components/PersonnelDetailDialog";
 
 export default function CounselorDashboardScreen(props: any) {
-  const [patients, setPatients] = useState<Patient[]>([
-    {
-      id: 1,
-      name: "Alice",
-      selfAssessmentResults: [
-        "Alice selfAssessmentResults",
-        "Alice selfAssessmentResults2",
-      ],
-      address: "address",
-      dob: "1998/01/01",
-      phoneNumber: "5140000000",
-      emailAddress: "Alice@gmail.com",
-      doctorRegistrationNumber: "88888888",
-    },
-    {
-      id: 2,
-      name: "Ben",
-      selfAssessmentResults: [
-        "Ben selfAssessmentResults",
-        "Ben selfAssessmentResults2",
-      ],
-      address: "address2",
-      dob: "1998/01/02",
-      phoneNumber: "5140000001",
-      emailAddress: "Ben@gmail.com",
-      doctorRegistrationNumber: "77777777",
-    },
-    {
-      id: 3,
-      name: "Alex",
-      selfAssessmentResults: [
-        "Alex selfAssessmentResults",
-        "Alex selfAssessmentResults2",
-      ],
-      address: "address3",
-      dob: "1998/01/03",
-      phoneNumber: "5140000002",
-      emailAddress: "Alex@gmail.com",
-      doctorRegistrationNumber: "99999999",
-    },
-  ]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
+  const [showSelfAssessmentDialog, setShowSelfAssessmentDialog] = useState(false);
+
+
+  const { userInfo } = useAppSelector(selectUserLogIn);
+  const personnelList = useAppSelector(selectPersonnelList);
+  const dispatch = useAppDispatch();
+  const [selectedPerson, setSelectedPerson] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    dispatch(listAllPersonnel(userInfo?.token, false))
+  }, [])
+
+  const handleAssessmentButtonClick = (person: UserData) => {
+    setSelectedPerson(person);
+    setShowAssessmentDialog(true);
+  };
+
+  const handleClose = () => {
+    setShowAssessmentDialog(false);
+  };
+
+  const handleAccept = (user: UserData) => {
+    dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.verified));
+  };
+
+  const handleReject = (user: UserData) => {
+    dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined));
+  };
+
+  const handleSnackbarClose = () => {
+    dispatch(personnelUpdateMessageReset());
+  };
+
+
+  const [tabIndex, setTabIndex] = useState(0);
+  const handleTabChange = (
+    event: any,
+    newTabIndex: React.SetStateAction<number>
+  ) => {
+    setTabIndex(newTabIndex);
+  };
 
   type Patient = {
     id: number;
@@ -88,20 +103,16 @@ export default function CounselorDashboardScreen(props: any) {
     emailAddress: string;
     doctorRegistrationNumber: string;
   };
-  const handleAssessmentButtonClick = (patient: Patient) => {
+
+  const handleSelfAssessmentButtonClick = (patient: Patient) => {
     setSelectedPatient(patient);
     setShowAssessmentDialog(true);
   };
-  const handleClose = () => {
-    setShowAssessmentDialog(false);
-    // setShowDetailDialog((false));
-  };
+
   const navigate = useNavigate();
   const handleAppointments = () => {
     navigate(`/counselor/appointments`);
   };
-
-  const { userInfo } = useAppSelector(selectUserLogIn);
 
   return (
     <ThemeProvider theme={counselorTheme}>
@@ -132,77 +143,37 @@ export default function CounselorDashboardScreen(props: any) {
         <Typography variant="h5" color={"primary.contrastText"}>
           Recent Patient List
         </Typography>
-
-        <List>
-          {patients.map((patient) => (
-            <ListItem key={patient.id}>
-              <Box sx={{ width: "100%" }}>
-                <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                  <CardContent>
-                    <Stack direction="row" justifyContent={"space-between"}>
-                      <Stack direction="row">
-                        <ListItemAvatar sx={{ display: "flex" }}>
-                          <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
-                        </ListItemAvatar>
-                        <Stack direction={"column"} sx={{ marginRight: 3 }}>
-                          <Typography>{patient.name}</Typography>
-                          <Typography>{`ID: ${patient.id}`}2</Typography>
-                        </Stack>
-                        <Button
-                          variant="contained"
-                          onClick={() => handleAssessmentButtonClick(patient)}
-                        >
-                          Self-Assessment
-                        </Button>
-                      </Stack>
-                      <Stack
-                        direction={"row"}
-                        spacing={2}
-                        sx={{ flexDirection: "row" }}
-                      >
-                        <Button variant="contained">Assign</Button>
-                        <Button variant="contained" color="secondary">
-                          Reject
-                        </Button>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
-
-        <Dialog open={showAssessmentDialog} onClose={handleClose}>
-          <DialogTitle
-            color={"primary.contrastText"}
-            sx={{ fontWeight: "bold" }}
-          >
-            {selectedPatient?.name}
-          </DialogTitle>
-          <DialogContent>
-            <Typography variant="subtitle1" color={"primary.contrastText"}>
-              ID: {selectedPatient?.id}
-            </Typography>
-            <Typography variant="subtitle1" color={"primary.contrastText"}>
-              Name: {selectedPatient?.name}
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Self-Assessment Results
-            </Typography>
-            <List>
-              {selectedPatient?.selfAssessmentResults.map((result) => (
-                <ListItem key={result} sx={{ color: "primary.contrastText" }}>
-                  <ListItemText
-                    primary={result}
-                    sx={{ color: "primary.contrastText" }}
+        <Box>
+          <Box>
+              <Box>
+                {personnelList.personnel && (
+                  <PatientPersonnelList
+                    users={personnelList.personnel.patients}
+                    handleAssessmentButtonClick={handleAssessmentButtonClick}
+                    handleAccept={handleAccept}
+                    handleReject={handleReject}
                   />
-                </ListItem>
-              ))}
-            </List>
-          </DialogContent>
-        </Dialog>
+                )}
+              </Box>
+          </Box>
+        </Box>
+        <PersonnelDetailDialog open={showAssessmentDialog} onClose={handleClose} selectedPerson={selectedPerson} />
+        <Snackbar
+          open={personnelList.personnelUpdateMessage !== ""}
+          message={personnelList.personnelUpdateMessage}
+          autoHideDuration={5000}
+          onClose={handleSnackbarClose}
+        />
+        <Snackbar
+          open={personnelList.personnelUpdateLoading}
+          message={"Applying changes, please wait..."}
+          autoHideDuration={5000}
+          onClose={handleSnackbarClose}
+        />
+
+      
       </Stack>
     </ThemeProvider>
   );
 }
+
