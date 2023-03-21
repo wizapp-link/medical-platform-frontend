@@ -1,61 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppDispatch, RootState } from "../../app/store";
+import { AppDispatch } from "../../app/store";
 import axios from "axios";
 import { Patient } from "../../types/PatientDataType";
 
-const TestPatient: Patient[] = [{
-  address: "Test",
-  assessmentOptionsSelected:  ["a", "b", "c", "d", "b", "c", "a", "b", "c"],
-  assessmentTaken: false,
-  counsellingComment: "",
-  counsellingDone: false,
-  counsellorAssigned: "",
-  creationDate: "2000-00-00",
-  dob: "2000-00-00",
-  doctorAssigned: null,
-  doctorComment: null,
-  doctoringDone: false,
-  email: "Alex@123.456",
-  id: "123456",
-  name: "Alex",
-  otp: null,
-  otpExpiryDate: null,
-  password: "",
-  patientQueue: null,
-  phone: "",
-  registrationNo: null,
-  role: "",
-  status: "",
-  verificationAttempts: null
-},
-  {
-    address: "Addr2",
-    assessmentOptionsSelected:  [],
-    assessmentTaken: false,
-    counsellingComment: "",
-    counsellingDone: false,
-    counsellorAssigned: "",
-    creationDate: "2000-00-00",
-    dob: "2003-00-00",
-    doctorAssigned: null,
-    doctorComment: null,
-    doctoringDone: false,
-    email: "Rui@123.456",
-    id: "888888",
-    name: "Rui",
-    otp: null,
-    otpExpiryDate: null,
-    password: "",
-    patientQueue: null,
-    phone: "5140000000",
-    registrationNo: null,
-    role: "",
-    status: "",
-    verificationAttempts: null
-
-  }]
-
-interface DoctorState {
+interface CounselorState {
   updatingPatientStatus: boolean;
   updateStatusError: string | null;
   patients: Patient[];
@@ -63,17 +11,16 @@ interface DoctorState {
   fetchPatientsError: string | null;
 }
 
-const initialState: DoctorState = {
+const initialState: CounselorState = {
   updatingPatientStatus: false,
   updateStatusError: null,
-  patients: TestPatient,
-  //Todo: TestPatient change to []
+  patients: [],
   fetchingPatients: false,
   fetchPatientsError: null,
 };
 
-const doctorSlice = createSlice({
-  name: 'doctor',
+const counselorSlice = createSlice({
+  name: 'counselor',
   initialState,
   reducers: {
     updatePatientStatusRequest: (state) => {
@@ -111,7 +58,7 @@ export const {
   fetchPatientsFail,
   fetchPatientsRequest,
   fetchPatientsSuccess,
-} = doctorSlice.actions;
+} = counselorSlice.actions;
 
 
 
@@ -128,7 +75,6 @@ export const updatePatientStatus = (email: string, status: string, reason: strin
     dispatch(updatePatientStatusSuccess());
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
-    console.log("Update Patient Status error: " + errorMessage );
     dispatch(updatePatientStatusFail(errorMessage));
   }
 };
@@ -140,11 +86,8 @@ export const fetchPatients = (email: string) => async (dispatch: AppDispatch) =>
     dispatch(fetchPatientsSuccess(response.data));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
-    console.log("doctor fetching patient error: " + errorMessage);
     dispatch(fetchPatientsFail(errorMessage));
   }
 };
 
-export const selectDoctor = (state: RootState) => state.doctor;
-
-export default doctorSlice.reducer;
+export default counselorSlice.reducer;

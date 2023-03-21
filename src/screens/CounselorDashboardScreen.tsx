@@ -18,6 +18,7 @@ import {
   DialogContent,
   Card,
   CardContent,
+  Grid,
 } from "@mui/material";
 import * as React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -32,62 +33,66 @@ import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { flexbox } from "@mui/system";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { selectDoctor } from "../features/doctor/doctorSlice";
+import { Patient } from "../types/PatientDataType";
+import { ansList, questions } from "./PatientAssessmentScreen";
 
 export default function CounselorDashboardScreen(props: any) {
-  const [patients, setPatients] = useState<Patient[]>([
-    {
-      id: 1,
-      name: "Alice",
-      selfAssessmentResults: [
-        "Alice selfAssessmentResults",
-        "Alice selfAssessmentResults2",
-      ],
-      address: "address",
-      dob: "1998/01/01",
-      phoneNumber: "5140000000",
-      emailAddress: "Alice@gmail.com",
-      doctorRegistrationNumber: "88888888",
-    },
-    {
-      id: 2,
-      name: "Ben",
-      selfAssessmentResults: [
-        "Ben selfAssessmentResults",
-        "Ben selfAssessmentResults2",
-      ],
-      address: "address2",
-      dob: "1998/01/02",
-      phoneNumber: "5140000001",
-      emailAddress: "Ben@gmail.com",
-      doctorRegistrationNumber: "77777777",
-    },
-    {
-      id: 3,
-      name: "Alex",
-      selfAssessmentResults: [
-        "Alex selfAssessmentResults",
-        "Alex selfAssessmentResults2",
-      ],
-      address: "address3",
-      dob: "1998/01/03",
-      phoneNumber: "5140000002",
-      emailAddress: "Alex@gmail.com",
-      doctorRegistrationNumber: "99999999",
-    },
-  ]);
+  const { patients } = useAppSelector(selectDoctor);
+  // const [patients, setPatients] = useState<Patient[]>([
+  //   {
+  //     id: 1,
+  //     name: "Alice",
+  //     selfAssessmentResults: [
+  //       "Alice selfAssessmentResults",
+  //       "Alice selfAssessmentResults2",
+  //     ],
+  //     address: "address",
+  //     dob: "1998/01/01",
+  //     phoneNumber: "5140000000",
+  //     emailAddress: "Alice@gmail.com",
+  //     doctorRegistrationNumber: "88888888",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Ben",
+  //     selfAssessmentResults: [
+  //       "Ben selfAssessmentResults",
+  //       "Ben selfAssessmentResults2",
+  //     ],
+  //     address: "address2",
+  //     dob: "1998/01/02",
+  //     phoneNumber: "5140000001",
+  //     emailAddress: "Ben@gmail.com",
+  //     doctorRegistrationNumber: "77777777",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Alex",
+  //     selfAssessmentResults: [
+  //       "Alex selfAssessmentResults",
+  //       "Alex selfAssessmentResults2",
+  //     ],
+  //     address: "address3",
+  //     dob: "1998/01/03",
+  //     phoneNumber: "5140000002",
+  //     emailAddress: "Alex@gmail.com",
+  //     doctorRegistrationNumber: "99999999",
+  //   },
+  // ]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
 
-  type Patient = {
-    id: number;
-    name: string;
-    selfAssessmentResults: string[];
-    address: string;
-    dob: string;
-    phoneNumber: string;
-    emailAddress: string;
-    doctorRegistrationNumber: string;
-  };
+  // type Patient = {
+  //   id: number;
+  //   name: string;
+  //   selfAssessmentResults: string[];
+  //   address: string;
+  //   dob: string;
+  //   phoneNumber: string;
+  //   emailAddress: string;
+  //   doctorRegistrationNumber: string;
+  // };
   const handleAssessmentButtonClick = (patient: Patient) => {
     setSelectedPatient(patient);
     setShowAssessmentDialog(true);
@@ -129,51 +134,104 @@ export default function CounselorDashboardScreen(props: any) {
         </Button>
 
         <Divider />
-        <Typography variant="h5" color={"primary.contrastText"}>
-          Recent Patient List
-        </Typography>
 
-        <List>
-          {patients.map((patient) => (
-            <ListItem key={patient.id}>
-              <Box sx={{ width: "100%" }}>
-                <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                  <CardContent>
-                    <Stack direction="row" justifyContent={"space-between"}>
-                      <Stack direction="row">
-                        <ListItemAvatar sx={{ display: "flex" }}>
-                          <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
-                        </ListItemAvatar>
-                        <Stack direction={"column"} sx={{ marginRight: 3 }}>
-                          <Typography>{patient.name}</Typography>
-                          <Typography>{`ID: ${patient.id}`}2</Typography>
+
+        <Grid container direction="row">
+          <Grid item container md={12} lg={6} direction="column">
+            <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
+              Unassigned Patient List
+            </Typography>
+            <List sx={{ flexGrow: 1 }}>
+              {patients.map((patient) => (
+                <ListItem key={patient.id}>
+                  <Box sx={{ width: "100%" }}>
+                    <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent={"space-between"}>
+                          <Stack direction="row">
+                            <ListItemAvatar sx={{ display: "flex" }}>
+                              <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
+                            </ListItemAvatar>
+                            <Stack direction={"column"} sx={{ marginRight: 3 }}>
+                              <Typography>{patient.name}</Typography>
+                              <Typography>{`ID: ${patient.id}`}2</Typography>
+                            </Stack>
+                            <Button
+                              variant="contained"
+                              onClick={() => handleAssessmentButtonClick(patient)}
+                            >
+                              Self-Assessment
+                            </Button>
+                          </Stack>
+                          <Stack
+                            direction={"row"}
+                            spacing={2}
+                            sx={{ flexDirection: "row" }}
+                          >
+                            <Button variant="contained"
+                              onClick={() => { navigate(`../assignment?patientId=${patient.id}`) }}
+                            >Assign</Button>
+                            <Button variant="contained" color="secondary">
+                              Reject
+                            </Button>
+                          </Stack>
                         </Stack>
-                        <Button
-                          variant="contained"
-                          onClick={() => handleAssessmentButtonClick(patient)}
-                        >
-                          Self-Assessment
-                        </Button>
-                      </Stack>
-                      <Stack
-                        direction={"row"}
-                        spacing={2}
-                        sx={{ flexDirection: "row" }}
-                      >
-                        <Button variant="contained">Assign</Button>
-                        <Button variant="contained" color="secondary">
-                          Reject
-                        </Button>
-                      </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          <Grid item container md={12} lg={6} direction="column">
+            <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
+              Pending Appointments for Me
+            </Typography>
+            <List sx={{ flexGrow: 1 }}>
+              {patients.map((patient) => (
+                <ListItem key={patient.id}>
+                  <Box sx={{ width: "100%" }}>
+                    <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent={"space-between"}>
+                          <Stack direction="row">
+                            <ListItemAvatar sx={{ display: "flex" }}>
+                              <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
+                            </ListItemAvatar>
+                            <Stack direction={"column"} sx={{ marginRight: 3 }}>
+                              <Typography>{patient.name}</Typography>
+                              <Typography>{`ID: ${patient.id}`}2</Typography>
+                            </Stack>
+                            <Button
+                              variant="contained"
+                              onClick={() => handleAssessmentButtonClick(patient)}
+                            >
+                              Self-Assessment
+                            </Button>
+                          </Stack>
+                          <Stack
+                            direction={"row"}
+                            spacing={2}
+                            sx={{ flexDirection: "row" }}
+                          >
+                            <Button variant="contained"
+                            >Accept</Button>
+                            <Button variant="contained" color="secondary">
+                              Reject
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+        </Grid>
 
-        <Dialog open={showAssessmentDialog} onClose={handleClose}>
+
+        {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
           <DialogTitle
             color={"primary.contrastText"}
             sx={{ fontWeight: "bold" }}
@@ -200,6 +258,35 @@ export default function CounselorDashboardScreen(props: any) {
                 </ListItem>
               ))}
             </List>
+          </DialogContent>
+        </Dialog> */}
+        <Dialog open={showAssessmentDialog} onClose={handleClose}>
+          <DialogTitle sx={{ fontWeight: "bold", fontSize: 30 }}>
+            {selectedPatient?.name} Self-Assessment Results
+          </DialogTitle>
+          <DialogContent>
+            <Stack direction={"row"} justifyContent={"space-around"}>
+              <Typography variant="subtitle1">
+                ID: {selectedPatient?.id}
+              </Typography>
+              <Typography variant="subtitle1">
+                Name: {selectedPatient?.name}
+              </Typography> </Stack>
+
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+
+            </Typography>
+            <Stack spacing={2} pt={1}>
+              {questions.map((question) => (
+                <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
+                  <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
+                  <Typography
+                    variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
+                    ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
+                  }`}</Typography>
+                </Paper>
+              ))}
+            </Stack>
           </DialogContent>
         </Dialog>
       </Stack>

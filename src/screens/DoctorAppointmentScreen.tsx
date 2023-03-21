@@ -16,68 +16,22 @@ import {
   Container,
   ThemeProvider,
   CardContent,
-  Card,
+  Card
 } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
 import { doctorTheme } from "../Themes";
+import { defaultPatient, Patient } from "../types/PatientDataType";
+import { useAppSelector } from "../app/hooks";
+import { selectDoctor } from "../features/doctor/doctorSlice";
+import { ansList, questions } from "./PatientAssessmentScreen";
 
 export default function DoctorAppointmentScreen(props: any) {
-  const [patients, setPatients] = useState<Patient[]>([
-    {
-      id: 1,
-      name: "Alice",
-      selfAssessmentResults: [
-        "Alice selfAssessmentResults",
-        "Alice selfAssessmentResults2",
-      ],
-      address: "address",
-      dob: "1998/01/01",
-      phoneNumber: "5140000000",
-      emailAddress: "Alice@gmail.com",
-      doctorRegistrationNumber: "88888888",
-    },
-    {
-      id: 2,
-      name: "Ben",
-      selfAssessmentResults: [
-        "Ben selfAssessmentResults",
-        "Ben selfAssessmentResults2",
-      ],
-      address: "address2",
-      dob: "1998/01/02",
-      phoneNumber: "5140000001",
-      emailAddress: "Ben@gmail.com",
-      doctorRegistrationNumber: "77777777",
-    },
-    {
-      id: 3,
-      name: "Alex",
-      selfAssessmentResults: [
-        "Alex selfAssessmentResults",
-        "Alex selfAssessmentResults2",
-      ],
-      address: "address3",
-      dob: "1998/01/03",
-      phoneNumber: "5140000002",
-      emailAddress: "Alex@gmail.com",
-      doctorRegistrationNumber: "99999999",
-    },
-  ]);
+  const { patients } = useAppSelector(selectDoctor);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
 
-  type Patient = {
-    id: number;
-    name: string;
-    selfAssessmentResults: string[];
-    address: string;
-    dob: string;
-    phoneNumber: string;
-    emailAddress: string;
-    doctorRegistrationNumber: string;
-  };
 
   const handleAssessmentButtonClick = (patient: Patient) => {
     setSelectedPatient(patient);
@@ -122,6 +76,7 @@ export default function DoctorAppointmentScreen(props: any) {
                           color="primary"
                           onClick={() => handleAssessmentButtonClick(patient)}
                           sx={{ marginRight: 2 }}
+                          disabled={patient.assessmentOptionsSelected.length === 0}
                         >
                           Self-Assessment
                         </Button>
@@ -141,26 +96,32 @@ export default function DoctorAppointmentScreen(props: any) {
           ))}
         </List>
         <Dialog open={showAssessmentDialog} onClose={handleClose}>
-          <DialogTitle sx={{ fontWeight: "bold" }}>
-            {selectedPatient?.name}
+          <DialogTitle sx={{ fontWeight: "bold", fontSize: 30 }}>
+            {selectedPatient?.name} Self-Assessment Results
           </DialogTitle>
           <DialogContent>
-            <Typography variant="subtitle1">
-              ID: {selectedPatient?.id}
-            </Typography>
-            <Typography variant="subtitle1">
-              Name: {selectedPatient?.name}
-            </Typography>
+            <Stack direction={"row"} justifyContent={"space-around"}>
+              <Typography variant="subtitle1">
+                ID: {selectedPatient?.id}
+              </Typography>
+              <Typography variant="subtitle1">
+                Name: {selectedPatient?.name}
+              </Typography> </Stack>
+
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Self-Assessment Results
+
             </Typography>
-            <List>
-              {selectedPatient?.selfAssessmentResults.map((result) => (
-                <ListItem key={result}>
-                  <ListItemText primary={result} />
-                </ListItem>
+            <Stack spacing={2} pt={1}>
+              {questions.map((question) => (
+                <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
+                  <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
+                  <Typography
+                    variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
+                    ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
+                  }`}</Typography>
+                </Paper>
               ))}
-            </List>
+            </Stack>
           </DialogContent>
         </Dialog>
         <Dialog open={showDetailDialog} onClose={handleClose}>
@@ -184,14 +145,10 @@ export default function DoctorAppointmentScreen(props: any) {
               Date of Birth: {selectedPatient?.dob}
             </Typography>
             <Typography variant="subtitle1">
-              Phone Number: {selectedPatient?.phoneNumber}
+              Phone Number: {selectedPatient?.phone}
             </Typography>
             <Typography variant="subtitle1">
-              Email Address: {selectedPatient?.emailAddress}
-            </Typography>
-            <Typography variant="subtitle1">
-              Doctor Registration Number:{" "}
-              {selectedPatient?.doctorRegistrationNumber}
+              Email Address: {selectedPatient?.email}
             </Typography>
           </DialogContent>
         </Dialog>
