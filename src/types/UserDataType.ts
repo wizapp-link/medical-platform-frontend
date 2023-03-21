@@ -14,3 +14,9 @@ export type UserInfo = {
   userData: UserData,
   token: string,
 }
+
+// export type Responses = {
+//   statusCode: number,
+//   error: boolean,
+//   response: string,
+// }

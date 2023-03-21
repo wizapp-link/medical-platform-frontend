@@ -7,7 +7,7 @@ import {
   Stack,
   FormControl,
   RadioGroup,
-  FormControlLabel, Radio
+  FormControlLabel, Radio, Snackbar
 } from "@mui/material";
 import * as React from "react";
 import { patientTheme } from "../Themes";
@@ -18,8 +18,12 @@ import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/mate
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import { redirect } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { roleToPosition } from "../constants/PositionRoleMap";
+import { userRegisterReset } from "../features/auth/userRegisterSlice";
 
-const questions = [
+export const questions = [
   {
     id: 1,
     text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Little interest or pleasure in doing things?"
@@ -59,17 +63,27 @@ const questions = [
 
 ];
 
-const ansList = ["Not At all", "Several Days", "More Than Half the Days", "Nearly Every Day"];
+export const ansList = ["Not At all", "Several Days", "More Than Half the Days", "Nearly Every Day"];
 export default function PatientAssessmentScreen(props: any) {
-  const {userInfo} = useAppSelector(selectUserLogIn)
+  const { userInfo } = useAppSelector(selectUserLogIn)
   const dispatch: AppDispatch = useDispatch();
   const assessment = useAppSelector((state: RootState) => state.assessment);
-  const { currentQuestionIndex, answers, errorMessage, loading, error } = assessment;
+  const { currentQuestionIndex, answers, errorMessage, loading, error, success } = assessment;
   const [showSummary, setShowSummary] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
   const [answer, setAnswerText] = useState(answers[currentQuestion.id] || "");
 
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitFail, setSubmitFail] = useState(false);
+  const [cancel, setCancel] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSnackbarClose = () => {
+    setSubmitSuccess(false);
+    setSubmitFail(false);
+    setCancel(false);
+  }
 
   const onAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswerText(event.target.value);
@@ -86,23 +100,39 @@ export default function PatientAssessmentScreen(props: any) {
   };
 
   const onSubmit = () => {
-    if(userInfo){
+    if (userInfo) {
       const email = userInfo.userData.email; // Replace this with the user's actual email
       const assessmentOptionsSelected = questions.map((question) => answers[question.id]);
-
       dispatch(submitAssessment({ email, assessmentOptionsSelected }));
+      if (success) {
+        setSubmitSuccess(true);
+      } else {
+        setSubmitFail(true);
+      }
     }
 
   };
+  const onCancel = () => {
+     setSubmitFail(true);
+  }
 
   const onReview = () => {
     dispatch(setAnswer({ index: currentQuestion.id, answer }));
     setShowSummary(true);
   };
 
+
   useEffect(() => {
     setAnswerText(answers[currentQuestion.id] || "");
   }, [currentQuestionIndex, answers]);
+
+  useEffect(() => {
+    if (submitSuccess || submitFail) {
+      setTimeout(() => {
+        navigate("/patient/dashboard");
+      }, 4000);
+    }
+  }, [submitSuccess, submitFail])
   const renderContent = () => {
 
     if (showSummary) {
@@ -114,31 +144,37 @@ export default function PatientAssessmentScreen(props: any) {
               <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
                 <Typography
-                  variant="body1">{`${answers[question.id]}. ${ansList[answers[question.id].charCodeAt(0) - 97]}`}</Typography>
+                  variant="body1">{`${answers[question.id].toUpperCase()}. ${ansList[answers[question.id].charCodeAt(0) - 97]}`}</Typography>
               </Paper>
             ))}
           </Stack>
           <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
             <Button variant="contained"
-                    color="primary"
-                    onClick={onSubmit}
-                    sx={{ textTransform: "none" }}>
-                    Submit
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => {
-              setShowSummary(false);
-            }}
-            sx={{ textTransform: "none" }}
-          >
-            Edit Answers
-          </Button>
-        </Stack>
-    </Box>
-    )
-      ;
+              color="primary"
+              onClick={onSubmit}
+              sx={{ textTransform: "none" }}>
+              Submit
+            </Button>
+            <Button variant="contained"
+              color="primary"
+              onClick={onCancel}
+              sx={{ textTransform: "none" }}>
+              Cancel
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => {
+                setShowSummary(false);
+              }}
+              sx={{ textTransform: "none" }}
+            >
+              Edit Answers
+            </Button>
+          </Stack>
+        </Box>
+      )
+        ;
     }
     return (
       <Box>
@@ -166,10 +202,10 @@ export default function PatientAssessmentScreen(props: any) {
         </Paper>
         <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
           <Button variant="outlined"
-                  color="secondary"
-                  onClick={onPrevious}
-                  disabled={currentQuestionIndex === 0}
-                  sx={{ textTransform: "none" }}>
+            color="secondary"
+            onClick={onPrevious}
+            disabled={currentQuestionIndex === 0}
+            sx={{ textTransform: "none" }}>
             Previous
           </Button>
           <Button
@@ -190,6 +226,24 @@ export default function PatientAssessmentScreen(props: any) {
     <ThemeProvider theme={patientTheme}>
       <Container>
         {renderContent()}
+        <Snackbar
+          open={submitSuccess}
+          message="SUBMIT SUCCESSFUL, REDIRECT TO DASHBOARD."
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+        />
+         <Snackbar
+          open={cancel}
+          message="CANCEL SUCCESSFUL, REDIRECT TO DASHBOARD."
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+        />
+        <Snackbar
+          open={submitFail}
+          message={errorMessage}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+        />
       </Container>
     </ThemeProvider>
   );

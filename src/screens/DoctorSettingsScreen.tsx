@@ -5,7 +5,6 @@ import { createTheme, ThemeProvider, colors} from '@mui/material';
 import { doctorTheme } from '../Themes';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
-import { passwordUpdate } from "../features/doctor/doctorSlice";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
@@ -20,13 +19,13 @@ export default function PatientSettingsScreen(props: any) {
 	const [newPassword2, setNewPassword2] = useState("");
 
 	const [openNotMatch, setOpenNotMatch] = useState(false)
-	const [openUncorrectPsw, setOpenUncorrectPsw] = useState(false)
+	const [openIncorrectPsw, setOpenIncorrectPsw] = useState(false)
 	const [openChanged, setOpenChanged] = useState(false)
 	const [openNotFilled, setOpenNotFilled] = useState(false)
 
 	const handleSnackbarClose = () => {
 		setOpenNotMatch(false)
-		setOpenUncorrectPsw(false)
+		setOpenIncorrectPsw(false)
 		setOpenChanged(false)
 		setOpenNotFilled(false)
 	};
@@ -37,8 +36,9 @@ export default function PatientSettingsScreen(props: any) {
 			setOpenNotFilled(true)
 			return;
 		}
-		if(password != doctor.password){
-			setOpenUncorrectPsw(true)
+		//todo: token to password
+		if(password != userInfo?.token){
+			setOpenIncorrectPsw(true)
 			return;
 		}
 		if(newPassword1 != newPassword2) {
@@ -46,8 +46,9 @@ export default function PatientSettingsScreen(props: any) {
 			return;
 		}
 
-		dispatch(passwordUpdate(newPassword1
-		))
+		//todo: update password
+		// dispatch(passwordUpdate(newPassword1
+		// ))
 		setPassword("")
 		setNewPassword1("")
 		setNewPassword2("")
@@ -114,7 +115,7 @@ export default function PatientSettingsScreen(props: any) {
 								onClose={handleSnackbarClose}
 							/>
 							<Snackbar
-								open={openUncorrectPsw}
+								open={openIncorrectPsw}
 								message="CURRENT PASSWORD IS NOT CORRECT"
 								autoHideDuration={3000}
 								onClose={handleSnackbarClose}

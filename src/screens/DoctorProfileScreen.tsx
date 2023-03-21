@@ -3,7 +3,6 @@ import * as React from "react";
 import { FormEvent, useState } from "react";
 import { createTheme, ThemeProvider, colors} from '@mui/material';
 import { doctorTheme } from '../Themes';
-import { doctorState, profileUpdate } from "../features/doctor/doctorSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { useAppSelector } from "../app/hooks";
@@ -16,14 +15,14 @@ export default function DoctorProfileScreen() {
 
   const handleSave = (e: FormEvent) => {
     e.preventDefault()
-    dispatch(profileUpdate({
-      name,
-      dob,
-      phone,
-      address,
-      registrationNo,
-      email
-    }))
+    // dispatch(profileUpdate({
+    //   name,
+    //   dob,
+    //   phone,
+    //   address,
+    //   registrationNo,
+    //   email
+    // }))
     // TODO: Save profile
   };
   const [name, setName] = useState(userInfo?.userData.name)
