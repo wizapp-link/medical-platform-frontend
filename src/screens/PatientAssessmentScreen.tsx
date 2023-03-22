@@ -123,6 +123,7 @@ export default function PatientAssessmentScreen(props: any) {
      setTimeout(() => {
       navigate("/patient/dashboard");
     }, 4000);
+    dispatch(setCurrentQuestionIndex(0));
   }
 
   const onReview = () => {
