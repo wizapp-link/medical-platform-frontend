@@ -51,7 +51,21 @@ export default function CounselorAssignmentScreen() {
 		dob: "2000-01-01",
 		phone: "8199933118",
 		registrationNo: null,
-		status: "VERIFIED"
+		status: "VERIFIED",
+  		password: "tests@555",
+  		assessmentTaken: true,
+  		assessmentOptionsSelected: [""],
+  		verificationAttempts: 0,
+  		otpExpiryDate: "",
+  		patientQueue: "",
+  		counsellorAssigned: "",
+  		doctorAssigned: "",
+  		counsellingDone: false,
+  		counsellingComment: "",
+  		doctoringDone: false,
+  		doctorComment: "",
+  		creationDate: "",
+  		otp: ""
 	}
 
 	const [open, setOpen] = React.useState(false);

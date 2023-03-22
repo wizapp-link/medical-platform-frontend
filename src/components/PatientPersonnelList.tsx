@@ -19,14 +19,15 @@ import { logOut, selectUserLogIn } from "../features/auth/userLogInSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { Stack } from "@mui/system";
+import { Patient } from "../types/PatientDataType";
 import { UserData } from "../types/UserDataType";
 import personnelStatus from "../constants/PersonnelStatus";
 
 interface PropsType {
-  users: UserData[] | null;
+  users: Patient[] | null;
   handleAssessmentButtonClick: (userData: UserData) => void;
-  handleAccept: (userData: UserData) => void;
-  handleReject: (userData: UserData) => void;
+  handleAccept: (userData: Patient) => void;
+  handleReject: (userData: Patient) => void;
 }
 
 
@@ -73,16 +74,9 @@ export default function PatientPersonnelList(props: PropsType) {
                   <Stack direction={"row"}>
                   <Button
                     variant="contained"
+                    onClick={() => handleAssessmentButtonClick(user)}
                     sx={{ marginRight: 2 }}
                     > SELF-ASSESSMENT </Button>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => handleAssessmentButtonClick(user)}
-                      sx={{ marginRight: 2, color: "secondary.main" }}
-                    >
-                      See-Infomation
-                    </Button>
                     <Button
                       variant="contained"
                       onClick={() => {
