@@ -51,7 +51,9 @@ export default function CounselorAssignmentScreen() {
 		dob: "2000-01-01",
 		phone: "8199933118",
 		registrationNo: null,
-		status: "VERIFIED"
+		status: "VERIFIED",
+		assessmentTaken: false,
+		assessmentOptionsSelected:[],
 	}
 
 	const [open, setOpen] = React.useState(false);

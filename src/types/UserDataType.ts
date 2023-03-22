@@ -8,6 +8,9 @@ export type UserData = {
   phone: string;
   registrationNo: string | null;
   status: string;
+  assessmentTaken: boolean;
+  assessmentOptionsSelected: string[],
+
 }
 
 export type UserInfo = {

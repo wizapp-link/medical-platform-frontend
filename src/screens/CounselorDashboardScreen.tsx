@@ -18,7 +18,7 @@ import {
   DialogContent,
   Card,
   CardContent,
-  Grid,
+  Grid, DialogContentText, TextField, DialogActions
 } from "@mui/material";
 import * as React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -28,60 +28,79 @@ import { height } from "@mui/system";
 import { createTheme, ThemeProvider, colors } from "@mui/material";
 import { counselorTheme } from "../Themes";
 import { useSelector } from "react-redux";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { flexbox } from "@mui/system";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { selectDoctor } from "../features/doctor/doctorSlice";
+import { selectDoctor, updatePatientStatus } from "../features/doctor/doctorSlice";
 import { Patient } from "../types/PatientDataType";
 import { ansList, questions } from "./PatientAssessmentScreen";
+import { roleToPosition } from "../constants/PositionRoleMap";
 
 export default function CounselorDashboardScreen(props: any) {
-  const { patients } = useAppSelector(selectDoctor);
-  // const [patients, setPatients] = useState<Patient[]>([
-  //   {
-  //     id: 1,
-  //     name: "Alice",
-  //     selfAssessmentResults: [
-  //       "Alice selfAssessmentResults",
-  //       "Alice selfAssessmentResults2",
-  //     ],
-  //     address: "address",
-  //     dob: "1998/01/01",
-  //     phoneNumber: "5140000000",
-  //     emailAddress: "Alice@gmail.com",
-  //     doctorRegistrationNumber: "88888888",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Ben",
-  //     selfAssessmentResults: [
-  //       "Ben selfAssessmentResults",
-  //       "Ben selfAssessmentResults2",
-  //     ],
-  //     address: "address2",
-  //     dob: "1998/01/02",
-  //     phoneNumber: "5140000001",
-  //     emailAddress: "Ben@gmail.com",
-  //     doctorRegistrationNumber: "77777777",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Alex",
-  //     selfAssessmentResults: [
-  //       "Alex selfAssessmentResults",
-  //       "Alex selfAssessmentResults2",
-  //     ],
-  //     address: "address3",
-  //     dob: "1998/01/03",
-  //     phoneNumber: "5140000002",
-  //     emailAddress: "Alex@gmail.com",
-  //     doctorRegistrationNumber: "99999999",
-  //   },
-  // ]);
+
+  //todo: change patient
+  // const { patients } = useAppSelector(selectDoctor);
+  const {userInfo} = useAppSelector(selectUserLogIn);
+  const position = "counsellor";
+  const dispatch = useAppDispatch();
+  const [patients, setPatients] = useState<Patient[]>([
+    {
+      address: "Test",
+      assessmentOptionsSelected: ["a", "b", "c", "d", "b", "c", "a", "b", "c"],
+      assessmentTaken: true,
+      counsellingComment: "",
+      counsellingDone: false,
+      counsellorAssigned: "",
+      creationDate: "2000-00-00",
+      dob: "2000-00-00",
+      doctorAssigned: null,
+      doctorComment: null,
+      doctoringDone: false,
+      email: "Alex@123.456",
+      id: "123456",
+      name: "Alex",
+      otp: null,
+      otpExpiryDate: null,
+      password: "",
+      patientQueue: null,
+      phone: "",
+      registrationNo: null,
+      role: "",
+      status: "",
+      verificationAttempts: null
+    },
+    {
+      address: "Addr2",
+      assessmentOptionsSelected: [],
+      assessmentTaken: false,
+      counsellingComment: "",
+      counsellingDone: false,
+      counsellorAssigned: "",
+      creationDate: "2000-00-00",
+      dob: "2003-00-00",
+      doctorAssigned: null,
+      doctorComment: null,
+      doctoringDone: false,
+      email: "Rui@123.456",
+      id: "888888",
+      name: "Rui",
+      otp: null,
+      otpExpiryDate: null,
+      password: "",
+      patientQueue: null,
+      phone: "5140000000",
+      registrationNo: null,
+      role: "",
+      status: "",
+      verificationAttempts: null
+
+    }]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState("");
 
   // type Patient = {
   //   id: number;
@@ -106,7 +125,23 @@ export default function CounselorDashboardScreen(props: any) {
     navigate(`/counselor/appointments`);
   };
 
-  const { userInfo } = useAppSelector(selectUserLogIn);
+  const handleAccept = (patient: Patient) => {
+    if(userInfo)
+      dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
+  };
+
+  const handleReject = () => {
+    if (selectedPatient)
+      dispatch(updatePatientStatus(selectedPatient.email, "REJECT_PATIENT", reason, userInfo?.token, position));
+    setReason("");
+    setOpen(false);
+
+  };
+  const handleClickOpen = (patient: any) => {
+    setSelectedPatient(patient);
+    setOpen(true);
+  };
+
 
   return (
     <ThemeProvider theme={counselorTheme}>
@@ -159,6 +194,7 @@ export default function CounselorDashboardScreen(props: any) {
                             <Button
                               variant="contained"
                               onClick={() => handleAssessmentButtonClick(patient)}
+                              disabled={patient.assessmentTaken}
                             >
                               Self-Assessment
                             </Button>
@@ -171,7 +207,8 @@ export default function CounselorDashboardScreen(props: any) {
                             <Button variant="contained"
                               onClick={() => { navigate(`/counselor/assignment?patientId=${patient.id}`) }}
                             >Assign</Button>
-                            <Button variant="contained" color="secondary">
+                            <Button variant="contained" color="secondary"
+                            onClick={() => handleClickOpen(patient)}>
                               Reject
                             </Button>
                           </Stack>
@@ -205,6 +242,7 @@ export default function CounselorDashboardScreen(props: any) {
                             <Button
                               variant="contained"
                               onClick={() => handleAssessmentButtonClick(patient)}
+                              disabled={patient.assessmentTaken}
                             >
                               Self-Assessment
                             </Button>
@@ -214,9 +252,9 @@ export default function CounselorDashboardScreen(props: any) {
                             spacing={2}
                             sx={{ flexDirection: "row" }}
                           >
-                            <Button variant="contained"
+                            <Button variant="contained" onClick={() => handleAccept(patient)}
                             >Accept</Button>
-                            <Button variant="contained" color="secondary">
+                            <Button variant="contained" color="secondary" onClick={() => handleClickOpen(patient)}>
                               Reject
                             </Button>
                           </Stack>
@@ -288,6 +326,32 @@ export default function CounselorDashboardScreen(props: any) {
               ))}
             </Stack>
           </DialogContent>
+        </Dialog>
+
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Reject Patient {selectedPatient?.name}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please provide a reason for rejecting this patient.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Reason"
+              type="text"
+              fullWidth
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleReject} color="error">
+              Reject
+            </Button>
+          </DialogActions>
         </Dialog>
       </Stack>
     </ThemeProvider>
