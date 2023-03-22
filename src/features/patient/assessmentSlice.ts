@@ -56,6 +56,12 @@ export const assessmentSlice = createSlice({
         state.answers[i+1] = value;
       });
     },
+    submitCancel: (state, action) => {
+      state.loading = false;
+      state.error = false;
+      state.success = true;
+      state.errorMessage = action.payload;
+    },
 
 
   },
@@ -78,7 +84,22 @@ export const submitAssessment = (questionAnswers: { email: string, assessmentOpt
     console.log(errorMessage);
     dispatch(submitFail(errorMessage));
   }
+
+  // try {
+  //   const { data } = await axios.post(`/api/v1/patient/removeAssessDetails`, {
+  //     headers: {
+  //       'Authorization': `Bearer ${token}`
+  //     }
+  //   });
+  //   dispatch(submitCancel(data.response));
+  //   console.log(data.response);
+  //   // localStorage.setItem('userData', JSON.stringify(data));
+  // } catch (err: any) {
+  //   const errorMessage = err.response ? err.response.data.response : err.message
+  //   console.log(errorMessage);
+  //   dispatch(submitFail(errorMessage));
+  // }
 };
 
-export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail,setAllAnswer } = assessmentSlice.actions;
+export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail,setAllAnswer, submitCancel } = assessmentSlice.actions;
 export default assessmentSlice.reducer;
