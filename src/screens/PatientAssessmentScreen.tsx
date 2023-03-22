@@ -119,7 +119,10 @@ export default function PatientAssessmentScreen(props: any) {
 
   };
   const onCancel = () => {
-     setSubmitFail(true);
+     setCancel(true);
+     setTimeout(() => {
+      navigate("/patient/dashboard");
+    }, 4000);
   }
 
   const onReview = () => {
