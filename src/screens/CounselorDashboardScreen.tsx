@@ -137,9 +137,9 @@ export default function CounselorDashboardScreen(props: any) {
 
 
         <Grid container direction="row">
-          <Grid item container md={12} lg={6} direction="column">
+          <Grid item container md={12} direction="column">
             <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
-              Unassigned Patient List
+              Patient List
             </Typography>
             <List sx={{ flexGrow: 1 }}>
               {patients.map((patient) => (
@@ -169,7 +169,7 @@ export default function CounselorDashboardScreen(props: any) {
                             sx={{ flexDirection: "row" }}
                           >
                             <Button variant="contained"
-                              onClick={() => { navigate(`../assignment?patientId=${patient.id}`) }}
+                              onClick={() => { navigate(`/counselor/assignment?patientId=${patient.id}`) }}
                             >Assign</Button>
                             <Button variant="contained" color="secondary">
                               Reject
@@ -183,7 +183,7 @@ export default function CounselorDashboardScreen(props: any) {
               ))}
             </List>
           </Grid>
-          <Grid item container md={12} lg={6} direction="column">
+          {/* <Grid item container md={12} lg={6} direction="column">
             <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
               Pending Appointments for Me
             </Typography>
@@ -227,7 +227,7 @@ export default function CounselorDashboardScreen(props: any) {
                 </ListItem>
               ))}
             </List>
-          </Grid>
+          </Grid> */}
         </Grid>
 
 
@@ -282,8 +282,8 @@ export default function CounselorDashboardScreen(props: any) {
                   <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
                   <Typography
                     variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
-                    ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
-                  }`}</Typography>
+                      ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
+                      }`}</Typography>
                 </Paper>
               ))}
             </Stack>
