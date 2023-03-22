@@ -6,6 +6,7 @@ import userLogInReducer from '../features/auth/userLogInSlice';
 import personnelListReducer from "../features/manager/personnelsSlice"
 import assessmentReducer from "../features/patient/assessmentSlice"
 // import counselorReducer from "../features/counselor/counselorSlice";
+import counselorAssignmentReducer from '../features/counselor/counselorAssignmentSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     personnelList: personnelListReducer,
     assessment: assessmentReducer,
     // counselor: counselorReducer,
+    counselorAssignment: counselorAssignmentReducer,
   },
 });
 
