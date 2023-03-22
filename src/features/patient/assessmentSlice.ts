@@ -51,15 +51,25 @@ export const assessmentSlice = createSlice({
       state.error = true;
       state.errorMessage = action.payload;
     },
+    setAllAnswer: (state, action: PayloadAction<string[]>) => {
+      action.payload.forEach((value, i) => {
+        state.answers[i+1] = value;
+      });
+    },
+
 
   },
 });
 
-export const submitAssessment = (questionAnswers: { email: string, assessmentOptionsSelected: string[]}) => async (dispatch: AppDispatch) => {
+export const submitAssessment = (questionAnswers: { email: string, assessmentOptionsSelected: string[]}, token: string) => async (dispatch: AppDispatch) => {
   dispatch(submitRequest());
   console.log(questionAnswers)
   try {
-    const { data } = await axios.post(`/api/v1/patient/addAssessDetails`, questionAnswers);
+    const { data } = await axios.post(`/api/v1/patient/addAssessDetails`, questionAnswers, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     dispatch(submitSuccess(data.response));
     console.log(data.response);
     // localStorage.setItem('userData', JSON.stringify(data));
@@ -70,5 +80,5 @@ export const submitAssessment = (questionAnswers: { email: string, assessmentOpt
   }
 };
 
-export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail } = assessmentSlice.actions;
+export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail,setAllAnswer } = assessmentSlice.actions;
 export default assessmentSlice.reducer;
