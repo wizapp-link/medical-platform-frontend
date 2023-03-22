@@ -74,7 +74,7 @@ export default function CounselorAppointmentScreen(props: any) {
   return (
     <ThemeProvider theme={counselorTheme}>
       <Grid item container>
-        <Grid item container direction="column" md={12} lg={6}>
+        <Grid item container direction="column" md={12}>
           <Typography variant="h4" marginLeft="1rem">
             Appointments Assigned
           </Typography>
@@ -133,7 +133,7 @@ export default function CounselorAppointmentScreen(props: any) {
           </List>
 
         </Grid>
-        <Grid item container direction="column" md={12} lg={6}>
+        {/* <Grid item container direction="column" md={12} lg={6}>
           <Grid item container md={12} lg={6} direction="column">
             <Typography variant="h4" color={"primary.contrastText"} marginLeft="1rem">
               Appointments for Me
@@ -179,7 +179,7 @@ export default function CounselorAppointmentScreen(props: any) {
             </List>
           </Grid>
 
-        </Grid>
+        </Grid> */}
       </Grid>
     </ThemeProvider>
   );
