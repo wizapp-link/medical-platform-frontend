@@ -71,7 +71,7 @@ export const {
 export const selectCounselorAssignment = (state: RootState) => state.counselorAssignment;
 
 export const assignSelf = (userData: UserData) => async (dispatch: AppDispatch) => {
-	dispatch(assignRequest);
+	dispatch(assignRequest());
   try {
     const { data } = await axios.post(
 			'/api/v1/counselor/updatePatientStatus', 
@@ -88,7 +88,7 @@ export const assignSelf = (userData: UserData) => async (dispatch: AppDispatch) 
 }
 
 export const assignDoctor = (userData: UserData) => async (dispatch: AppDispatch) => {
-	dispatch(assignRequest);
+	dispatch(assignRequest());
   try {
     const { data } = await axios.post(
 			'/api/v1/counselor/updatePatientStatus', 
@@ -105,7 +105,7 @@ export const assignDoctor = (userData: UserData) => async (dispatch: AppDispatch
 }
 
 export const rejectAssignment = (userData: UserData) => async (dispatch: AppDispatch) => {
-	dispatch(assignRequest);
+	dispatch(assignRequest());
   try {
     const { data } = await axios.post(
 			'/api/v1/counselor/updatePatientStatus', 
@@ -122,7 +122,7 @@ export const rejectAssignment = (userData: UserData) => async (dispatch: AppDisp
 }
 
 export const markCounsellingDone = (patientEmail: string) => async (dispatch: AppDispatch) => {
-	// dispatch(assignRequest);
+	// dispatch(assignRequest());
   try {
     const { data } = await axios.post(
 			`/api/v1/counsellor/markCounsellingDone?patientEmail=${patientEmail}`);
