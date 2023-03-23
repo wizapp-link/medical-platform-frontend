@@ -31,6 +31,7 @@ import { useEffect, useState } from "react";
 import { Patient } from "../types/PatientDataType";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { ansList, questions } from "./PatientAssessmentScreen";
+import { setPatient } from "../features/appointment/appointmentSlice";
 
 export default function DoctorDashboardScreen(props: any) {
   const doctor = useSelector((state: RootState) => state.doctor);
