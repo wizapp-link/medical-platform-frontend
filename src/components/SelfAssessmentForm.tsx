@@ -3,11 +3,15 @@ import React, { useState } from "react";
 import questions from "../constants/Questions";
 import { ansList } from "../constants/Questions";
 
-export default function SelfAssessmentForm(props: any) {
+interface Props {
+	answerArr: string[],
+}
+
+export default function SelfAssessmentForm(props: Props) {
 
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	const [answer, setAnswer] = useState('d');
-	const [answerArr, setAnswerArr] = useState(['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c',]);
+	// const [answerArr, setAnswerArr] = useState(['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c',]);
+	const { answerArr } = props;
 
 	const onPrevious = () => {
 		setCurrentQuestionIndex(lastIndex => lastIndex - 1);

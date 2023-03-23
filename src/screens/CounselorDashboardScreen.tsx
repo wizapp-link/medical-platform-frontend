@@ -38,6 +38,7 @@ import { Patient } from "../types/PatientDataType";
 import { ansList, questions } from "./PatientAssessmentScreen";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { fetchPatients, selectConselor } from "../features/counselor/counselorSlice"
+import { setPatient } from "../features/counselor/counselorAssignmentSlice";
 
 export default function CounselorDashboardScreen(props: any) {
 
@@ -214,7 +215,10 @@ export default function CounselorDashboardScreen(props: any) {
                             sx={{ flexDirection: "row" }}
                           >
                             <Button variant="contained"
-                              onClick={() => { navigate(`/counselor/assignment?patientId=${patient.id}`) }}
+                              onClick={() => {
+                                dispatch(setPatient(patient));
+                                navigate(`/counselor/assignment`);
+                              }}
                             >Assign</Button>
                             <Button variant="contained" color="secondary"
                               onClick={() => handleClickOpen(patient)}>

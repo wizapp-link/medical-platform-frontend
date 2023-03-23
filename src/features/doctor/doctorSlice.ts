@@ -131,6 +131,9 @@ export const updatePatientStatus = (email: string, status: string, reason: strin
         }
       });
     dispatch(updatePatientStatusSuccess());
+    if(token){
+      dispatch(fetchPatients(email, token, role))
+    }
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
     console.log("Update Patient Status error: " + errorMessage);
