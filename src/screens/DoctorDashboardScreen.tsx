@@ -41,7 +41,7 @@ export default function DoctorDashboardScreen(props: any) {
   const [open, setOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [reason, setReason] = useState("");
-  const [showAssessmentDialog ,setShowAssessmentDialog] = useState(false);
+  const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
 
   const role = userInfo?.userData.role;
   const position = roleToPosition.get(role ? role : "");
@@ -67,7 +67,7 @@ export default function DoctorDashboardScreen(props: any) {
     navigate(`/doctor/appointments`);
   };
   const handleAccept = (patient: Patient) => {
-    if(userInfo){
+    if (userInfo) {
       // dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
       dispatch(setPatient(patient))
       setTimeout(() => {
@@ -78,8 +78,8 @@ export default function DoctorDashboardScreen(props: any) {
   };
 
   const handleReject = () => {
-    if (selectedPatient)
-      dispatch(updatePatientStatus(selectedPatient.email, "REJECT_PATIENT", reason, userInfo?.token, position));
+    if (selectedPatient && userInfo)
+      dispatch(updatePatientStatus(selectedPatient.email, userInfo?.userData.email, "REJECT_PATIENT", reason, userInfo?.token, position,));
     setReason("");
     setOpen(false);
 
@@ -111,7 +111,7 @@ export default function DoctorDashboardScreen(props: any) {
           <List sx={{ flexGrow: 1 }}>
             {patients.map(
               patient => (
-                <ListItem  key={patient.id}>
+                <ListItem key={patient.id}>
                   <Box width={"100%"}>
                     <Card sx={{ boxShadow: 3, marginTop: 1 }}>
                       <CardContent>
@@ -119,8 +119,8 @@ export default function DoctorDashboardScreen(props: any) {
                           <Stack direction={"row"}>
                             <ListItemAvatar sx={{ display: "flex" }}>
                               <Avatar sx={{ alignSelf: "center" }}
-                                      alt={patient.name}
-                                      src="/static/images/doctor/samplePatient.jpg"
+                                alt={patient.name}
+                                src="/static/images/doctor/samplePatient.jpg"
                               />
                             </ListItemAvatar>
                             <Stack direction={"column"}>
@@ -139,8 +139,8 @@ export default function DoctorDashboardScreen(props: any) {
                               Self-Assessment
                             </Button>
                             <Button variant="contained"
-                                    sx={{ marginRight: 2 }}
-                                    onClick={() => handleAccept(patient)}
+                              sx={{ marginRight: 2 }}
+                              onClick={() => handleAccept(patient)}
                             >
                               Accept
                             </Button>
@@ -204,8 +204,8 @@ export default function DoctorDashboardScreen(props: any) {
                     <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
                     <Typography
                       variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
-                      ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
-                    }`}</Typography>
+                        ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
+                        }`}</Typography>
                   </Paper>
                 ))}
               </Stack>
