@@ -63,7 +63,7 @@ export default function CounselorModifyAppointmentScreen() {
 	const handleSubmit = (event: React.MouseEvent) => {
 		event.preventDefault();
 		if (userInfo && date) {
-			dispatch(setAppointmentDateTime(userInfo?.userData, appointment.patient, date, value));
+			dispatch(setAppointmentDateTime(userInfo.token, userInfo?.userData, appointment.patient, dayjs(date).format("YYYY-MM-DD"), value));
 		}
 	};
 
@@ -78,7 +78,7 @@ export default function CounselorModifyAppointmentScreen() {
 		const formattedDate = dayjs(dateStr).format("YYYY-MM-DD");
 		console.log(`new date ${formattedDate}`);
 		if (userInfo) {
-			dispatch(getTimeslot(userInfo.userData, formattedDate));
+			dispatch(getTimeslot(userInfo.token, userInfo.userData, formattedDate));
 		}
 	}
 

@@ -77,16 +77,33 @@ export const {
 
 export const selectAppointment = (state: RootState) => state.appointment;
 
-export const getTimeslot = (userData: UserData, date: string) => async (dispatch: AppDispatch) => {
+export const getTimeslot = (token: string, userData: UserData, date: string) => async (dispatch: AppDispatch) => {
 	dispatch(timeslotRequest);
   try {
 		let res;
 		if(userData.role === roles.counselor){
-    res = await axios.post(
-			`/api/v1/counsellor/getAppointmentSlots?email=${userData.email}&date=${date}`);
+		const queryStr = `/api/v1/counsellor/getAppointmentSlots?email=${userData.email}&date=${date}`
+		console.log("queryStr: "+ queryStr);
+    // res = await axios.post(
+		// 	queryStr,
+		// 	{ 'headers': { 'Authorization': `Bearer ${token}` } });
+		res= await axios({
+			method: 'get',
+			url: queryStr,
+			headers:{
+				Authorization: `Bearer ${token}`
+			}
+		});
+
 		}else{
-			res = await axios.post(
-				`/api/v1/doctor/getAppointmentSlots?email=${userData.email}&date=${date}`);
+			const queryStr = `/api/v1/doctor/getAppointmentSlots?email=${userData.email}&date=${date}`;
+			res= await axios({
+				method: 'get',
+				url: queryStr,
+				headers:{
+					Authorization: `Bearer ${token}`
+				}
+			});
 		}
     console.log(res.data);
     dispatch(timeslotSuccess(res.data.response));
@@ -97,16 +114,28 @@ export const getTimeslot = (userData: UserData, date: string) => async (dispatch
   }
 }
 
-export const setAppointmentDateTime = (userData: UserData, patient: Patient, date: string, timeslot: string) => async (dispatch: AppDispatch) => {
+export const setAppointmentDateTime = (token: string, userData: UserData, patient: Patient, date: string, timeslot: string) => async (dispatch: AppDispatch) => {
 	dispatch(timeslotRequest);
   try {
-		let res;
+		let res, queryStr;
 		if(userData.role === roles.counselor){
-			res = await axios.post(
-			`/api/v1/counsellor/setAppointmentSlot?counsellorEmail=${userData.email}&date=${date}&patientEmail=${patient.email}&slotTime=${timeslot}`);
+			queryStr = `/api/v1/counsellor/setAppointmentSlot?counsellorEmail=${userData.email}&date=${date}&patientEmail=${patient.email}&slotTime=${timeslot}`;
+			res= await axios({
+				method: 'post',
+				url: queryStr,
+				headers:{
+					Authorization: `Bearer ${token}`
+				}
+			});
 		} else {
-			res = await axios.post(
-				`/api/v1/doctor/setAppointmentSlot?doctorEmail=${userData.email}&date=${date}&patientEmail=${patient.email}&slotTime=${timeslot}`);
+			queryStr = `/api/v1/doctor/setAppointmentSlot?doctorEmail=${userData.email}&date=${date}&patientEmail=${patient.email}&slotTime=${timeslot}`;
+			res= await axios({
+				method: 'post',
+				url: queryStr,
+				headers:{
+					Authorization: `Bearer ${token}`
+				}
+			});
 		}
     console.log(res.data);
     dispatch(timeslotSuccess(res.data.response));
