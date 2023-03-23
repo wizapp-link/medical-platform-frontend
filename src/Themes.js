@@ -52,6 +52,7 @@ export const managerTheme = createTheme({
 		},
 		secondary:{
 			main:'#FEFF89',
+			contrastText: '#000000'
 		}
 		
 	}
