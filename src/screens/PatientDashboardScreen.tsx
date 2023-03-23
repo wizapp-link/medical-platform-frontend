@@ -36,12 +36,13 @@ export default function PatientDashboardScreen(props: any) {
   const handleAppointments = () => {
     navigate(`/patient/appointments`);
   };
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
   const handleDetailButtonClick = () => {
     // setSelectedPatient(patient);
     setShowDetailDialog(true);
   };
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [showDetailDialog, setShowDetailDialog] = useState(false);
+  
   const handleClose = () => {
     // setShowAssessmentDialog(false);
     setShowDetailDialog(false);
@@ -104,7 +105,7 @@ export default function PatientDashboardScreen(props: any) {
                             ":hover": { backgroundColor: "primary.main" },
                           }}
                         >
-                          Detials
+                          Details
                         </Button>
                         <Button
                           variant="contained"
@@ -128,35 +129,35 @@ export default function PatientDashboardScreen(props: any) {
 
         <Dialog open={showDetailDialog} onClose={handleClose}>
           <DialogTitle sx={{ fontWeight: "bold" }}>
-            Patient Name: Alex
+            Patient Name: Rui
           </DialogTitle>
           <DialogContent>
             <Typography variant="subtitle1">
-              Patient ID: {selectedPatient?.id}
+              Patient ID: 1
             </Typography>
-            {/* <Typography variant="subtitle1">
-              Patient Name: {selectedPatient?.name}
-            </Typography> */}
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Assessment Test
             </Typography>
             <Typography variant="subtitle1">
-              Status: {selectedPatient?.address}
+              Status: Pass
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Assignment Comment
             </Typography>
             <Typography variant="subtitle1">
-              Comment: {selectedPatient?.dob}
+              Counselor: Harsh Singh
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Appointment Comment
             </Typography>
             <Typography variant="subtitle1">
-              Comment: {selectedPatient?.phone}
+              Doctor: Dr. Gregory House
             </Typography>
             <Typography variant="subtitle1">
-              Notes: {selectedPatient?.email}
+              Date: 2023-02-12
+            </Typography>
+            <Typography variant="subtitle1">
+              Notes: 
             </Typography>
           </DialogContent>
         </Dialog>
