@@ -5,6 +5,9 @@ import {
   Card,
   CardContent,
   CardActions,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@mui/material";
 import {
   Box,
@@ -21,8 +24,19 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { patientTheme } from "../Themes";
+import { useState } from "react";
+
 
 export default function PatientAppointmentScreen(props: any) {
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const handleDetailButtonClick = () => {
+    // setSelectedPatient(patient);
+    setShowDetailDialog(true);
+  };
+  const handleClose = () => {
+    // setShowAssessmentDialog(false);
+    setShowDetailDialog(false);
+  };
   return (
     <ThemeProvider theme={patientTheme}>
       <Stack>
@@ -49,6 +63,7 @@ export default function PatientAppointmentScreen(props: any) {
                     <Stack direction={"row"}>
                       <Button
                         variant="contained"
+                        onClick={() => handleDetailButtonClick()}
                         sx={{
                           marginRight: 2,
                           backgroundColor: "primary.dark",
@@ -56,7 +71,7 @@ export default function PatientAppointmentScreen(props: any) {
                           ":hover": { backgroundColor: "primary.main" },
                         }}
                       >
-                        Accept
+                        Details
                       </Button>
                       <Button
                         variant="contained"
@@ -77,6 +92,40 @@ export default function PatientAppointmentScreen(props: any) {
           </ListItem>
         </List>
       </Stack>
+      <Dialog open={showDetailDialog} onClose={handleClose}>
+          <DialogTitle sx={{ fontWeight: "bold" }}>
+            Patient Name: Rui
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="subtitle1">
+              Patient ID: 1
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Assessment Test
+            </Typography>
+            <Typography variant="subtitle1">
+              Status: Pass
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Assignment Comment
+            </Typography>
+            <Typography variant="subtitle1">
+              Counselor: Harsh Singh
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Appointment Comment
+            </Typography>
+            <Typography variant="subtitle1">
+              Doctor: Dr. Gregory House
+            </Typography>
+            <Typography variant="subtitle1">
+              Date: 2023-02-12
+            </Typography>
+            <Typography variant="subtitle1">
+              Notes: 
+            </Typography>
+          </DialogContent>
+        </Dialog>
     </ThemeProvider>
   );
 }
