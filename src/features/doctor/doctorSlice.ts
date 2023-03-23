@@ -4,28 +4,28 @@ import axios from "axios";
 import { Patient } from "../../types/PatientDataType";
 
 const TestPatient: Patient[] = [{
-  address: "Test",
-  assessmentOptionsSelected: ["a", "b", "c", "d", "b", "c", "a", "b", "c"],
-  assessmentTaken: false,
+  address: "Rue guy",
+  assessmentOptionsSelected: ["a", "b", "c", "d", "a", "b", "c", "d", "a"],
+  assessmentTaken: true,
   counsellingComment: "",
   counsellingDone: false,
   counsellorAssigned: "",
   creationDate: "2000-00-00",
-  dob: "2000-00-00",
+  dob: "2010-01-01",
   doctorAssigned: null,
   doctorComment: null,
   doctoringDone: false,
-  email: "Alex@123.456",
-  id: "123456",
-  name: "Alex",
+  email: "Niltavakolian@gmail.com",
+  id: "641761ecf3d83d34448f6429",
+  name: "Nilta",
   otp: null,
   otpExpiryDate: null,
   password: "",
   patientQueue: null,
-  phone: "",
+  phone: "4379860077",
   registrationNo: null,
-  role: "",
-  status: "",
+  role: "ROLE_PATIENT",
+  status: "VERIFIED",
   verificationAttempts: null
 },
   {
@@ -93,7 +93,7 @@ const doctorSlice = createSlice({
       state.fetchingPatients = true;
       state.fetchPatientsError = null;
     },
-    fetchPatientsSuccess: (state, action: PayloadAction<any[]>) => {
+    fetchPatientsSuccess: (state, action: PayloadAction<Patient[]>) => {
       state.fetchingPatients = false;
       state.patients = action.payload;
       state.fetchPatientsError = null;
@@ -131,6 +131,11 @@ export const updatePatientStatus = (email: string, status: string, reason: strin
         }
       });
     dispatch(updatePatientStatusSuccess());
+    console.log("updatePatientStatusSuccess");
+    console.log(response);
+    if(token){
+      dispatch(fetchPatients(email, token, role))
+    }
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
     console.log("Update Patient Status error: " + errorMessage);
@@ -145,9 +150,10 @@ export const fetchPatients = (email: string, token: string, role: string | undef
       headers: {
         "Authorization": `Bearer ${token}`
       }
-    });
+    })
     dispatch(fetchPatientsSuccess(response.data));
-    console.log("Patients: " + response);
+    console.log("fetched patients:")
+    console.log(response);
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
     console.log("doctor fetching patient error: " + errorMessage);

@@ -69,7 +69,7 @@ export const assessmentSlice = createSlice({
       state.cancelError = false;
       state.cancelSuccess = true;
       state.message = action.payload;
-      state.answers = []
+      state.answers = {}
 
     },
     cancelFail: (state, action: PayloadAction<string>) => {
