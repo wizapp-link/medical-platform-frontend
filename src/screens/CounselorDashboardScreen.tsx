@@ -136,7 +136,6 @@ export default function CounselorDashboardScreen(props: any) {
       dispatch(updatePatientStatus(selectedPatient.email, "REJECT_PATIENT", reason, userInfo?.token, position));
     setReason("");
     setOpen(false);
-
   };
   const handleClickOpen = (patient: any) => {
     setSelectedPatient(patient);
@@ -187,8 +186,8 @@ export default function CounselorDashboardScreen(props: any) {
               Patient List
             </Typography>
             <List sx={{ flexGrow: 1 }}>
-              {patients.map((patient) => (
-                <ListItem key={patient.id}>
+              {counselor.patients.map((patient) => (
+                patient.assessmentTaken && <ListItem key={patient.id}>
                   <Box sx={{ width: "100%" }}>
                     <Card sx={{ boxShadow: 3, marginTop: 1 }}>
                       <CardContent>
@@ -199,12 +198,12 @@ export default function CounselorDashboardScreen(props: any) {
                             </ListItemAvatar>
                             <Stack direction={"column"} sx={{ marginRight: 3 }}>
                               <Typography>{patient.name}</Typography>
-                              <Typography>{`ID: ${patient.id}`}2</Typography>
+                              <Typography>{`${patient.email}`}</Typography>
                             </Stack>
                             <Button
                               variant="contained"
                               onClick={() => handleAssessmentButtonClick(patient)}
-                              disabled={patient.assessmentTaken}
+                              disabled={!patient.assessmentTaken}
                             >
                               Self-Assessment
                             </Button>
