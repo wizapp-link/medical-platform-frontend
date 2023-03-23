@@ -31,13 +31,11 @@ import { useEffect, useState } from "react";
 import { Patient } from "../types/PatientDataType";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { ansList, questions } from "./PatientAssessmentScreen";
-import { selectAppointment, setPatient } from "../features/appointment/appointmentSlice";
 
 export default function DoctorDashboardScreen(props: any) {
   const doctor = useSelector((state: RootState) => state.doctor);
   const { userInfo } = useAppSelector(selectUserLogIn);
   const { patients } = useAppSelector(selectDoctor);
-  const appointment = useAppSelector(selectAppointment);
 
   const [open, setOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -126,7 +124,7 @@ export default function DoctorDashboardScreen(props: any) {
                             </ListItemAvatar>
                             <Stack direction={"column"}>
                               <Typography>{patient.name}</Typography>
-                              <Typography>Date: {patient.dob}</Typography>
+                              <Typography>{patient.email}</Typography>
                             </Stack>
                           </Stack>
                           <Stack direction={"row"}>
