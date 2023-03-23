@@ -17,7 +17,7 @@ import {
   setCurrentQuestionIndex,
   setAnswer,
   submitAssessment,
-  setAllAnswer
+  setAllAnswer, removeAssessment, reset
 } from "../features/patient/assessmentSlice";
 import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -74,21 +74,18 @@ export default function PatientAssessmentScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn)
   const dispatch: AppDispatch = useDispatch();
   const assessment = useAppSelector((state: RootState) => state.assessment);
-  const { currentQuestionIndex, answers, errorMessage, loading, error, success } = assessment;
+  const { currentQuestionIndex, answers, message, loading, error, success, cancelSuccess } = assessment;
   const [showSummary, setShowSummary] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
   const [answer, setAnswerText] = useState(answers[currentQuestion.id] || "");
 
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitFail, setSubmitFail] = useState(false);
-  const [cancel, setCancel] = useState(false);
+  const [snackBar, setSnackBar] = useState(false);
   const navigate = useNavigate();
+  const [taken, setTaken] = useState<boolean | undefined>(userInfo?.userData.assessmentTaken);
 
   const handleSnackbarClose = () => {
-    setSubmitSuccess(false);
-    setSubmitFail(false);
-    setCancel(false);
+    setSnackBar(false);
   }
 
   const onAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,19 +104,30 @@ export default function PatientAssessmentScreen(props: any) {
 
   const onSubmit = () => {
     if (userInfo) {
-      const email = userInfo.userData.email; // Replace this with the user's actual email
+      const email = userInfo.userData.email;
       const assessmentOptionsSelected = questions.map((question) => answers[question.id]);
       dispatch(submitAssessment({ email, assessmentOptionsSelected }, userInfo.token));
-      if (success) {
-        setSubmitSuccess(true);
-      } else {
-        setSubmitFail(true);
-      }
+      setTimeout(() => {
+        setSnackBar(true);
+      }, 1000)
+
     }
 
   };
   const onCancel = () => {
-     setSubmitFail(true);
+    if(userInfo){
+      const email = userInfo.userData.email;
+      dispatch(removeAssessment(email, userInfo.token));
+      setTimeout(() => {
+        setSnackBar(true);
+      }, 1000)
+      if(cancelSuccess){
+        dispatch(setCurrentQuestionIndex(0));
+        setShowSummary(false);
+        setTaken(false);
+        dispatch(reset());
+      }
+    }
   }
 
   const onReview = () => {
@@ -132,20 +140,21 @@ export default function PatientAssessmentScreen(props: any) {
   }, [currentQuestionIndex, answers]);
 
   useEffect(() => {
-    if (submitSuccess) {
+    if (success) {
       setTimeout(() => {
         navigate("/patient/dashboard");
       }, 4000);
     }
-  }, [submitSuccess, submitFail])
+  }, [success])
   const renderContent = () => {
     if(userInfo){
-      if(userInfo.userData.assessmentTaken) {
+      if(taken) {
         dispatch(setAllAnswer(userInfo.userData.assessmentOptionsSelected));
         dispatch(setCurrentQuestionIndex(8));
+        dispatch(setAllAnswer([]));
       }
     }
-    if (showSummary || userInfo?.userData.assessmentTaken || success) {
+    if (showSummary || taken || success) {
       return (
         <Box>
           <Typography variant="h4" my={5}>Summary</Typography>
@@ -178,7 +187,7 @@ export default function PatientAssessmentScreen(props: any) {
                 setShowSummary(false);
               }}
               sx={{ textTransform: "none" }}
-              disabled={success || userInfo?.userData.assessmentTaken}
+              disabled={success || taken}
             >
               Edit Answers
             </Button>
@@ -238,23 +247,12 @@ export default function PatientAssessmentScreen(props: any) {
       <Container>
         {renderContent()}
         <Snackbar
-          open={submitSuccess}
-          message="SUBMIT SUCCESSFUL, REDIRECT TO DASHBOARD."
+          open={snackBar}
+          message={message}
           autoHideDuration={3000}
           onClose={handleSnackbarClose}
         />
-         <Snackbar
-          open={cancel}
-          message="CANCEL SUCCESSFUL, REDIRECT TO DASHBOARD."
-          autoHideDuration={3000}
-          onClose={handleSnackbarClose}
-        />
-        <Snackbar
-          open={submitFail}
-          message={errorMessage}
-          autoHideDuration={3000}
-          onClose={handleSnackbarClose}
-        />
+
       </Container>
     </ThemeProvider>
   );
