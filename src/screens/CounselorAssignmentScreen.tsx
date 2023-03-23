@@ -11,9 +11,11 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { useNavigate } from "react-router";
-import { selectCounselorAssignment, assignSelf, assignDoctor, markCounsellingDone } from "../features/counselor/counselorAssignmentSlice";
+import { selectCounselorAssignment, assignSelf, assignDoctor, markCounsellingDone, resetToInitialState } from "../features/counselor/counselorAssignmentSlice";
 import generateResultFromSelfAssessmentResult, { AssessmentSummary } from "../utils/GenerateResultFromSelfAssessmentResult";
 import { userInfo } from "os";
+import roles from "../constants/Roles";
+import { setPatient as appointmentSetPatient } from "../features/appointment/appointmentSlice";
 
 
 export default function CounselorAssignmentScreen() {
@@ -96,6 +98,23 @@ export default function CounselorAssignmentScreen() {
 	}
 
 	const assessmentSummary = generateResultFromSelfAssessmentResult(counselorAssignment.patient.assessmentOptionsSelected);
+
+
+	useEffect(() => {
+		if (counselorAssignment.success) {
+			if (counselorAssignment.expertRole === roles.counselor) {
+				// TODO, set patient in next slice
+				dispatch(appointmentSetPatient(counselorAssignment.patient));
+				dispatch(resetToInitialState())
+				navigate(`/counselor/modify_appointment`);
+			}
+			if (counselorAssignment.expertRole === roles.doctor) {
+				dispatch(resetToInitialState())
+				navigate(`/counselor/dashboard`);
+			}
+
+		}
+	}, [counselorAssignment.success])
 
 	return (
 		<Box>
