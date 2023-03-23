@@ -20,7 +20,7 @@ import {
   CardContent,
   Grid, DialogContentText, TextField, DialogActions
 } from "@mui/material";
-import * as React from "react";
+import React, { useEffect } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useState } from "react";
@@ -37,12 +37,13 @@ import { selectDoctor, updatePatientStatus } from "../features/doctor/doctorSlic
 import { Patient } from "../types/PatientDataType";
 import { ansList, questions } from "./PatientAssessmentScreen";
 import { roleToPosition } from "../constants/PositionRoleMap";
+import { fetchPatients, selectConselor } from "../features/counselor/counselorSlice"
 
 export default function CounselorDashboardScreen(props: any) {
 
   //todo: change patient
   // const { patients } = useAppSelector(selectDoctor);
-  const {userInfo} = useAppSelector(selectUserLogIn);
+  const { userInfo } = useAppSelector(selectUserLogIn);
   const position = "counsellor";
   const dispatch = useAppDispatch();
   const [patients, setPatients] = useState<Patient[]>([
@@ -126,7 +127,7 @@ export default function CounselorDashboardScreen(props: any) {
   };
 
   const handleAccept = (patient: Patient) => {
-    if(userInfo)
+    if (userInfo)
       dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
   };
 
@@ -141,6 +142,15 @@ export default function CounselorDashboardScreen(props: any) {
     setSelectedPatient(patient);
     setOpen(true);
   };
+
+  const counselor = useAppSelector(selectConselor);
+
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(fetchPatients(userInfo.userData.email, userInfo.token));
+    }
+  }, [])
 
 
   return (
@@ -208,7 +218,7 @@ export default function CounselorDashboardScreen(props: any) {
                               onClick={() => { navigate(`/counselor/assignment?patientId=${patient.id}`) }}
                             >Assign</Button>
                             <Button variant="contained" color="secondary"
-                            onClick={() => handleClickOpen(patient)}>
+                              onClick={() => handleClickOpen(patient)}>
                               Reject
                             </Button>
                           </Stack>
