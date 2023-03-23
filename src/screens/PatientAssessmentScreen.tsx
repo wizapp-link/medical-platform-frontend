@@ -162,7 +162,7 @@ export default function PatientAssessmentScreen(props: any) {
               <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
                 <Typography
-                  variant="body1">{`${answers[question.id].toUpperCase()}. ${ansList[answers[question.id].charCodeAt(0) - 97]}`}</Typography>
+                  variant="body1">{answers[question.id] ? `${answers[question.id].toUpperCase()}. ${ansList[answers[question.id].charCodeAt(0) - 97]}` : ""}</Typography>
               </Paper>
             ))}
           </Stack>
