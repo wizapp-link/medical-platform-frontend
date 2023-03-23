@@ -15,6 +15,7 @@ interface AssessmentState {
   message: string,
   cancelError: boolean,
   cancelSuccess: boolean,
+
 }
 
 const initialState: AssessmentState = {
@@ -122,3 +123,4 @@ export const removeAssessment = (email: string, token: string) => async (dispatc
 
 export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail, setAllAnswer, cancelRequest, cancelFail, cancelSuccess, reset } = assessmentSlice.actions;
 export default assessmentSlice.reducer;
+

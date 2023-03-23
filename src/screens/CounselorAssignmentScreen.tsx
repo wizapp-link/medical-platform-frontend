@@ -17,6 +17,7 @@ export default function CounselorAssignmentScreen() {
 
 	const navigate = useNavigate();
 	const userLogIn = useAppSelector(selectUserLogIn);
+	
 
 	const [value, setValue] = useState("");
 	const [activeStep, setActiveStep] = useState(0);
@@ -76,6 +77,14 @@ export default function CounselorAssignmentScreen() {
 		event.preventDefault();
 	}
 
+	const handleAssignSelf = (event: React.MouseEvent) => {
+		event.preventDefault();
+	}
+
+	const handleAssignDoctor = (event: React.MouseEvent) => {
+		event.preventDefault();
+	}
+
 	return (
 		<Box>
 			{/* <Stepper activeStep={activeStep} sx={{ marginBottom: 2 }}>
@@ -121,7 +130,6 @@ export default function CounselorAssignmentScreen() {
 									/>
 								</LocalizationProvider>
 							</Grid>
-
 						</Grid>
 						<Grid item container direction="column" spacing={2} id="timeslot-picker" lg={4} md={12}>
 							<Grid item>
@@ -144,12 +152,27 @@ export default function CounselorAssignmentScreen() {
 							</Grid>
 						</Grid> */}
 					{/* </Grid> */}
-					<Grid item container direction="column" id="expert-picker" spacing={2}>
+					<Grid item container direction="column" id="expert-picker" spacing={2}
+					sx={{marginTop:2}}
+					>
 						<Grid item>
-							<Typography variant="h4">Expert Picker</Typography>
+							<Typography variant="h5">{"Counselor's comment"}</Typography>
 						</Grid>
 
-						<Grid item container spacing={3}>
+						<Grid item>
+							<TextField
+								id="outlined-multiline-flexible"
+								label="Counselor's comment"
+								placeholder="Please enter your comment..."
+								required
+								multiline
+								maxRows={6}
+								value={comment}
+								onChange={handleCommentChange}
+								sx={{width:"60%"}}
+							/>
+						</Grid>
+						{/* <Grid item container spacing={3}>
 							{experts.map((expert) => (
 								<Grid item xs={12} sm={6} xl={4} key={expert.name}>
 									<Card
@@ -176,41 +199,32 @@ export default function CounselorAssignmentScreen() {
 									</Card>
 								</Grid>
 							))}
-						</Grid>
+						</Grid> */}
 					</Grid>
 				</Grid>
 				<Grid id="profile-grid" item container md={4} direction="column" spacing={3}>
 					<Grid id="patient-details" item container spacing={2} direction="column">
 						<Grid item>
-							<Typography variant="h4">Patient Details</Typography>
+							<Typography variant="h4">Assessment Summary</Typography>
 						</Grid>
 						<Grid item>
 							<Paper sx={{ p: 3, paddingTop: 1, display: "flex", flexDirection: "column" }}>
-								<Box display="flex" alignItems="center" justifyContent="flex-start" >
-									<Avatar>{patient.name.charAt(0)}</Avatar>
-									<Typography variant="h5" margin={3}>{patient.name}</Typography>
-								</Box>
 								<Stack spacing={1}>
-									<Typography>ID: {patient.id}</Typography>
-									<Typography>Email: {patient.email}</Typography>
-									<Typography>Role: {patient.role}</Typography>
-									<Typography>Address: {patient.address}</Typography>
-									<Typography>Date of Birth: {patient.dob}</Typography>
-									<Typography>Phone: {patient.phone}</Typography>
-									<Typography>Status: {patient.status}</Typography>
+									<Typography>Score: 19</Typography>
+									<Typography>Description: {"description about the score"}</Typography>
 								</Stack>
 							</Paper>
 						</Grid>
 					</Grid>
-					<Grid id="expert-details" item container spacing={2} direction="column">
+					<Grid id="patient-details" item container spacing={2} direction="column">
 						<Grid item>
-							<Typography variant="h4">Expert Details</Typography>
+							<Typography variant="h5">Patient Details</Typography>
 						</Grid>
 						<Grid item>
 							<Paper sx={{ p: 3, paddingTop: 1, display: "flex", flexDirection: "column" }}>
 								<Box display="flex" alignItems="center" justifyContent="flex-start" >
 									<Avatar>{patient.name.charAt(0)}</Avatar>
-									<Typography variant="h5" margin={3}>{patient.name}</Typography>
+									<Typography variant="h6" margin={3}>{patient.name}</Typography>
 								</Box>
 								<Stack spacing={1}>
 									<Typography>ID: {patient.id}</Typography>
@@ -223,13 +237,19 @@ export default function CounselorAssignmentScreen() {
 								</Stack>
 							</Paper>
 						</Grid>
-						<Grid item container>
-							<Button variant="outlined" color="secondary" sx={{ flexGrow: 1, marginRight: "1rem" }}
+						<Grid item container display="flex" justifyContent="space-between">
+							<Button variant="contained"
 								onClick={() => { navigate("../") }}
+								sx={{backgroundColor: "secondary.dark"}}
 							>Back</Button>
 							<Button
-								// disabled
-								variant="contained" sx={{ flexGrow: 1, marginLeft: "1rem" }} onClick={handleClickOpen}>Assign</Button>
+								variant="contained" onClick={handleAssignSelf}>
+								Assign Self
+							</Button>
+							<Button
+								variant="contained" onClick={handleAssignDoctor}>
+								Assign Doctor
+							</Button>
 						</Grid>
 					</Grid>
 				</Grid>

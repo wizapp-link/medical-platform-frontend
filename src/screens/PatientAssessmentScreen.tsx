@@ -112,7 +112,6 @@ export default function PatientAssessmentScreen(props: any) {
       }, 1000)
 
     }
-
   };
   const onCancel = () => {
     if(userInfo){
