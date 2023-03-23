@@ -36,12 +36,13 @@ export default function PatientDashboardScreen(props: any) {
   const handleAppointments = () => {
     navigate(`/patient/appointments`);
   };
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
   const handleDetailButtonClick = () => {
     // setSelectedPatient(patient);
     setShowDetailDialog(true);
   };
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [showDetailDialog, setShowDetailDialog] = useState(false);
+  
   const handleClose = () => {
     // setShowAssessmentDialog(false);
     setShowDetailDialog(false);
@@ -104,7 +105,7 @@ export default function PatientDashboardScreen(props: any) {
                             ":hover": { backgroundColor: "primary.main" },
                           }}
                         >
-                          Detials
+                          Details
                         </Button>
                         <Button
                           variant="contained"
@@ -134,9 +135,6 @@ export default function PatientDashboardScreen(props: any) {
             <Typography variant="subtitle1">
               Patient ID: 1
             </Typography>
-            {/* <Typography variant="subtitle1">
-              Patient Name: {selectedPatient?.name}
-            </Typography> */}
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Assessment Test
             </Typography>

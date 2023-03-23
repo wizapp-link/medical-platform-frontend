@@ -75,7 +75,7 @@ export default function PatientAssessmentScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn)
   const dispatch: AppDispatch = useDispatch();
   const assessment = useAppSelector((state: RootState) => state.assessment);
-  const { currentQuestionIndex, answers, errorMessage, loading, error, success } = assessment;
+  const { currentQuestionIndex, answers, errorMessage, loading, error, success, cancelError, cancelSuccess, cancelErrorMessage } = assessment;
   const [showSummary, setShowSummary] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -122,11 +122,13 @@ export default function PatientAssessmentScreen(props: any) {
     if(userInfo){
       const email = userInfo.userData.email;
       dispatch(removeAssessment(email, userInfo.token));
-      setCancel(true);
-      setTimeout(() => {
-        navigate("/patient/dashboard");
-      }, 4000);
-      dispatch(setCurrentQuestionIndex(0));
+      if(cancelSuccess){
+        setCancel(true);
+        setTimeout(() => {
+          navigate("/patient/dashboard");
+        }, 4000);
+        dispatch(setCurrentQuestionIndex(0));
+      }
     }
     
   };
