@@ -70,14 +70,24 @@ export const {
 
 export const selectCounselorAssignment = (state: RootState) => state.counselorAssignment;
 
-export const assignSelf = (userData: UserData) => async (dispatch: AppDispatch) => {
+export const assignSelf = (token: string, patient: Patient, counselor: UserData, reason: string) => async (dispatch: AppDispatch) => {
 	dispatch(assignRequest());
   try {
-    const { data } = await axios.post(
-			'/api/v1/counselor/updatePatientStatus', 
-		{
+		const body = 		{
+			email: patient.email,
+			expertEmail: counselor.email,
 			status: "SELF_ASSIGN",
-		});
+			reason,
+		}
+		console.log(body);
+    const { data } = await axios.post(
+			'/api/v1/counsellor/updatePatientStatus', 
+		{
+			email: patient.email,
+			expertEmail: counselor.email,
+			status: "SELF_ASSIGN",
+			reason,
+		}, { 'headers': { 'Authorization': `Bearer ${token}` } });
     console.log(data);
     dispatch(assignSuccess(data.response));
   } catch (err: any) {
@@ -87,15 +97,18 @@ export const assignSelf = (userData: UserData) => async (dispatch: AppDispatch) 
   }
 }
 
-export const assignDoctor = (userData: UserData) => async (dispatch: AppDispatch) => {
+export const assignDoctor = (token: string, patient: Patient, counselor: UserData, reason: string) => async (dispatch: AppDispatch) => {
 	dispatch(assignRequest());
   try {
     const { data } = await axios.post(
-			'/api/v1/counselor/updatePatientStatus', 
+			'/api/v1/counsellor/updatePatientStatus', 
 		{
+			email: patient.email,
+			expertEmail: counselor.email,
+			reason,
 			status: "ASSIGN_DOCTOR",
-		});
-    console.log(data);
+		}, { 'headers': { 'Authorization': `Bearer ${token}` } });
+		console.log(data);
     dispatch(assignSuccess(data.response));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
@@ -104,22 +117,23 @@ export const assignDoctor = (userData: UserData) => async (dispatch: AppDispatch
   }
 }
 
-export const rejectAssignment = (userData: UserData) => async (dispatch: AppDispatch) => {
-	dispatch(assignRequest());
-  try {
-    const { data } = await axios.post(
-			'/api/v1/counselor/updatePatientStatus', 
-		{
-			status: "REJECT_PATIENT",
-		});
-    console.log(data);
-    dispatch(assignSuccess(data.response));
-  } catch (err: any) {
-    const errorMessage = err.response ? err.response.data.response : err.message
-    console.log(errorMessage);
-    dispatch(assignFail(errorMessage));
-  }
-}
+// // unused, used the doctor's one
+// export const rejectAssignment = (userData: UserData) => async (dispatch: AppDispatch) => 
+// 	dispatch(assignRequest());
+//   try {
+//     const { data } = await axios.post(
+// 			'/api/v1/counselor/updatePatientStatus', 
+// 		{
+// 			status: "REJECT_PATIENT",
+// 		});
+//     console.log(data);
+//     dispatch(assignSuccess(data.response));
+//   } catch (err: any) {
+//     const errorMessage = err.response ? err.response.data.response : err.message
+//     console.log(errorMessage);
+//     dispatch(assignFail(errorMessage));
+//   }
+// }
 
 export const markCounsellingDone = (patientEmail: string) => async (dispatch: AppDispatch) => {
 	// dispatch(assignRequest());

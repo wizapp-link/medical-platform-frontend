@@ -61,7 +61,7 @@ export const {
 } = counselorSlice.actions;
 
 
-
+// not used, refer to the doctor's one
 export const updatePatientStatus = (email: string, status: string, reason: string) => async (
   dispatch: AppDispatch
 ) => {
