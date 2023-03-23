@@ -20,7 +20,7 @@ import {
   CardContent,
   Grid, DialogContentText, TextField, DialogActions
 } from "@mui/material";
-import * as React from "react";
+import React, { useEffect } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useState } from "react";
@@ -37,12 +37,13 @@ import { selectDoctor, updatePatientStatus } from "../features/doctor/doctorSlic
 import { Patient } from "../types/PatientDataType";
 import { ansList, questions } from "./PatientAssessmentScreen";
 import { roleToPosition } from "../constants/PositionRoleMap";
+import { fetchPatients, selectConselor } from "../features/counselor/counselorSlice"
 
 export default function CounselorDashboardScreen(props: any) {
 
   //todo: change patient
   // const { patients } = useAppSelector(selectDoctor);
-  const {userInfo} = useAppSelector(selectUserLogIn);
+  const { userInfo } = useAppSelector(selectUserLogIn);
   const position = "counsellor";
   const dispatch = useAppDispatch();
   const [patients, setPatients] = useState<Patient[]>([
@@ -126,7 +127,7 @@ export default function CounselorDashboardScreen(props: any) {
   };
 
   const handleAccept = (patient: Patient) => {
-    if(userInfo)
+    if (userInfo)
       dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
   };
 
@@ -135,12 +136,20 @@ export default function CounselorDashboardScreen(props: any) {
       dispatch(updatePatientStatus(selectedPatient.email, "REJECT_PATIENT", reason, userInfo?.token, position));
     setReason("");
     setOpen(false);
-
   };
   const handleClickOpen = (patient: any) => {
     setSelectedPatient(patient);
     setOpen(true);
   };
+
+  const counselor = useAppSelector(selectConselor);
+
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(fetchPatients(userInfo.userData.email, userInfo.token));
+    }
+  }, [])
 
 
   return (
@@ -177,8 +186,8 @@ export default function CounselorDashboardScreen(props: any) {
               Patient List
             </Typography>
             <List sx={{ flexGrow: 1 }}>
-              {patients.map((patient) => (
-                <ListItem key={patient.id}>
+              {counselor.patients.map((patient) => (
+                patient.assessmentTaken && <ListItem key={patient.id}>
                   <Box sx={{ width: "100%" }}>
                     <Card sx={{ boxShadow: 3, marginTop: 1 }}>
                       <CardContent>
@@ -189,12 +198,12 @@ export default function CounselorDashboardScreen(props: any) {
                             </ListItemAvatar>
                             <Stack direction={"column"} sx={{ marginRight: 3 }}>
                               <Typography>{patient.name}</Typography>
-                              <Typography>{`ID: ${patient.id}`}2</Typography>
+                              <Typography>{`${patient.email}`}</Typography>
                             </Stack>
                             <Button
                               variant="contained"
                               onClick={() => handleAssessmentButtonClick(patient)}
-                              disabled={patient.assessmentTaken}
+                              disabled={!patient.assessmentTaken}
                             >
                               Self-Assessment
                             </Button>
@@ -208,7 +217,7 @@ export default function CounselorDashboardScreen(props: any) {
                               onClick={() => { navigate(`/counselor/assignment?patientId=${patient.id}`) }}
                             >Assign</Button>
                             <Button variant="contained" color="secondary"
-                            onClick={() => handleClickOpen(patient)}>
+                              onClick={() => handleClickOpen(patient)}>
                               Reject
                             </Button>
                           </Stack>

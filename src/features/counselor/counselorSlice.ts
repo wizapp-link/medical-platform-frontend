@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppDispatch } from "../../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import axios from "axios";
 import { Patient } from "../../types/PatientDataType";
 
-interface CounselorState {
+export type CounselorState = {
   updatingPatientStatus: boolean;
   updateStatusError: string | null;
   patients: Patient[];
@@ -67,7 +67,7 @@ export const updatePatientStatus = (email: string, status: string, reason: strin
 ) => {
   dispatch(updatePatientStatusRequest());
   try {
-    const response = await axios.post('/api/v1/doctor/updatePatientStatus', {
+    const response = await axios.post('/api/v1/counsellor/updatePatientStatus', {
       email,
       status,
       reason,
@@ -79,11 +79,13 @@ export const updatePatientStatus = (email: string, status: string, reason: strin
   }
 };
 
-export const fetchPatients = (email: string) => async (dispatch: AppDispatch) => {
+export const fetchPatients = (email: string, token: string) => async (dispatch: AppDispatch) => {
   dispatch(fetchPatientsRequest());
   try {
-    const response = await axios.get(`/api/v1/counsellor/getAllAssessPatients?email=${email}`);
+    const response = await axios.get(`/api/v1/counsellor/getAllAssessPatients?email=${email}`, { 'headers': { 'Authorization': `Bearer ${token}` } });
     dispatch(fetchPatientsSuccess(response.data));
+    console.log("counselor fetching patient data");
+    console.log(response);
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
     dispatch(fetchPatientsFail(errorMessage));
@@ -91,3 +93,5 @@ export const fetchPatients = (email: string) => async (dispatch: AppDispatch) =>
 };
 
 export default counselorSlice.reducer;
+
+export const selectConselor = (state: RootState) => state.counselor;
