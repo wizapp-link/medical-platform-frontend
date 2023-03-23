@@ -8,13 +8,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import { useLocation, useNavigate, Link as RouterLink, useSearchParams } from "react-router-dom";
 
 export default function CounselorProfileScreen() {
   const { userInfo } = useAppSelector(selectUserLogIn);
   const dispatch = useDispatch()
 
   const handleSave = (e: FormEvent) => {
-    e.preventDefault()
+  e.preventDefault()
     // dispatch(profileUpdate({
     //   name,
     //   dob,
@@ -32,7 +33,7 @@ export default function CounselorProfileScreen() {
   const [registrationNo, setRegistrationNo] = useState(userInfo?.userData.registrationNo)
   const [email, setEmail] = useState(userInfo?.userData.email);
 
-
+  
 
   return (
     <ThemeProvider theme={counselorTheme}>
@@ -97,6 +98,7 @@ export default function CounselorProfileScreen() {
                 onChange={e => setRegistrationNo(e.target.value)}
                 required
                 color='secondary'
+                disabled
               />
               <Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button size={'large'} variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
