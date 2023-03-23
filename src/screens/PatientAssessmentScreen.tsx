@@ -17,6 +17,7 @@ import {
   setCurrentQuestionIndex,
   setAnswer,
   submitAssessment,
+  removeAssessment,
   setAllAnswer
 } from "../features/patient/assessmentSlice";
 import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
@@ -89,7 +90,7 @@ export default function PatientAssessmentScreen(props: any) {
     setSubmitSuccess(false);
     setSubmitFail(false);
     setCancel(false);
-  }
+  };
 
   const onAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswerText(event.target.value);
@@ -116,15 +117,19 @@ export default function PatientAssessmentScreen(props: any) {
         setSubmitFail(true);
       }
     }
-
   };
   const onCancel = () => {
-     setCancel(true);
-     setTimeout(() => {
-      navigate("/patient/dashboard");
-    }, 4000);
-    dispatch(setCurrentQuestionIndex(0));
-  }
+    if(userInfo){
+      const email = userInfo.userData.email;
+      dispatch(removeAssessment(email, userInfo.token));
+      setCancel(true);
+      setTimeout(() => {
+        navigate("/patient/dashboard");
+      }, 4000);
+      dispatch(setCurrentQuestionIndex(0));
+    }
+    
+  };
 
   const onReview = () => {
     dispatch(setAnswer({ index: currentQuestion.id, answer }));
@@ -143,8 +148,8 @@ export default function PatientAssessmentScreen(props: any) {
     }
   }, [submitSuccess, submitFail])
   const renderContent = () => {
-    if(userInfo){
-      if(userInfo.userData.assessmentTaken) {
+    if (userInfo) {
+      if (userInfo.userData.assessmentTaken) {
         dispatch(setAllAnswer(userInfo.userData.assessmentOptionsSelected));
         dispatch(setCurrentQuestionIndex(8));
       }
@@ -247,7 +252,7 @@ export default function PatientAssessmentScreen(props: any) {
           autoHideDuration={3000}
           onClose={handleSnackbarClose}
         />
-         <Snackbar
+        <Snackbar
           open={cancel}
           message="CANCEL SUCCESSFUL, REDIRECT TO DASHBOARD."
           autoHideDuration={3000}
