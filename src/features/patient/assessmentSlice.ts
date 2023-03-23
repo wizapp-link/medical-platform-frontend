@@ -1,3 +1,5 @@
+
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch } from "../../app/store";
 import axios from "axios";
@@ -10,11 +12,10 @@ interface AssessmentState {
   loading: boolean,
   error: boolean,
   success: boolean,
-  errorMessage: string,
-  successMessage: string,
+  message: string,
   cancelError: boolean,
   cancelSuccess: boolean,
-  cancelErrorMessage: string,
+
 }
 
 const initialState: AssessmentState = {
@@ -23,11 +24,9 @@ const initialState: AssessmentState = {
   loading: false,
   error: false,
   success: false,
-  errorMessage: "",
-  successMessage: "",
+  message: "",
   cancelError: false,
   cancelSuccess: false,
-  cancelErrorMessage: "",
 };
 
 export const assessmentSlice = createSlice({
@@ -48,13 +47,13 @@ export const assessmentSlice = createSlice({
       state.loading = false;
       state.error = false;
       state.success = true;
-      state.successMessage = action.payload;
+      state.message = action.payload;
 
     },
     submitFail: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = true;
-      state.errorMessage = action.payload;
+      state.message = action.payload;
     },
     setAllAnswer: (state, action: PayloadAction<string[]>) => {
       action.payload.forEach((value, i) => {
@@ -65,24 +64,30 @@ export const assessmentSlice = createSlice({
       state.loading = true;
       state.cancelError = false;
     },
-    cancelSuccess: (state) => {
+    cancelSuccess: (state,action) => {
       state.loading = false;
       state.cancelError = false;
       state.cancelSuccess = true;
-      // state.cancelsuccessMessage = action.payload;
+      state.message = action.payload;
+      state.answers = []
 
     },
     cancelFail: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.cancelError = true;
-      state.cancelErrorMessage = action.payload;
+      state.message = action.payload;
     },
+    reset: (state) => {
+      state.loading = false;
+      state.success = false;
+      state.cancelError = false;
+      state.cancelSuccess = false;
+    }
   },
 });
 
 export const submitAssessment = (questionAnswers: { email: string, assessmentOptionsSelected: string[]}, token: string) => async (dispatch: AppDispatch) => {
   dispatch(submitRequest());
-  console.log(questionAnswers)
   try {
     const { data } = await axios.post(`/api/v1/patient/addAssessDetails`, questionAnswers, {
       headers: {
@@ -106,7 +111,7 @@ export const removeAssessment = (email: string, token: string) => async (dispatc
         'Authorization': `Bearer ${token}`
       }
     });
-    dispatch(cancelSuccess());
+    dispatch(cancelSuccess(data.response));
     console.log(data.response);
     // localStorage.setItem('userData', JSON.stringify(data));
   } catch (err: any) {
@@ -116,5 +121,6 @@ export const removeAssessment = (email: string, token: string) => async (dispatc
   }
 };
 
-export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail, setAllAnswer, cancelRequest, cancelFail, cancelSuccess } = assessmentSlice.actions;
+export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail, setAllAnswer, cancelRequest, cancelFail, cancelSuccess, reset } = assessmentSlice.actions;
 export default assessmentSlice.reducer;
+
