@@ -31,11 +31,13 @@ import { useEffect, useState } from "react";
 import { Patient } from "../types/PatientDataType";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { ansList, questions } from "./PatientAssessmentScreen";
+import { selectAppointment, setPatient } from "../features/appointment/appointmentSlice";
 
 export default function DoctorDashboardScreen(props: any) {
   const doctor = useSelector((state: RootState) => state.doctor);
   const { userInfo } = useAppSelector(selectUserLogIn);
   const { patients } = useAppSelector(selectDoctor);
+  const appointment = useAppSelector(selectAppointment);
 
   const [open, setOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -66,8 +68,14 @@ export default function DoctorDashboardScreen(props: any) {
     navigate(`/doctor/appointments`);
   };
   const handleAccept = (patient: Patient) => {
-    if(userInfo)
-      dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
+    if(userInfo){
+      // dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
+      dispatch(setPatient(patient))
+      setTimeout(() => {
+        navigate("/doctor/modify_appointment");
+      }, 2000);
+    }
+
   };
 
   const handleReject = () => {
