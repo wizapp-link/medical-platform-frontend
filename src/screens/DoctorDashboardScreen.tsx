@@ -66,7 +66,7 @@ export default function DoctorDashboardScreen(props: any) {
     navigate(`/doctor/appointments`);
   };
   const handleAccept = (patient: Patient) => {
-    if(userInfo)
+    if (userInfo)
       dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
   };
 
@@ -104,7 +104,7 @@ export default function DoctorDashboardScreen(props: any) {
           <List sx={{ flexGrow: 1 }}>
             {patients.map(
               patient => (
-                <ListItem  key={patient.id}>
+                <ListItem key={patient.id}>
                   <Box width={"100%"}>
                     <Card sx={{ boxShadow: 3, marginTop: 1 }}>
                       <CardContent>
@@ -112,13 +112,13 @@ export default function DoctorDashboardScreen(props: any) {
                           <Stack direction={"row"}>
                             <ListItemAvatar sx={{ display: "flex" }}>
                               <Avatar sx={{ alignSelf: "center" }}
-                                      alt={patient.name}
-                                      src="/static/images/doctor/samplePatient.jpg"
+                                alt={patient.name}
+                                src="/static/images/doctor/samplePatient.jpg"
                               />
                             </ListItemAvatar>
                             <Stack direction={"column"}>
                               <Typography>{patient.name}</Typography>
-                              <Typography>Date: {patient.dob}</Typography>
+                              <Typography>{patient.email}</Typography>
                             </Stack>
                           </Stack>
                           <Stack direction={"row"}>
@@ -132,8 +132,8 @@ export default function DoctorDashboardScreen(props: any) {
                               Self-Assessment
                             </Button>
                             <Button variant="contained"
-                                    sx={{ marginRight: 2 }}
-                                    onClick={() => handleAccept(patient)}
+                              sx={{ marginRight: 2 }}
+                              onClick={() => handleAccept(patient)}
                             >
                               Accept
                             </Button>
