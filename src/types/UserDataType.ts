@@ -1,6 +1,7 @@
 export type UserData = {
   id: string;
-  email:string;
+  email: string;
+  password: string;
   role: string;
   name: string;
   address: string;
@@ -9,8 +10,18 @@ export type UserData = {
   registrationNo: string | null;
   status: string;
   assessmentTaken: boolean;
-  assessmentOptionsSelected: string[],
-
+  assessmentOptionsSelected: string[];
+  verificationAttempts: number | null;
+  otpExpiryDate: string | null;
+  patientQueue: string | null;
+  counsellorAssigned: string;
+  doctorAssigned: string | null;
+  counsellingDone: boolean;
+  counsellingComment: string;
+  doctoringDone: boolean;
+  doctorComment: string | null;
+  creationDate: string;
+  otp: string | null;
 }
 
 export type UserInfo = {
