@@ -131,6 +131,8 @@ export const updatePatientStatus = (email: string, status: string, reason: strin
         }
       });
     dispatch(updatePatientStatusSuccess());
+    console.log("updatePatientStatusSuccess");
+    console.log(response);
     if(token){
       dispatch(fetchPatients(email, token, role))
     }
@@ -150,7 +152,8 @@ export const fetchPatients = (email: string, token: string, role: string | undef
       }
     })
     dispatch(fetchPatientsSuccess(response.data));
-    console.log("Patients: " + response.data);
+    console.log("fetched patients:")
+    console.log(response);
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
     console.log("doctor fetching patient error: " + errorMessage);
