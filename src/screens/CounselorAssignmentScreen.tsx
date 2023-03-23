@@ -7,16 +7,18 @@ import timeslots from "../constants/Timeslots";
 import { UserData } from "../types/UserDataType";
 import { display, style } from "@mui/system";
 import SelfAssessmentForm from "../components/SelfAssessmentForm";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { useNavigate } from "react-router";
-import { selectCounselorAssignment } from "../features/counselor/counselorAssignmentSlice";
+import { selectCounselorAssignment, assignSelf, assignDoctor, markCounsellingDone } from "../features/counselor/counselorAssignmentSlice";
 import generateResultFromSelfAssessmentResult, { AssessmentSummary } from "../utils/GenerateResultFromSelfAssessmentResult";
+import { userInfo } from "os";
 
 
 export default function CounselorAssignmentScreen() {
 
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const userLogIn = useAppSelector(selectUserLogIn);
 	const counselorAssignment = useAppSelector(selectCounselorAssignment);
@@ -36,28 +38,28 @@ export default function CounselorAssignmentScreen() {
 		setValue((event.target as HTMLInputElement).value);
 	};
 
-	const experts = [
-		userLogIn.userInfo ? { name: userLogIn.userInfo?.userData.name, role: roleToPosition.get(userLogIn.userInfo?.userData.role) } : { name: "Myself", role: "counselor" },
-		{ name: 'John Doe', role: 'Cardiologist' },
-		{ name: 'Jane Doe', role: 'Neurologist' },
-		{ name: 'Bob Smith', role: 'Dermatologist' },
-		{ name: 'Alice Smith', role: 'Pediatrician' },
-		{ name: 'Mike Johnson', role: 'Oncologist' },
-		{ name: 'Sara Johnson', role: 'Psychiatrist' },
-	];
-	const patient: UserData = {
-		id: "patientId",
-		email: "patient@front.end",
-		role: "ROLE_PATIENT",
-		name: "Patient Name",
-		address: "142 Rue Wellington S",
-		dob: "2000-01-01",
-		phone: "8199933118",
-		registrationNo: null,
-		status: "VERIFIED",
-		assessmentTaken: false,
-		assessmentOptionsSelected: [],
-	}
+	// const experts = [
+	// 	userLogIn.userInfo ? { name: userLogIn.userInfo?.userData.name, role: roleToPosition.get(userLogIn.userInfo?.userData.role) } : { name: "Myself", role: "counselor" },
+	// 	{ name: 'John Doe', role: 'Cardiologist' },
+	// 	{ name: 'Jane Doe', role: 'Neurologist' },
+	// 	{ name: 'Bob Smith', role: 'Dermatologist' },
+	// 	{ name: 'Alice Smith', role: 'Pediatrician' },
+	// 	{ name: 'Mike Johnson', role: 'Oncologist' },
+	// 	{ name: 'Sara Johnson', role: 'Psychiatrist' },
+	// ];
+	// const patient: UserData = {
+	// 	id: "patientId",
+	// 	email: "patient@front.end",
+	// 	role: "ROLE_PATIENT",
+	// 	name: "Patient Name",
+	// 	address: "142 Rue Wellington S",
+	// 	dob: "2000-01-01",
+	// 	phone: "8199933118",
+	// 	registrationNo: null,
+	// 	status: "VERIFIED",
+	// 	assessmentTaken: false,
+	// 	assessmentOptionsSelected: [],
+	// }
 
 	const [open, setOpen] = React.useState(false);
 
@@ -81,10 +83,16 @@ export default function CounselorAssignmentScreen() {
 
 	const handleAssignSelf = (event: React.MouseEvent) => {
 		event.preventDefault();
+		if (userLogIn.userInfo) {
+			dispatch(assignSelf(userLogIn.userInfo.token, counselorAssignment.patient, userLogIn.userInfo?.userData, comment))
+		}
 	}
 
 	const handleAssignDoctor = (event: React.MouseEvent) => {
 		event.preventDefault();
+		if (userLogIn.userInfo) {
+			dispatch(assignDoctor(userLogIn.userInfo.token, counselorAssignment.patient, userLogIn.userInfo?.userData, comment))
+		}
 	}
 
 	const assessmentSummary = generateResultFromSelfAssessmentResult(counselorAssignment.patient.assessmentOptionsSelected);
@@ -152,7 +160,7 @@ export default function CounselorAssignmentScreen() {
 							<Paper sx={{ p: 3, paddingTop: 1, display: "flex", flexDirection: "column" }}>
 								<Box display="flex" alignItems="center" justifyContent="flex-start" >
 									<Avatar>{counselorAssignment.patient.name.charAt(0)}</Avatar>
-									<Typography variant="h6" margin={3}>{patient.name}</Typography>
+									<Typography variant="h6" margin={3}>{counselorAssignment.patient.name}</Typography>
 								</Box>
 								<Stack spacing={1}>
 									<Typography>ID: {counselorAssignment.patient.id}</Typography>
