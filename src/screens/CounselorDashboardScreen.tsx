@@ -129,12 +129,12 @@ export default function CounselorDashboardScreen(props: any) {
 
   const handleAccept = (patient: Patient) => {
     if (userInfo)
-      dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
+      dispatch(updatePatientStatus(patient.email, userInfo.userData.email, "SELF_ASSIGN", "", userInfo?.token, position));
   };
 
   const handleReject = () => {
-    if (selectedPatient)
-      dispatch(updatePatientStatus(selectedPatient.email, "REJECT_PATIENT", reason, userInfo?.token, position));
+    if (selectedPatient && userInfo)
+      dispatch(updatePatientStatus(selectedPatient.email, userInfo?.userData.email, "REJECT_PATIENT", reason, userInfo?.token, position));
     setReason("");
     setOpen(false);
   };
