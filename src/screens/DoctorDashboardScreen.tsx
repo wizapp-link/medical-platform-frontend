@@ -30,6 +30,8 @@ import { fetchPatients, selectDoctor, updatePatientStatus } from "../features/do
 import { useEffect, useState } from "react";
 import { Patient } from "../types/PatientDataType";
 import { roleToPosition } from "../constants/PositionRoleMap";
+import { ansList, questions } from "./PatientAssessmentScreen";
+import { setPatient } from "../features/appointment/appointmentSlice";
 
 export default function DoctorDashboardScreen(props: any) {
   const doctor = useSelector((state: RootState) => state.doctor);
@@ -39,6 +41,7 @@ export default function DoctorDashboardScreen(props: any) {
   const [open, setOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [reason, setReason] = useState("");
+  const [showAssessmentDialog ,setShowAssessmentDialog] = useState(false);
 
   const role = userInfo?.userData.role;
   const position = roleToPosition.get(role ? role : "");
@@ -51,6 +54,11 @@ export default function DoctorDashboardScreen(props: any) {
     setOpen(false);
   };
 
+  const handleAssessmentButtonClick = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setShowAssessmentDialog(true);
+  };
+
 
   const dispatch = useAppDispatch();
 
@@ -59,8 +67,14 @@ export default function DoctorDashboardScreen(props: any) {
     navigate(`/doctor/appointments`);
   };
   const handleAccept = (patient: Patient) => {
-    if(userInfo)
-      dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
+    if(userInfo){
+      // dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
+      dispatch(setPatient(patient))
+      setTimeout(() => {
+        navigate("/doctor/modify_appointment");
+      }, 2000);
+    }
+
   };
 
   const handleReject = () => {
@@ -75,7 +89,7 @@ export default function DoctorDashboardScreen(props: any) {
   useEffect(() => {
     if (userInfo)
       dispatch(fetchPatients(userInfo.userData.email, userInfo.token, position));
-  }, []);
+  }, [dispatch]);
 
   return (
     <ThemeProvider theme={doctorTheme}>
@@ -111,10 +125,19 @@ export default function DoctorDashboardScreen(props: any) {
                             </ListItemAvatar>
                             <Stack direction={"column"}>
                               <Typography>{patient.name}</Typography>
-                              <Typography>Date: {patient.dob}</Typography>
+                              <Typography>{patient.email}</Typography>
                             </Stack>
                           </Stack>
                           <Stack direction={"row"}>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleAssessmentButtonClick(patient)}
+                              sx={{ marginRight: 2 }}
+                              disabled={patient.assessmentOptionsSelected.length === 0}
+                            >
+                              Self-Assessment
+                            </Button>
                             <Button variant="contained"
                                     sx={{ marginRight: 2 }}
                                     onClick={() => handleAccept(patient)}
@@ -159,6 +182,35 @@ export default function DoctorDashboardScreen(props: any) {
               </DialogActions>
             </Dialog>
           </List>
+          <Dialog open={showAssessmentDialog} onClose={() => setShowAssessmentDialog(false)}>
+            <DialogTitle sx={{ fontWeight: "bold", fontSize: 30 }}>
+              {selectedPatient?.name} Self-Assessment Results
+            </DialogTitle>
+            <DialogContent>
+              <Stack direction={"row"} justifyContent={"space-around"}>
+                <Typography variant="subtitle1">
+                  ID: {selectedPatient?.id}
+                </Typography>
+                <Typography variant="subtitle1">
+                  Name: {selectedPatient?.name}
+                </Typography> </Stack>
+
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+
+              </Typography>
+              <Stack spacing={2} pt={1}>
+                {questions.map((question) => (
+                  <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
+                    <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
+                    <Typography
+                      variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
+                      ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
+                    }`}</Typography>
+                  </Paper>
+                ))}
+              </Stack>
+            </DialogContent>
+          </Dialog>
         </Stack>
       </Stack>
     </ThemeProvider>

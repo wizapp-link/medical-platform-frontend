@@ -56,9 +56,11 @@ export const assessmentSlice = createSlice({
       state.message = action.payload;
     },
     setAllAnswer: (state, action: PayloadAction<string[]>) => {
-      action.payload.forEach((value, i) => {
+      if(action.payload) {
+        action.payload.forEach((value, i) => {
         state.answers[i+1] = value;
       });
+    }
     },
     cancelRequest: (state) => {
       state.loading = true;

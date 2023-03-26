@@ -128,14 +128,7 @@ export default function PatientAssessmentScreen(props: any) {
       //   setShowSummary(false);
       //   dispatch(reset());
       // }, 3000);
-      setTimeout(() => {
-        if(cancelSuccess){
-          setTaken(false);
-          dispatch(setCurrentQuestionIndex(0));
-          setShowSummary(false);
-          dispatch(reset());
-        }
-      }, 3000);
+
 
     }
   };
@@ -144,6 +137,20 @@ export default function PatientAssessmentScreen(props: any) {
     dispatch(setAnswer({ index: currentQuestion.id, answer }));
     setShowSummary(true);
   };
+
+  useEffect(() => {
+      if(cancelSuccess){
+        setTaken(false);
+        dispatch(setCurrentQuestionIndex(0));
+        setShowSummary(false);
+        dispatch(reset());
+      }
+  },[cancelSuccess])
+
+  useEffect(() => {
+    if(taken || success)
+      setShowSummary(true);
+  },[taken, success])
 
   useEffect(() => {
     setAnswerText(answers[currentQuestion.id] || "");
@@ -164,7 +171,7 @@ export default function PatientAssessmentScreen(props: any) {
         setSyncAns(true);
       }
     }
-    if (showSummary || taken || success) {
+    if (showSummary) {
       return (
         <Box>
           <Typography variant="h4" my={5}>Summary</Typography>
