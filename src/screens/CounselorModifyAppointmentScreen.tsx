@@ -24,6 +24,7 @@ import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import SelfAssessmentForm from "../components/SelfAssessmentForm";
 import timeslots from "../constants/Timeslots";
@@ -37,6 +38,7 @@ export default function CounselorModifyAppointmentScreen() {
 	const [value, setValue] = useState("");
 
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
 	const { userInfo } = useAppSelector(selectUserLogIn);
 	const appointment = useAppSelector(selectAppointment);
 
@@ -64,6 +66,7 @@ export default function CounselorModifyAppointmentScreen() {
 		event.preventDefault();
 		if (userInfo && date) {
 			dispatch(setAppointmentDateTime(userInfo.token, userInfo?.userData, appointment.patient, dayjs(date).format("YYYY-MM-DD"), value));
+			navigate("/counselor");
 		}
 	};
 

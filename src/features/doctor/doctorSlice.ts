@@ -115,7 +115,7 @@ export const {
 } = doctorSlice.actions;
 
 
-export const updatePatientStatus = (email: string, status: string, reason: string, token: string | undefined, role: string | undefined) => async (
+export const updatePatientStatus = (email: string, expertEmail: string, status: string, reason: string, token: string | undefined, role: string | undefined) => async (
   dispatch: AppDispatch
 ) => {
   dispatch(updatePatientStatusRequest());
@@ -123,7 +123,8 @@ export const updatePatientStatus = (email: string, status: string, reason: strin
     const response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
         email,
         status,
-        reason
+        reason,
+        expertEmail,
       },
       {
         headers: {

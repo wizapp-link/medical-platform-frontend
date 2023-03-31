@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Typography, Chip, RadioGroup, FormControl, FormLabel, FormControlLabel, Radio, Card, CardContent, Avatar, CardActions, Button, Box, Stepper, Step, StepLabel, Paper, Stack, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { Grid, Typography, Chip, RadioGroup, FormControl, FormLabel, FormControlLabel, Radio, Card, CardContent, Avatar, CardActions, Button, Box, Stepper, Step, StepLabel, Paper, Stack, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Alert, Snackbar } from "@mui/material";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import { DatePickerToolbar, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -74,6 +74,7 @@ export default function CounselorAssignmentScreen() {
 	};
 
 	const [comment, setComment] = React.useState("");
+	const [commentErrorMessage, setCommentErrorMessage] = React.useState("");
 
 	const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setComment(event.target.value);
@@ -85,15 +86,21 @@ export default function CounselorAssignmentScreen() {
 
 	const handleAssignSelf = (event: React.MouseEvent) => {
 		event.preventDefault();
-		if (userLogIn.userInfo) {
+		if (userLogIn.userInfo && comment !== "") {
 			dispatch(assignSelf(userLogIn.userInfo.token, counselorAssignment.patient, userLogIn.userInfo?.userData, comment))
+		}
+		if (comment === "") {
+			setCommentErrorMessage("A comment is required!");
 		}
 	}
 
 	const handleAssignDoctor = (event: React.MouseEvent) => {
 		event.preventDefault();
-		if (userLogIn.userInfo) {
+		if (userLogIn.userInfo && comment !== "") {
 			dispatch(assignDoctor(userLogIn.userInfo.token, counselorAssignment.patient, userLogIn.userInfo?.userData, comment))
+		}
+		if (comment === "") {
+			setCommentErrorMessage("A comment is required!");
 		}
 	}
 
@@ -244,6 +251,14 @@ export default function CounselorAssignmentScreen() {
 					<Button variant="contained" onClick={handleSubmit}>Submit</Button>
 				</DialogActions>
 			</Dialog>
+
+
+			<Snackbar
+				open={commentErrorMessage !== ""}
+				autoHideDuration={6000}
+				onClose={handleClose}
+				message={commentErrorMessage}
+			/>
 		</Box>
 	)
 }
