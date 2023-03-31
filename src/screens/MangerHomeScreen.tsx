@@ -26,6 +26,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DrawerOptionTextIconsType from "../types/DrawerOptionTextIconsType";
+import Drawer from '@mui/material/Drawer';
 import {
   BrowserRouter as Router,
   Routes,
@@ -43,30 +44,30 @@ const backgroundColor = "#388087";
 const textColor = "#FFFFFF";
 const text = "Manager's Dashboard";
 
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-  backgroundColor: backgroundColor,
-  color: textColor,
-});
+// const openedMixin = (theme: Theme): CSSObject => ({
+//   width: drawerWidth,
+//   transition: theme.transitions.create("width", {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.enteringScreen,
+//   }),
+//   overflowX: "hidden",
+//   backgroundColor: backgroundColor,
+//   color: textColor,
+// });
 
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-  backgroundColor: backgroundColor,
-  color: textColor,
-});
+// const closedMixin = (theme: Theme): CSSObject => ({
+//   transition: theme.transitions.create("width", {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   overflowX: "hidden",
+//   width: `calc(${theme.spacing(7)} + 1px)`,
+//   [theme.breakpoints.up("sm")]: {
+//     width: `calc(${theme.spacing(8)} + 1px)`,
+//   },
+//   backgroundColor: backgroundColor,
+//   color: textColor,
+// });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -101,22 +102,22 @@ const AppBar = styled(MuiAppBar, {
   color: textColor,
 }));
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
+// const Drawer = styled(MuiDrawer, {
+//   shouldForwardProp: (prop) => prop !== "open",
+// })(({ theme, open }) => ({
+//   width: drawerWidth,
+//   flexShrink: 0,
+//   whiteSpace: "nowrap",
+//   boxSizing: "border-box",
+// //   ...(open && {
+// //     ...openedMixin(theme),
+// //     "& .MuiDrawer-paper": openedMixin(theme),
+// //   }),
+// //   ...(!open && {
+// //     ...closedMixin(theme),
+// //     "& .MuiDrawer-paper": closedMixin(theme),
+// //   }),
+// }));
 
 export default function ManagerHomeScreen() {
   const { userInfo } = useAppSelector(selectUserLogIn);
@@ -161,7 +162,7 @@ export default function ManagerHomeScreen() {
             >
               <item.icon />
             </ListItemIcon>
-            <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+            <ListItemText primary={item.text} sx={{ opacity: 1, marginLeft: 3 }} />
           </ListItemButton>
         </ListItem>
       ))}
@@ -200,7 +201,7 @@ export default function ManagerHomeScreen() {
             </ListItemIcon>
             <ListItemText
               primary={item.text}
-              sx={{ opacity: open ? 1 : 0, color: textColor }}
+              sx={{ opacity: 1, color: textColor, marginLeft: 3 }}
             />
           </ListItemButton>
         </ListItem>
@@ -219,9 +220,13 @@ export default function ManagerHomeScreen() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar
+        position="fixed"
+        open={open}
+        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+      >
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -233,7 +238,7 @@ export default function ManagerHomeScreen() {
             }}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Stack
             direction="row"
             sx={{ justifyContent: "center", flexGrow: 1, alignItems: "center" }}
@@ -250,7 +255,20 @@ export default function ManagerHomeScreen() {
           </Stack>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer
+        variant="permanent"
+        anchor="left"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+			backgroundColor: backgroundColor,
+			color: textColor
+          },
+        }}
+      >
         <DrawerHeader sx={{ justifyContent: "space-between" }}>
           <Typography sx={{ marginLeft: 1.5, marginTop: 0.25, fontSize: 19 }}>
             {text}
