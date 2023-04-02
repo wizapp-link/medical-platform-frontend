@@ -22,6 +22,7 @@ export default function LogOutScreen() {
 
 	useEffect(() => {
 		if (userInfo == null) {
+			window.location.reload();
 			navigate("/");
 		}
 	}, [userInfo]);
