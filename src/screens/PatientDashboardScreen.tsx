@@ -28,17 +28,25 @@ import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { useAppSelector } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { Patient } from "../types/PatientDataType";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { listAppointment, selectPatientAppointmentList } from "../features/patient/patientAppointmentSlice";
+import { useAppDispatch } from "../app/hooks";
+import { Appointment } from "../types/AppointmentType";
+import { updateAppointment } from "../features/patient/patientAppointmentSlice";
 
 export default function PatientDashboardScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn);
+  const patientAppointmentList = useAppSelector(selectPatientAppointmentList);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleAppointments = () => {
     navigate(`/patient/assessment`);
   };
   const [showDetailDialog, setShowDetailDialog] = useState(false);
-  const handleDetailButtonClick = () => {
+  const [appointmentDetail, setAppointmentDetail] = useState<Appointment>();
+  const handleDetailButtonClick = (appointment: Appointment) => {
     // setSelectedPatient(patient);
+    setAppointmentDetail(appointment);
     setShowDetailDialog(true);
   };
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -48,6 +56,24 @@ export default function PatientDashboardScreen(props: any) {
     setShowDetailDialog(false);
   };
 
+  const handleAccept = (appointment: Appointment) => {
+    if (userInfo) {
+      dispatch(updateAppointment(userInfo.token, userInfo.userData, appointment, "ACCEPTED"));
+    }
+  }
+
+  const handleReject = (appointment: Appointment) => {
+    if (userInfo) {
+      dispatch(updateAppointment(userInfo.token, userInfo.userData, appointment, "REJECTED"));
+    }
+  }
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(listAppointment(userInfo.token, userInfo.userData))
+    }
+  }, [])
+  
   return (
     <ThemeProvider theme={patientTheme}>
       <Stack padding={2} spacing={2}>
@@ -93,8 +119,10 @@ export default function PatientDashboardScreen(props: any) {
           <Typography variant="h5" color="primary.contrastText">
             Upcoming Appointments
           </Typography>
+
           <List>
-            <ListItem>
+            {patientAppointmentList.appointments.map((appointment) =>
+            (<ListItem key={appointment.name.concat(appointment.slotDate).concat(appointment.slotTime)}>
               <Box sx={{ width: "100%" }}>
                 <Card sx={{ marginTop: 2, boxShadow: 3 }}>
                   <CardContent>
@@ -108,17 +136,18 @@ export default function PatientDashboardScreen(props: any) {
                           />
                         </ListItemAvatar>
                         <Stack direction={"column"}>
-                          <Typography>Dr. Gregory House</Typography>
-                          <Typography>Date: 2023-02-12</Typography>
+                          <Typography>{appointment.name}</Typography>
+                          <Typography>Date:{appointment.slotDate}</Typography>
                         </Stack>
                       </Stack>
                       <Stack direction={"row"}>
                         <Button
                           variant="contained"
-                          onClick={() => handleDetailButtonClick()}
+                          // variant="outlined"
+                          onClick={() => handleDetailButtonClick(appointment)}
                           sx={{
-                            backgroundColor: "secondary.main",
                             marginRight: 2,
+                            backgroundColor: "primary",
                             color: "primary.contrastText",
                             ":hover": {
                               color: "primary.contrastText",
@@ -128,58 +157,114 @@ export default function PatientDashboardScreen(props: any) {
                         >
                           Details
                         </Button>
-                        <Button
-                          variant="contained"
-                          sx={{
-                            marginRight: 2,
-                            color: "primary.contrastText",
-                            ":hover": { color: "primary.contrastText" },
-                          }}
-                        >
-                          ACCEPT
-                        </Button>
-                        <Button
-                          variant="contained"
-                          sx={{
-                            backgroundColor: "secondary.dark",
-                            color: "primary.contrastText",
-                            borderColor: "secondary.dark",
-                            ":hover": { backgroundColor: "secondary.dark" },
-                          }}
-                        >
-                          Reject
-                        </Button>
+                        {appointment.status !== "ACCEPTED" &&
+                          appointment.status !== "REJECTED" &&
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            sx={{
+                              color: "primary.contrastText",
+                              marginRight: 2,
+                              borderColor: "secondary.dark",
+                              ":hover": { backgroundColor: "secondary.dark" },
+                            }}
+                            onClick={() => handleReject(appointment)}
+                          >
+                            Reject
+                          </Button>
+                        }
+                        {appointment.status !== "ACCEPTED" &&
+                          appointment.status !== "REJECTED" &&
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleAccept(appointment)}
+                            sx={{
+                              backgroundColor: "primary.dark",
+                              color: "primary.contrastText",
+                              ":hover": { backgroundColor: "primary.main" },
+                            }}
+                          >
+                            Accept
+                          </Button>
+                        }
+
+                        {(appointment.status === "ACCEPTED" ||
+                          appointment.status === "REJECTED") &&
+                          <Button
+                            variant="outlined"
+                            disabled
+                          >
+                            {appointment.status}
+                          </Button>
+                        }
                       </Stack>
                     </Stack>
                   </CardContent>
                 </Card>
               </Box>
-            </ListItem>
+            </ListItem>)
+            )}
+
           </List>
         </Stack>
 
         <Dialog open={showDetailDialog} onClose={handleClose}>
           <DialogTitle sx={{ fontWeight: "bold" }}>
-            Patient Name: Rui
+            Appointment Detail
           </DialogTitle>
           <DialogContent>
-            <Typography variant="subtitle1">Patient ID: 1</Typography>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Assessment Test
-            </Typography>
-            <Typography variant="subtitle1">Status: Pass</Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Assignment Comment
-            </Typography>
-            <Typography variant="subtitle1">Counselor: Harsh Singh</Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Appointment Comment
+              Patient Info
             </Typography>
             <Typography variant="subtitle1">
-              Doctor: Dr. Gregory House
+              Patient ID: {userInfo?.userData.id}
             </Typography>
-            <Typography variant="subtitle1">Date: 2023-02-12</Typography>
-            <Typography variant="subtitle1">Notes:</Typography>
+            <Typography variant="subtitle1">
+              Patient Email: {userInfo?.userData.name}
+            </Typography>
+            <Typography variant="subtitle1">
+              Patient Email: {userInfo?.userData.email}
+            </Typography>
+            {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Assessment Test
+            </Typography>
+            <Typography variant="subtitle1">
+              Status: Pass
+            </Typography> */}
+            {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Assignment Comment 
+            </Typography> */}
+            
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Expert Info
+            </Typography>
+            <Typography variant="subtitle1">
+              Expert Position: {appointmentDetail?.type}
+            </Typography>
+            <Typography variant="subtitle1">
+              Expert Name: {appointmentDetail?.name}
+            </Typography>
+            <Typography variant="subtitle1">
+              Expert Email: {appointmentDetail?.slotAssignedTo ? appointmentDetail?.slotAssignedTo : appointmentDetail?.slotAssignedBy}
+            </Typography>
+            {/* <Typography variant="subtitle1">
+              Doctor: Dr. Gregory House
+            </Typography> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Appointment Info
+            </Typography>
+            <Typography variant="subtitle1">
+              Status: {appointmentDetail?.status}
+            </Typography>
+            <Typography variant="subtitle1">
+              Date: {appointmentDetail?.slotDate}
+            </Typography>
+            <Typography variant="subtitle1">
+              Timeslot: {appointmentDetail?.slotTime}
+            </Typography>
+            {/* <Typography variant="subtitle1">
+              Notes:
+            </Typography> */}
           </DialogContent>
         </Dialog>
       </Stack>

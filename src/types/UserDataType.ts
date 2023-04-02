@@ -9,16 +9,31 @@ export type UserData = {
   registrationNo: string | null;
   status: string;
   assessmentTaken: boolean;
-  assessmentOptionsSelected: string[];
-  counsellorAssigned: string | null;
-  doctorAssigned: string | null;
+  
+  // counsellorAssigned: string | null;
+  // doctorAssigned: string | null;
+  
+  assessmentOptionsSelected: string[],
+  creationDate: string,
+  otp: string | null,
+  otpExpiryDate: string | null,
+  password: string | null,
 
+  // appointments?: Appointment[],
+  // counsellingComment?: string | null,
+  // counsellingDone?: boolean,
+  // counsellorAssigned?: string | null,
+  // doctorAssigned?: string | null,
+  // doctorComment?: string | null,
+  // doctoringDone?: boolean,
 }
 
 export type UserInfo = {
   userData: UserData,
   token: string,
 }
+
+
 
 // export type Responses = {
 //   statusCode: number,

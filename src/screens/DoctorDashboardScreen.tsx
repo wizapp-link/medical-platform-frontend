@@ -42,6 +42,8 @@ export default function DoctorDashboardScreen(props: any) {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [reason, setReason] = useState("");
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
+  const [openConfirm, setConfirm] = useState(false);
+
 
   const role = userInfo?.userData.role;
   const position = roleToPosition.get(role ? role : "");
@@ -59,6 +61,12 @@ export default function DoctorDashboardScreen(props: any) {
     setShowAssessmentDialog(true);
   };
 
+  const handleRejectConfirmDialog = () => {
+    setConfirm(true);
+  };
+  const handleCloseConfirm = () => {
+    setConfirm(false);
+  };
 
   const dispatch = useAppDispatch();
 
@@ -82,6 +90,7 @@ export default function DoctorDashboardScreen(props: any) {
       dispatch(updatePatientStatus(selectedPatient.email, userInfo?.userData.email, "REJECT_PATIENT", reason, userInfo?.token, position,));
     setReason("");
     setOpen(false);
+    setConfirm(false);
 
   };
 
@@ -176,11 +185,39 @@ export default function DoctorDashboardScreen(props: any) {
                 <Button onClick={handleClose} color="primary">
                   Cancel
                 </Button>
-                <Button onClick={handleReject} color="error">
+                <Button onClick={handleRejectConfirmDialog} color="error">
                   Reject
                 </Button>
               </DialogActions>
             </Dialog>
+            <Dialog
+              open={openConfirm}
+              onClose={handleCloseConfirm}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Do you want to reject this patient?"}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Once you click confirm, this rejection will not be withdrawn.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseConfirm}>Cancel</Button>
+                <Button onClick={handleReject} autoFocus color="error">
+                  Confirm
+                </Button>
+              </DialogActions>
+
+            </Dialog>
+
+
+
+
+
+
           </List>
           <Dialog open={showAssessmentDialog} onClose={() => setShowAssessmentDialog(false)}>
             <DialogTitle sx={{ fontWeight: "bold", fontSize: 30 }}>
