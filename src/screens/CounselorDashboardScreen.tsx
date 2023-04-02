@@ -102,6 +102,7 @@ export default function CounselorDashboardScreen(props: any) {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openConfirm, setConfirm] = useState(false);
   const [reason, setReason] = useState("");
 
   // type Patient = {
@@ -120,7 +121,14 @@ export default function CounselorDashboardScreen(props: any) {
   };
   const handleClose = () => {
     setShowAssessmentDialog(false);
+    setOpen(false);
     // setShowDetailDialog((false));
+  };
+  const handleRejectConfirmDialog = () => {
+    setConfirm(true);
+  };
+  const handleCloseConfirm = () => {
+    setConfirm(false);
   };
   const navigate = useNavigate();
   const handleAppointments = () => {
@@ -137,6 +145,7 @@ export default function CounselorDashboardScreen(props: any) {
       dispatch(updatePatientStatus(selectedPatient.email, userInfo?.userData.email, "REJECT_PATIENT", reason, userInfo?.token, position));
     setReason("");
     setOpen(false);
+    setConfirm(false);
   };
   const handleClickOpen = (patient: any) => {
     setSelectedPatient(patient);
@@ -281,36 +290,6 @@ export default function CounselorDashboardScreen(props: any) {
           </Grid> */}
         </Grid>
 
-
-        {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
-          <DialogTitle
-            color={"primary.contrastText"}
-            sx={{ fontWeight: "bold" }}
-          >
-            {selectedPatient?.name}
-          </DialogTitle>
-          <DialogContent>
-            <Typography variant="subtitle1" color={"primary.contrastText"}>
-              ID: {selectedPatient?.id}
-            </Typography>
-            <Typography variant="subtitle1" color={"primary.contrastText"}>
-              Name: {selectedPatient?.name}
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Self-Assessment Results
-            </Typography>
-            <List>
-              {selectedPatient?.selfAssessmentResults.map((result) => (
-                <ListItem key={result} sx={{ color: "primary.contrastText" }}>
-                  <ListItemText
-                    primary={result}
-                    sx={{ color: "primary.contrastText" }}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </DialogContent>
-        </Dialog> */}
         <Dialog open={showAssessmentDialog} onClose={handleClose}>
           <DialogTitle sx={{ fontWeight: "bold", fontSize: 30 }}>
             {selectedPatient?.name} Self-Assessment Results
@@ -361,10 +340,33 @@ export default function CounselorDashboardScreen(props: any) {
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleReject} color="error">
+            <Button onClick={handleRejectConfirmDialog} color="error">
               Reject
             </Button>
           </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={openConfirm}
+          onClose={handleCloseConfirm}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Do you want to reject this patient?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Once you click confirm, this rejection will not be withdrawn.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirm}>Cancel</Button>
+            <Button onClick={handleReject} autoFocus color="error">
+              Confirm
+            </Button>
+          </DialogActions>
+
         </Dialog>
       </Stack>
     </ThemeProvider>
