@@ -10,7 +10,7 @@ import PatientDashboardScreen from './screens/PatientDashboardScreen';
 import PatientProfileScreen from './screens/PatientProfileScreen';
 import PatientAppointmentScreen from './screens/PatientAppointmentScreen';
 import PatientAssessmentScreen from './screens/PatientAssessmentScreen';
-import PatientSettingsScreen from './screens/PatientSettingsScreen';
+import PatientChangePasswordScreen from './screens/PatientChangePasswordScreen';
 import RegisterScreen from "./screens/RegisterScreen";
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import DoctorHomeScreen from './screens/DoctorHomeScreen';
@@ -70,7 +70,7 @@ function App() {
 						<Route path="appointments" element={<PatientAppointmentScreen />} />
 						<Route path="assessment" element={<PatientAssessmentScreen />} />
 						<Route path="profile" element={<PatientProfileScreen />} />
-						<Route path="settings" element={<PatientSettingsScreen />} />
+						<Route path="changepassword" element={<PatientChangePasswordScreen />} />
 					</Route>
 
 

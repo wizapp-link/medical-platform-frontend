@@ -214,7 +214,7 @@ export default function CounselorHomeScreen() {
 						</IconButton>
 						<Stack direction="row" sx={{ justifyContent: "space-between", flexGrow: 1, alignItems: "center" }}>
 							<Typography variant="h6" noWrap component="div">
-								Depression Care
+								We Care
 							</Typography>
 							<UserProfileMenu />
 						</Stack>

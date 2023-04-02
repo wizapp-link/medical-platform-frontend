@@ -5,7 +5,7 @@ import { patientTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppSelector } from '../app/hooks';
 
-export default function PatientSettingsScreen(props: any) {
+export default function PatientChangePasswordScreen(props: any) {
 
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
