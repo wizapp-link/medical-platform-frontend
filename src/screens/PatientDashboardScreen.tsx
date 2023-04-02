@@ -34,7 +34,7 @@ export default function PatientDashboardScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn);
   const navigate = useNavigate();
   const handleAppointments = () => {
-    navigate(`/patient/appointments`);
+    navigate(`/patient/assessment`);
   };
   const [showDetailDialog, setShowDetailDialog] = useState(false);
   const handleDetailButtonClick = () => {
@@ -69,7 +69,7 @@ export default function PatientDashboardScreen(props: any) {
             color: "primary.contrastText",
           }}
         >
-          View Appointments
+          Self-Assessment Form
         </Button>
         <Divider />
 

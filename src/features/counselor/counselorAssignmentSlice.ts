@@ -5,20 +5,15 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 import type { AppDispatch } from '../../app/store';
 import { Patient, defaultPatient } from "../../types/PatientDataType";
-
-// const initialState: UserLogInState = {
-//   userInfo: null,
-// 	loading: false,
-// 	error: false,
-// 	message: ""
-// };
+import roles from '../../constants/Roles';
 
 const initialState: AssignmentScreenState = {
 	loading: false,
 	error: false,
 	success: false,
 	message: "",
-	patient: defaultPatient
+	patient: defaultPatient,
+	expertRole: "",
 }
 
 export type AssignmentScreenState = {
@@ -27,14 +22,8 @@ export type AssignmentScreenState = {
 	error: boolean,
 	success: boolean,
 	message: string,
+	expertRole: string,
 }
-
-// export type UserLogInState = {
-// 	userInfo: UserInfo | null
-// 	loading: boolean,
-// 	error: boolean,
-// 	errorMessage: string,
-// }
 
 const counselorAssignmentSlice = createSlice({
   name: 'counselorAssignment',
@@ -60,26 +49,48 @@ const counselorAssignmentSlice = createSlice({
     },
 		setPatient: (state, action: PayloadAction<Patient>) => {
 			state.patient = action.payload;
+		},
+		resetToInitialState: (state) => {
+			state.loading = initialState.loading;
+			state.error = initialState.error;
+			state.message = initialState.message;
+			// state.patient = initialState.patient;
+			state.success = initialState.success;
+			state.expertRole = initialState.expertRole;
+		},
+		setExpertRole: (state, action: PayloadAction<string>) => {
+			state.expertRole = action.payload;
 		}
   },
 });
 
 export const {
-  assignRequest, assignSuccess, assignFail, setPatient,
+  assignRequest, assignSuccess, assignFail, setPatient, resetToInitialState, setExpertRole
 } = counselorAssignmentSlice.actions;
 
 export const selectCounselorAssignment = (state: RootState) => state.counselorAssignment;
 
-export const assignSelf = (userData: UserData) => async (dispatch: AppDispatch) => {
+export const assignSelf = (token: string, patient: Patient, counselor: UserData, reason: string) => async (dispatch: AppDispatch) => {
 	dispatch(assignRequest());
   try {
-    const { data } = await axios.post(
-			'/api/v1/counselor/updatePatientStatus', 
-		{
+		const body = 		{
+			email: patient.email,
+			expertEmail: counselor.email,
 			status: "SELF_ASSIGN",
-		});
+			reason,
+		}
+		console.log(body);
+    const { data } = await axios.post(
+			'/api/v1/counsellor/updatePatientStatus', 
+		{
+			email: patient.email,
+			expertEmail: counselor.email,
+			status: "SELF_ASSIGN",
+			reason,
+		}, { 'headers': { 'Authorization': `Bearer ${token}` } });
     console.log(data);
     dispatch(assignSuccess(data.response));
+		dispatch(setExpertRole(roles.counselor));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
     console.log(errorMessage);
@@ -87,16 +98,20 @@ export const assignSelf = (userData: UserData) => async (dispatch: AppDispatch) 
   }
 }
 
-export const assignDoctor = (userData: UserData) => async (dispatch: AppDispatch) => {
+export const assignDoctor = (token: string, patient: Patient, counselor: UserData, reason: string) => async (dispatch: AppDispatch) => {
 	dispatch(assignRequest());
   try {
     const { data } = await axios.post(
-			'/api/v1/counselor/updatePatientStatus', 
+			'/api/v1/counsellor/updatePatientStatus', 
 		{
+			email: patient.email,
+			expertEmail: counselor.email,
+			reason,
 			status: "ASSIGN_DOCTOR",
-		});
-    console.log(data);
+		}, { 'headers': { 'Authorization': `Bearer ${token}` } });
+		console.log(data);
     dispatch(assignSuccess(data.response));
+		dispatch(setExpertRole(roles.doctor));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
     console.log(errorMessage);
@@ -104,34 +119,32 @@ export const assignDoctor = (userData: UserData) => async (dispatch: AppDispatch
   }
 }
 
-export const rejectAssignment = (userData: UserData) => async (dispatch: AppDispatch) => {
-	dispatch(assignRequest());
-  try {
-    const { data } = await axios.post(
-			'/api/v1/counselor/updatePatientStatus', 
-		{
-			status: "REJECT_PATIENT",
-		});
-    console.log(data);
-    dispatch(assignSuccess(data.response));
-  } catch (err: any) {
-    const errorMessage = err.response ? err.response.data.response : err.message
-    console.log(errorMessage);
-    dispatch(assignFail(errorMessage));
-  }
-}
+// // unused, used the doctor's one
+// export const rejectAssignment = (userData: UserData) => async (dispatch: AppDispatch) => 
+// 	dispatch(assignRequest());
+//   try {
+//     const { data } = await axios.post(
+// 			'/api/v1/counselor/updatePatientStatus', 
+// 		{
+// 			status: "REJECT_PATIENT",
+// 		});
+//     console.log(data);
+//     dispatch(assignSuccess(data.response));
+//   } catch (err: any) {
+//     const errorMessage = err.response ? err.response.data.response : err.message
+//     console.log(errorMessage);
+//     dispatch(assignFail(errorMessage));
+//   }
+// }
 
 export const markCounsellingDone = (patientEmail: string) => async (dispatch: AppDispatch) => {
-	// dispatch(assignRequest());
   try {
     const { data } = await axios.post(
 			`/api/v1/counsellor/markCounsellingDone?patientEmail=${patientEmail}`);
     console.log(data);
-    // dispatch(assignSuccess(data.response));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
     console.log(errorMessage);
-    // dispatch(assignFail(errorMessage));
   }
 }
 

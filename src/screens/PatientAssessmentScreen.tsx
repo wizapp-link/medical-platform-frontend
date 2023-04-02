@@ -71,7 +71,7 @@ export const questions = [
 
 export const ansList = ["Not At all", "Several Days", "More Than Half the Days", "Nearly Every Day"];
 export default function PatientAssessmentScreen(props: any) {
-  const { userInfo } = useAppSelector(selectUserLogIn)
+  const { userInfo } = useAppSelector(selectUserLogIn);
   const dispatch: AppDispatch = useDispatch();
   const assessment = useAppSelector((state: RootState) => state.assessment);
   const { currentQuestionIndex, answers, message, loading, error, success, cancelSuccess } = assessment;
@@ -83,10 +83,11 @@ export default function PatientAssessmentScreen(props: any) {
   const [snackBar, setSnackBar] = useState(false);
   const navigate = useNavigate();
   const [taken, setTaken] = useState<boolean | undefined>(userInfo?.userData.assessmentTaken);
+  const [syncAns, setSyncAns] = useState(false);
 
   const handleSnackbarClose = () => {
     setSnackBar(false);
-  }
+  };
 
   const onAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswerText(event.target.value);
@@ -109,25 +110,28 @@ export default function PatientAssessmentScreen(props: any) {
       dispatch(submitAssessment({ email, assessmentOptionsSelected }, userInfo.token));
       setTimeout(() => {
         setSnackBar(true);
-      }, 1000)
+      }, 1000);
 
     }
   };
   const onCancel = () => {
-    if(userInfo){
+    if (userInfo) {
       const email = userInfo.userData.email;
       dispatch(removeAssessment(email, userInfo.token));
       setTimeout(() => {
         setSnackBar(true);
-      }, 1000)
-      if(cancelSuccess){
-        dispatch(setCurrentQuestionIndex(0));
-        setShowSummary(false);
-        setTaken(false);
-        dispatch(reset());
-      }
+      }, 1000);
+
+      // setTimeout(() => {
+      //   setTaken(false);
+      //   dispatch(setCurrentQuestionIndex(0));
+      //   setShowSummary(false);
+      //   dispatch(reset());
+      // }, 3000);
+
+
     }
-  }
+  };
 
   const onReview = () => {
     dispatch(setAnswer({ index: currentQuestion.id, answer }));
@@ -135,25 +139,39 @@ export default function PatientAssessmentScreen(props: any) {
   };
 
   useEffect(() => {
+      if(cancelSuccess){
+        setTaken(false);
+        dispatch(setCurrentQuestionIndex(0));
+        setShowSummary(false);
+        dispatch(reset());
+      }
+  },[cancelSuccess])
+
+  useEffect(() => {
+    if(taken || success)
+      setShowSummary(true);
+  },[taken, success])
+
+  useEffect(() => {
     setAnswerText(answers[currentQuestion.id] || "");
   }, [currentQuestionIndex, answers]);
 
-  useEffect(() => {
-    if (success) {
-      setTimeout(() => {
-        navigate("/patient/dashboard");
-      }, 4000);
-    }
-  }, [success])
+  // useEffect(() => {
+  //   if (success) {
+  //     setTimeout(() => {
+  //       navigate("/patient/dashboard");
+  //     }, 4000);
+  //   }
+  // }, [success]);
+
   const renderContent = () => {
-    if(userInfo){
-      if(taken) {
+    if (userInfo) {
+      if (!syncAns) {
         dispatch(setAllAnswer(userInfo.userData.assessmentOptionsSelected));
-        dispatch(setCurrentQuestionIndex(8));
-        dispatch(setAllAnswer([]));
+        setSyncAns(true);
       }
     }
-    if (showSummary || taken || success) {
+    if (showSummary) {
       return (
         <Box>
           <Typography variant="h4" my={5}>Summary</Typography>
@@ -168,15 +186,15 @@ export default function PatientAssessmentScreen(props: any) {
           </Stack>
           <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
             <Button variant="contained"
-              color="primary"
-              onClick={onSubmit}
-              sx={{ textTransform: "none" }}>
+                    color="primary"
+                    onClick={onSubmit}
+                    sx={{ textTransform: "none" }}>
               Submit
             </Button>
             <Button variant="contained"
-              color="primary"
-              onClick={onCancel}
-              sx={{ textTransform: "none" }}>
+                    color="primary"
+                    onClick={onCancel}
+                    sx={{ textTransform: "none" }}>
               Cancel
             </Button>
             <Button
@@ -221,10 +239,10 @@ export default function PatientAssessmentScreen(props: any) {
         </Paper>
         <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
           <Button variant="outlined"
-            color="secondary"
-            onClick={onPrevious}
-            disabled={currentQuestionIndex === 0}
-            sx={{ textTransform: "none" }}>
+                  color="secondary"
+                  onClick={onPrevious}
+                  disabled={currentQuestionIndex === 0}
+                  sx={{ textTransform: "none" }}>
             Previous
           </Button>
           <Button
