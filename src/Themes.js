@@ -4,8 +4,8 @@ import { createTheme, ThemeProvider, colors} from '@mui/material';
 export const patientTheme = createTheme({
 	palette:{
 		primary:{
-			main: '#DCE7D7',
-			dark: '#A9C39E',
+			dark: '#DCE7D7',
+			main: '#A9C39E',
 			contrastText: '#153D3C'
 		},
 		secondary:{
@@ -52,6 +52,7 @@ export const managerTheme = createTheme({
 		},
 		secondary:{
 			main:'#FEFF89',
+			contrastText: '#000000'
 		}
 		
 	}

@@ -7,7 +7,9 @@ import {
   Stack,
   FormControl,
   RadioGroup,
-  FormControlLabel, Radio, Snackbar
+  FormControlLabel,
+  Radio,
+  Snackbar,
 } from "@mui/material";
 import * as React from "react";
 import { patientTheme } from "../Themes";
@@ -17,9 +19,18 @@ import {
   setCurrentQuestionIndex,
   setAnswer,
   submitAssessment,
-  setAllAnswer, removeAssessment, reset
+  setAllAnswer,
+  removeAssessment,
+  reset,
 } from "../features/patient/assessmentSlice";
-import { Box, Card, CardContent, Typography, TextField, Button } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
@@ -32,49 +43,61 @@ import { listAllPersonnel } from "../features/manager/personnelsSlice";
 export const questions = [
   {
     id: 1,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Little interest or pleasure in doing things?"
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Little interest or pleasure in doing things?",
   },
   {
     id: 2,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling down, depressed or hopeless?"
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling down, depressed or hopeless?",
   },
   {
     id: 3,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Trouble falling asleep, staying asleep, or sleeping too much?"
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Trouble falling asleep, staying asleep, or sleeping too much?",
   },
   {
     id: 4,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling tired or having little energy?"
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling tired or having little energy?",
   },
   {
     id: 5,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Poor appetite or overeating?"
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Poor appetite or overeating?",
   },
   {
     id: 6,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling bad about yourself - or that you're a failure or have let yourself or your family down?"
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Feeling bad about yourself - or that you're a failure or have let yourself or your family down?",
   },
   {
     id: 7,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Trouble concentrating on things, such as reading the newspaper or watching television?"
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Trouble concentrating on things, such as reading the newspaper or watching television?",
   },
   {
     id: 8,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Moving or speaking so slowly that other people could have noticed. Or, the opposite - being so fidgety or restless that you have been moving around a lot more than usual?"
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Moving or speaking so slowly that other people could have noticed. Or, the opposite - being so fidgety or restless that you have been moving around a lot more than usual?",
   },
   {
     id: 9,
-    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Thoughts that you would be better off dead or of hurting yourself in some way?"
-  }
-
+    text: "Over the past 2 weeks, how often have you been bothered by any of the following problems: Thoughts that you would be better off dead or of hurting yourself in some way?",
+  },
 ];
 
-export const ansList = ["Not At all", "Several Days", "More Than Half the Days", "Nearly Every Day"];
+export const ansList = [
+  "Not At all",
+  "Several Days",
+  "More Than Half the Days",
+  "Nearly Every Day",
+];
 export default function PatientAssessmentScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn);
   const dispatch: AppDispatch = useDispatch();
   const assessment = useAppSelector((state: RootState) => state.assessment);
-  const { currentQuestionIndex, answers, message, loading, error, success, cancelSuccess } = assessment;
+  const {
+    currentQuestionIndex,
+    answers,
+    message,
+    loading,
+    error,
+    success,
+    cancelSuccess,
+  } = assessment;
   const [showSummary, setShowSummary] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -82,7 +105,12 @@ export default function PatientAssessmentScreen(props: any) {
 
   const [snackBar, setSnackBar] = useState(false);
   const navigate = useNavigate();
-  const [taken, setTaken] = useState<boolean | undefined>(userInfo?.userData.assessmentTaken);
+  const [taken, setTaken] = useState<boolean | undefined>(
+    userInfo?.userData.assessmentTaken
+  );
+  const [assigned, setAssigned] = useState<string | null | undefined>(
+    userInfo?.userData.counsellorAssigned || userInfo?.userData.doctorAssigned
+  );
   const [syncAns, setSyncAns] = useState(false);
 
   const handleSnackbarClose = () => {
@@ -106,12 +134,15 @@ export default function PatientAssessmentScreen(props: any) {
   const onSubmit = () => {
     if (userInfo) {
       const email = userInfo.userData.email;
-      const assessmentOptionsSelected = questions.map((question) => answers[question.id]);
-      dispatch(submitAssessment({ email, assessmentOptionsSelected }, userInfo.token));
+      const assessmentOptionsSelected = questions.map(
+        (question) => answers[question.id]
+      );
+      dispatch(
+        submitAssessment({ email, assessmentOptionsSelected }, userInfo.token)
+      );
       setTimeout(() => {
         setSnackBar(true);
       }, 1000);
-
     }
   };
   const onCancel = () => {
@@ -128,8 +159,6 @@ export default function PatientAssessmentScreen(props: any) {
       //   setShowSummary(false);
       //   dispatch(reset());
       // }, 3000);
-
-
     }
   };
 
@@ -139,18 +168,17 @@ export default function PatientAssessmentScreen(props: any) {
   };
 
   useEffect(() => {
-      if(cancelSuccess){
-        setTaken(false);
-        dispatch(setCurrentQuestionIndex(0));
-        setShowSummary(false);
-        dispatch(reset());
-      }
-  },[cancelSuccess])
+    if (cancelSuccess) {
+      setTaken(false);
+      dispatch(setCurrentQuestionIndex(0));
+      setShowSummary(false);
+      dispatch(reset());
+    }
+  }, [cancelSuccess]);
 
   useEffect(() => {
-    if(taken || success)
-      setShowSummary(true);
-  },[taken, success])
+    if (taken || success) setShowSummary(true);
+  }, [taken, success]);
 
   useEffect(() => {
     setAnswerText(answers[currentQuestion.id] || "");
@@ -174,52 +202,78 @@ export default function PatientAssessmentScreen(props: any) {
     if (showSummary) {
       return (
         <Box>
-          <Typography variant="h4" my={5}>Summary</Typography>
+          <Typography variant="h4" my={5}>
+            Summary
+          </Typography>
           <Stack spacing={2}>
             {questions.map((question) => (
               <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
-                <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
-                <Typography
-                  variant="body1">{answers[question.id] ? `${answers[question.id].toUpperCase()}. ${ansList[answers[question.id].charCodeAt(0) - 97]}` : ""}</Typography>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  {question.text}
+                </Typography>
+                <Typography variant="body1">
+                  {answers[question.id]
+                    ? `${answers[question.id].toUpperCase()}. ${
+                        ansList[answers[question.id].charCodeAt(0) - 97]
+                      }`
+                    : ""}
+                </Typography>
               </Paper>
             ))}
           </Stack>
-          <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
-            <Button variant="contained"
-                    color="primary"
-                    onClick={onSubmit}
-                    sx={{ textTransform: "none" }}>
-              Submit
-            </Button>
-            <Button variant="contained"
-                    color="primary"
-                    onClick={onCancel}
-                    sx={{ textTransform: "none" }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            spacing={2}
+            mt={2}
+            sx={{ marginTop: 5, marginBottom: 5 }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onCancel}
+              size="large"
+              sx={{ textTransform: "none", backgroundColor: "secondary.dark", fontSize: 16 }}
+              disabled={!assigned}
+            >
               Cancel
             </Button>
             <Button
               variant="outlined"
               color="secondary"
+              size="large"
               onClick={() => {
                 setShowSummary(false);
               }}
-              sx={{ textTransform: "none" }}
+              sx={{ textTransform: "none", fontSize: 16 }}
               disabled={success || taken}
             >
               Edit Answers
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={onSubmit}
+              sx={{ textTransform: "none", fontSize: 16 }}
+            >
+              Submit
+            </Button>
           </Stack>
         </Box>
-      )
-        ;
+      );
     }
     return (
       <Box>
-        <Typography variant="h4" my={5}>Self-Assessment Form</Typography>
+        <Typography variant="h4" my={5}>
+          Self-Assessment Form
+        </Typography>
         <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
           <CardContent>
             <FormControl component="fieldset">
-              <Typography variant="h5" pb={3}>{currentQuestion.text}</Typography>
+              <Typography variant="h5" pb={3}>
+                {currentQuestion.text}
+              </Typography>
               <RadioGroup
                 name={`question-${currentQuestion.id}`}
                 value={answer}
@@ -230,25 +284,36 @@ export default function PatientAssessmentScreen(props: any) {
                     key={index}
                     value={String.fromCharCode(97 + index)}
                     control={<Radio />}
-                    label={`${String.fromCharCode(97 + index).toUpperCase()}. ${option}`}
+                    label={`${String.fromCharCode(
+                      97 + index
+                    ).toUpperCase()}. ${option}`}
                   />
                 ))}
               </RadioGroup>
             </FormControl>
           </CardContent>
         </Paper>
-        <Stack direction="row" justifyContent="space-between" spacing={2} mt={2}>
-          <Button variant="outlined"
-                  color="secondary"
-                  onClick={onPrevious}
-                  disabled={currentQuestionIndex === 0}
-                  sx={{ textTransform: "none" }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          spacing={2}
+          mt={2}
+        >
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={onPrevious}
+            disabled={currentQuestionIndex === 0}
+            sx={{ textTransform: "none" }}
+          >
             Previous
           </Button>
           <Button
             variant="contained"
             color="primary"
-            onClick={currentQuestionIndex === questions.length - 1 ? onReview : onNext}
+            onClick={
+              currentQuestionIndex === questions.length - 1 ? onReview : onNext
+            }
             sx={{ textTransform: "none" }}
             disabled={!answer}
           >
@@ -269,11 +334,7 @@ export default function PatientAssessmentScreen(props: any) {
           autoHideDuration={3000}
           onClose={handleSnackbarClose}
         />
-
       </Container>
     </ThemeProvider>
   );
-
-
 }
-
