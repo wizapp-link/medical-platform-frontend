@@ -14,6 +14,7 @@ const initialState: AssignmentScreenState = {
 	message: "",
 	patient: defaultPatient,
 	timeslot: [],
+	done: false,
 }
 
 export type AssignmentScreenState = {
@@ -23,6 +24,7 @@ export type AssignmentScreenState = {
 	error: boolean,
 	success: boolean,
 	message: string,
+	done: boolean,
 }
 
 const appointmentSlice = createSlice({
@@ -67,12 +69,49 @@ const appointmentSlice = createSlice({
     },
 		setPatient: (state, action: PayloadAction<Patient>) => {
 			state.patient = action.payload;
-		}
+		},
+		doctorAcceptRequest: (state) => {
+      state.loading = true;
+			state.error = false;
+			state.success = false;
+			state.message = "";
+    },
+		doctorAcceptSuccess: (state, action: PayloadAction<string>) => {
+			state.loading = false;
+      state.error = false;
+			state.success = true;
+			state.message = action.payload;
+		},
+		doctorAcceptFail: (state, action: PayloadAction<string>) => {
+			state.loading = false;
+			state.error = true;
+      state.message = action.payload;
+			state.success = false;
+		},
+		markDoneRequest: (state) => {
+      state.loading = true;
+			state.error = false;
+			state.success = false;
+			state.message = "";
+    },
+		markDoneSuccess: (state, action: PayloadAction<string>) => {
+			state.loading = false;
+      state.error = false;
+			state.success = true;
+			state.message = action.payload;
+			state.done = true;
+		},
+		markDoneFail: (state, action: PayloadAction<string>) => {
+			state.loading = false;
+			state.error = true;
+      state.message = action.payload;
+			state.success = false;
+		},
   },
 });
 
 export const {
-  timeslotRequest, timeslotSuccess, timeslotFail, setAppointmentRequest, setAppointmentSuccess, setAppointmentFail, setPatient,
+  timeslotRequest, timeslotSuccess, timeslotFail, setAppointmentRequest, setAppointmentSuccess, setAppointmentFail, setPatient, markDoneRequest, markDoneSuccess, markDoneFail, doctorAcceptRequest, doctorAcceptSuccess, doctorAcceptFail,
 } = appointmentSlice.actions;
 
 export const selectAppointment = (state: RootState) => state.appointment;
@@ -84,9 +123,6 @@ export const getTimeslot = (token: string, userData: UserData, date: string) => 
 		if(userData.role === roles.counselor){
 		const queryStr = `/api/v1/counsellor/getAppointmentSlots?email=${userData.email}&date=${date}`
 		console.log("queryStr: "+ queryStr);
-    // res = await axios.post(
-		// 	queryStr,
-		// 	{ 'headers': { 'Authorization': `Bearer ${token}` } });
 		res= await axios({
 			method: 'get',
 			url: queryStr,
@@ -114,7 +150,7 @@ export const getTimeslot = (token: string, userData: UserData, date: string) => 
   }
 }
 
-export const setAppointmentDateTime = (token: string, userData: UserData, patient: Patient, date: string, timeslot: string) => async (dispatch: AppDispatch) => {
+export const setAppointmentDateTime = (token: string, userData: UserData, patient: Patient, date: string, timeslot: string, doctorComment?: string) => async (dispatch: AppDispatch) => {
 	dispatch(timeslotRequest);
   try {
 		let res, queryStr;
@@ -138,11 +174,70 @@ export const setAppointmentDateTime = (token: string, userData: UserData, patien
 			});
 		}
     console.log(res.data);
-    dispatch(timeslotSuccess(res.data.response));
+    dispatch(setAppointmentSuccess(res.data.response));
+		if(userData.role == roles.doctor){
+			doctorAcceptPatient(token, patient, userData, doctorComment);
+		}
+		dispatch(markDone(token, patient, userData.role));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
     console.log(errorMessage);
-    dispatch(timeslotFail(errorMessage));
+    dispatch(setAppointmentFail(errorMessage));
+  }
+}
+
+export const doctorAcceptPatient = (token: string, patient: Patient, doctor: UserData, doctorComment?: string) => async(dispatch: AppDispatch) => {
+	const patientEmail = patient.email;
+	const doctorEmail = doctor.email;
+	const status = "SELF_ASSIGN";
+	const reason = doctorComment;
+	try{
+		if(reason === "" || reason == null){
+			throw new Error("Doctor's comment cannot be empty!");
+		}
+		dispatch(doctorAcceptRequest());
+		const {data} = await axios({
+			method: 'post',
+			url: "/api/v1/doctor/updatePatientStatus",
+			headers:{
+				Authorization: `Bearer ${token}`
+			},
+			data: {
+				patientEmail,
+				doctorEmail,
+				status,
+				reason,
+			}
+		});
+		dispatch(doctorAcceptSuccess(data.response));
+	} catch (err: any) {
+    const errorMessage = err.response ? err.response.data.response : err.message
+    console.log(errorMessage);
+    dispatch(doctorAcceptFail(errorMessage));
+  }
+}
+
+export const markDone = (token: string, patient: Patient, expertRole: string) => async(dispatch: AppDispatch) => {
+	const endpointPath = 
+	expertRole == roles.counselor ? 
+	"/api/v1/counsellor/markCounsellingDone" : "/api/v1/doctor/markDoctoringDone";
+	const queryStr = `${endpointPath}?patientEmail=${patient.email}`;
+	dispatch(markDoneRequest);
+	try{
+		const { data } = await axios({
+			method: 'post',
+			url: queryStr,
+			headers:{
+				Authorization: `Bearer ${token}`
+			}
+		});
+		console.log("markCounseloringDone success message:")
+		console.log(data);
+		dispatch(markDoneSuccess(data.response));
+	} catch (err: any) {
+    const errorMessage = err.response ? err.response.data.response : err.message
+    console.log(errorMessage);
+    dispatch(markDoneFail(errorMessage));
   }
 }
 
