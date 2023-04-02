@@ -102,6 +102,7 @@ export default function CounselorDashboardScreen(props: any) {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openConfirm, setConfirm] = useState(false);
   const [reason, setReason] = useState("");
 
   // type Patient = {
@@ -120,13 +121,14 @@ export default function CounselorDashboardScreen(props: any) {
   };
   const handleClose = () => {
     setShowAssessmentDialog(false);
+    setOpen(false);
     // setShowDetailDialog((false));
   };
   const handleRejectConfirmDialog = () => {
-    setOpen(true);
+    setConfirm(true);
   };
   const handleCloseConfirm = () => {
-    setOpen(false);
+    setConfirm(false);
   };
   const navigate = useNavigate();
   const handleAppointments = () => {
@@ -143,6 +145,7 @@ export default function CounselorDashboardScreen(props: any) {
       dispatch(updatePatientStatus(selectedPatient.email, userInfo?.userData.email, "REJECT_PATIENT", reason, userInfo?.token, position));
     setReason("");
     setOpen(false);
+    setConfirm(false);
   };
   const handleClickOpen = (patient: any) => {
     setSelectedPatient(patient);
@@ -344,13 +347,13 @@ export default function CounselorDashboardScreen(props: any) {
         </Dialog>
 
         <Dialog
-          open={open}
+          open={openConfirm}
           onClose={handleCloseConfirm}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {"Do you want to reject this patient??"}
+            {"Do you want to reject this patient?"}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
@@ -359,7 +362,7 @@ export default function CounselorDashboardScreen(props: any) {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseConfirm}>Cancel</Button>
-            <Button onClick={handleReject} autoFocus>
+            <Button onClick={handleReject} autoFocus color="error">
               Confirm
             </Button>
           </DialogActions>
