@@ -122,6 +122,12 @@ export default function CounselorDashboardScreen(props: any) {
     setShowAssessmentDialog(false);
     // setShowDetailDialog((false));
   };
+  const handleRejectConfirmDialog = () => {
+    setOpen(true);
+  };
+  const handleCloseConfirm = () => {
+    setOpen(false);
+  };
   const navigate = useNavigate();
   const handleAppointments = () => {
     navigate(`/counselor/appointments`);
@@ -281,36 +287,6 @@ export default function CounselorDashboardScreen(props: any) {
           </Grid> */}
         </Grid>
 
-
-        {/* <Dialog open={showAssessmentDialog} onClose={handleClose}>
-          <DialogTitle
-            color={"primary.contrastText"}
-            sx={{ fontWeight: "bold" }}
-          >
-            {selectedPatient?.name}
-          </DialogTitle>
-          <DialogContent>
-            <Typography variant="subtitle1" color={"primary.contrastText"}>
-              ID: {selectedPatient?.id}
-            </Typography>
-            <Typography variant="subtitle1" color={"primary.contrastText"}>
-              Name: {selectedPatient?.name}
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Self-Assessment Results
-            </Typography>
-            <List>
-              {selectedPatient?.selfAssessmentResults.map((result) => (
-                <ListItem key={result} sx={{ color: "primary.contrastText" }}>
-                  <ListItemText
-                    primary={result}
-                    sx={{ color: "primary.contrastText" }}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </DialogContent>
-        </Dialog> */}
         <Dialog open={showAssessmentDialog} onClose={handleClose}>
           <DialogTitle sx={{ fontWeight: "bold", fontSize: 30 }}>
             {selectedPatient?.name} Self-Assessment Results
@@ -361,10 +337,33 @@ export default function CounselorDashboardScreen(props: any) {
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleReject} color="error">
+            <Button onClick={handleRejectConfirmDialog} color="error">
               Reject
             </Button>
           </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={open}
+          onClose={handleCloseConfirm}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Do you want to reject this patient??"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Once you click confirm, this rejection will not be withdrawn.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirm}>Cancel</Button>
+            <Button onClick={handleReject} autoFocus>
+              Confirm
+            </Button>
+          </DialogActions>
+
         </Dialog>
       </Stack>
     </ThemeProvider>
