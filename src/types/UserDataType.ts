@@ -9,7 +9,9 @@ export type UserData = {
   registrationNo: string | null;
   status: string;
   assessmentTaken: boolean;
-  assessmentOptionsSelected: string[],
+  assessmentOptionsSelected: string[];
+  counsellorAssigned: string | null;
+  doctorAssigned: string | null;
 
 }
 
