@@ -10,8 +10,8 @@ export type UserData = {
   status: string;
   assessmentTaken: boolean;
   
-  // counsellorAssigned: string | null;
-  // doctorAssigned: string | null;
+  counsellorAssigned: string | null;
+  doctorAssigned: string | null;
   
   assessmentOptionsSelected: string[],
   creationDate: string,
