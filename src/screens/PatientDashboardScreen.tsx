@@ -42,12 +42,11 @@ export default function PatientDashboardScreen(props: any) {
     setShowDetailDialog(true);
   };
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  
+
   const handleClose = () => {
     // setShowAssessmentDialog(false);
     setShowDetailDialog(false);
   };
-
 
   return (
     <ThemeProvider theme={patientTheme}>
@@ -55,9 +54,26 @@ export default function PatientDashboardScreen(props: any) {
         <Typography variant="h4" color={"primary.contrastText"}>
           Good day! Dear {userInfo?.userData.name}!
         </Typography>
-        <Typography variant="h5" color={"primary.contrastText"}>
+        {/* <Typography variant="h5" color={"primary.contrastText"}>
           How can we help you?
-        </Typography>
+        </Typography> */}
+        <Box>
+          <Typography sx={{ fontSize: 19, marginTop: 3 }}>
+            The Patient Health Questionnaire (PHQ) is a validated diagnostic and
+            severity assessment tool for depressive disorders. A number of
+            different versions exist, each with their own benefits and
+            tradeoffs.
+          </Typography>
+          <Typography sx={{ fontSize: 19 }}>
+            In our questionnaires, we use the PHQ-9 which has been shown to be
+            highly effective. Additionally, it is an impeccable questionaaire to
+            assess depression and anxiety.
+          </Typography>
+          <Typography sx={{ fontSize: 19 }}>
+            <br></br>
+            Click on the SELF-ASSESSMENT button below to start your journey of self heal.
+          </Typography>
+        </Box>
         {/* if the assessment is not completed */}
         {/* <Button variant="contained">Complete the assessment</Button> */}
         {/* if the assessment is completed, the patient can view the appointment schedule and decide to accept/reject it */}
@@ -65,17 +81,17 @@ export default function PatientDashboardScreen(props: any) {
           variant="contained"
           onClick={handleAppointments}
           sx={{
-            backgroundColor: "primary.dark",
+            backgroundColor: "primary.main",
             color: "primary.contrastText",
           }}
         >
-          Self-Assessment Form
+          Self-Assessment
         </Button>
         <Divider />
 
         <Stack>
           <Typography variant="h5" color="primary.contrastText">
-            Recent Appointments
+            Upcoming Appointments
           </Typography>
           <List>
             <ListItem>
@@ -85,9 +101,11 @@ export default function PatientDashboardScreen(props: any) {
                     <Stack direction="row" justifyContent="space-between">
                       <Stack direction="row">
                         <ListItemAvatar sx={{ display: "flex" }}>
-                          <Avatar alt="doctor"
+                          <Avatar
+                            alt="doctor"
                             src="/static/images/doctor/sampleDoctor.jpg"
-                            sx={{ alignSelf: "center" }} />
+                            sx={{ alignSelf: "center" }}
+                          />
                         </ListItemAvatar>
                         <Stack direction={"column"}>
                           <Typography>Dr. Gregory House</Typography>
@@ -99,18 +117,31 @@ export default function PatientDashboardScreen(props: any) {
                           variant="contained"
                           onClick={() => handleDetailButtonClick()}
                           sx={{
+                            backgroundColor: "secondary.main",
                             marginRight: 2,
-                            backgroundColor: "primary.dark",
                             color: "primary.contrastText",
-                            ":hover": { backgroundColor: "primary.main" },
+                            ":hover": {
+                              color: "primary.contrastText",
+                              backgroundColor: "secondary.main",
+                            },
                           }}
                         >
                           Details
                         </Button>
                         <Button
                           variant="contained"
-                          color="secondary"
                           sx={{
+                            marginRight: 2,
+                            color: "primary.contrastText",
+                            ":hover": { color: "primary.contrastText" },
+                          }}
+                        >
+                          ACCEPT
+                        </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "secondary.dark",
                             color: "primary.contrastText",
                             borderColor: "secondary.dark",
                             ":hover": { backgroundColor: "secondary.dark" },
@@ -132,33 +163,23 @@ export default function PatientDashboardScreen(props: any) {
             Patient Name: Rui
           </DialogTitle>
           <DialogContent>
-            <Typography variant="subtitle1">
-              Patient ID: 1
-            </Typography>
+            <Typography variant="subtitle1">Patient ID: 1</Typography>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Assessment Test
             </Typography>
-            <Typography variant="subtitle1">
-              Status: Pass
-            </Typography>
+            <Typography variant="subtitle1">Status: Pass</Typography>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Assignment Comment
             </Typography>
-            <Typography variant="subtitle1">
-              Counselor: Harsh Singh
-            </Typography>
+            <Typography variant="subtitle1">Counselor: Harsh Singh</Typography>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Appointment Comment
             </Typography>
             <Typography variant="subtitle1">
               Doctor: Dr. Gregory House
             </Typography>
-            <Typography variant="subtitle1">
-              Date: 2023-02-12
-            </Typography>
-            <Typography variant="subtitle1">
-              Notes: 
-            </Typography>
+            <Typography variant="subtitle1">Date: 2023-02-12</Typography>
+            <Typography variant="subtitle1">Notes:</Typography>
           </DialogContent>
         </Dialog>
       </Stack>
