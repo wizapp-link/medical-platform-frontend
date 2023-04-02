@@ -75,19 +75,14 @@ export const assignSelf = (token: string, patient: Patient, counselor: UserData,
   try {
 		const body = 		{
 			email: patient.email,
-			expertEmail: counselor.email,
+			counsellorEmail: counselor.email,
 			status: "SELF_ASSIGN",
 			reason,
 		}
 		console.log(body);
     const { data } = await axios.post(
 			'/api/v1/counsellor/updatePatientStatus', 
-		{
-			email: patient.email,
-			expertEmail: counselor.email,
-			status: "SELF_ASSIGN",
-			reason,
-		}, { 'headers': { 'Authorization': `Bearer ${token}` } });
+		body, { 'headers': { 'Authorization': `Bearer ${token}` } });
     console.log(data);
     dispatch(assignSuccess(data.response));
 		dispatch(setExpertRole(roles.counselor));
@@ -105,7 +100,7 @@ export const assignDoctor = (token: string, patient: Patient, counselor: UserDat
 			'/api/v1/counsellor/updatePatientStatus', 
 		{
 			email: patient.email,
-			expertEmail: counselor.email,
+			counsellorEmail: counselor.email,
 			reason,
 			status: "ASSIGN_DOCTOR",
 		}, { 'headers': { 'Authorization': `Bearer ${token}` } });

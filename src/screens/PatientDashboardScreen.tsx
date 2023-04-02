@@ -136,6 +136,7 @@ export default function PatientDashboardScreen(props: any) {
                           Details
                         </Button>
                         {appointment.status !== "ACCEPTED" &&
+                          appointment.status !== "REJECTED" &&
                           <Button
                             variant="contained"
                             color="secondary"
@@ -150,19 +151,30 @@ export default function PatientDashboardScreen(props: any) {
                             Reject
                           </Button>
                         }
+                        {appointment.status !== "ACCEPTED" &&
+                          appointment.status !== "REJECTED" &&
+                          <Button
+                            variant="outlined"
+                            onClick={() => handleAccept(appointment)}
+                            sx={{
+                              backgroundColor: "primary.dark",
+                              color: "primary.contrastText",
+                              ":hover": { backgroundColor: "primary.main" },
+                            }}
+                          >
+                            Accept
+                          </Button>
+                        }
 
-                        <Button
-                          variant="outlined"
-                          onClick={() => handleAccept(appointment)}
-                          sx={{
-                            backgroundColor: "primary.dark",
-                            color: "primary.contrastText",
-                            ":hover": { backgroundColor: "primary.main" },
-                          }}
-                          disabled={appointment.status === "ACCEPTED"}
-                        >
-                          {appointment.status === "ACCEPTED" ? "Accepted" : "Accept"}
-                        </Button>
+                        {(appointment.status === "ACCEPTED" ||
+                          appointment.status === "REJECTED") &&
+                          <Button
+                            variant="outlined"
+                            disabled
+                          >
+                            {appointment.status}
+                          </Button>
+                        }
                       </Stack>
                     </Stack>
                   </CardContent>
