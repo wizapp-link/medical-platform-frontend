@@ -73,7 +73,7 @@ export default function PatientDashboardScreen(props: any) {
       dispatch(listAppointment(userInfo.token, userInfo.userData))
     }
   }, [])
-  
+
   return (
     <ThemeProvider theme={patientTheme}>
       <Stack padding={2} spacing={2}>
@@ -122,7 +122,10 @@ export default function PatientDashboardScreen(props: any) {
 
           <List>
             {patientAppointmentList.appointments.map((appointment) =>
-            (<ListItem key={appointment.name.concat(appointment.slotDate).concat(appointment.slotTime)}>
+            (<ListItem key=
+              {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+            // {appointment.name.concat(appointment.slotDate).concat(appointment.slotTime)}
+            >
               <Box sx={{ width: "100%" }}>
                 <Card sx={{ marginTop: 2, boxShadow: 3 }}>
                   <CardContent>
@@ -234,7 +237,7 @@ export default function PatientDashboardScreen(props: any) {
             {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Assignment Comment 
             </Typography> */}
-            
+
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Expert Info
             </Typography>
