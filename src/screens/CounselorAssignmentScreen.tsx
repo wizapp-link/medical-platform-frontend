@@ -11,11 +11,12 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { useNavigate } from "react-router";
-import { selectCounselorAssignment, assignSelf, assignDoctor, markCounsellingDone, resetToInitialState } from "../features/counselor/counselorAssignmentSlice";
+import { selectCounselorAssignment, assignSelf, assignDoctor, markCounsellingDone, resetToInitialState, closeSnackbar, newError } from "../features/counselor/counselorAssignmentSlice";
 import generateResultFromSelfAssessmentResult, { AssessmentSummary } from "../utils/GenerateResultFromSelfAssessmentResult";
 import { userInfo } from "os";
 import roles from "../constants/Roles";
 import { setPatient as appointmentSetPatient } from "../features/appointment/appointmentSlice";
+import ReduxSnackbar from "../components/ReduxSnackbar";
 
 
 export default function CounselorAssignmentScreen() {
@@ -90,7 +91,8 @@ export default function CounselorAssignmentScreen() {
 			dispatch(assignSelf(userLogIn.userInfo.token, counselorAssignment.patient, userLogIn.userInfo?.userData, comment))
 		}
 		if (comment === "") {
-			setCommentErrorMessage("A comment is required!");
+			// setCommentErrorMessage("A comment is required!");
+			dispatch(newError("A comment is required!"))
 		}
 	}
 
@@ -100,7 +102,8 @@ export default function CounselorAssignmentScreen() {
 			dispatch(assignDoctor(userLogIn.userInfo.token, counselorAssignment.patient, userLogIn.userInfo?.userData, comment))
 		}
 		if (comment === "") {
-			setCommentErrorMessage("A comment is required!");
+			// setCommentErrorMessage("A comment is required!");
+			dispatch(newError("A comment is required!"))
 		}
 	}
 
@@ -253,12 +256,13 @@ export default function CounselorAssignmentScreen() {
 			</Dialog>
 
 
-			<Snackbar
+			{/* <Snackbar
 				open={commentErrorMessage !== ""}
 				autoHideDuration={6000}
 				onClose={handleClose}
 				message={commentErrorMessage}
-			/>
+			/> */}
+			<ReduxSnackbar show={counselorAssignment.showSnackbar} loading={counselorAssignment.loading} success={counselorAssignment.success} error={counselorAssignment.error} message={counselorAssignment.message} onClose={() => dispatch(closeSnackbar())} autoHideDuration={5000} />
 		</Box>
 	)
 }
