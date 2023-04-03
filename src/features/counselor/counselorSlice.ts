@@ -1,22 +1,31 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch, RootState } from "../../app/store";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { Patient } from "../../types/PatientDataType";
 
 export type CounselorState = {
-  updatingPatientStatus: boolean;
-  updateStatusError: string | null;
+  loading: boolean;
+  success: boolean;
+  error: boolean;
+  // updateStatusError: string | null;
   patients: Patient[];
-  fetchingPatients: boolean;
-  fetchPatientsError: string | null;
+  // fetchingPatients: boolean;
+  // fetchPatientsError: string | null;
+  showSnackbar: boolean;
+  message: string;
 }
 
 const initialState: CounselorState = {
-  updatingPatientStatus: false,
-  updateStatusError: null,
+  loading: false,
+  success: false,
+  error: false,
+  // updatingPatientStatus: false,
+  // updateStatusError: null,
   patients: [],
-  fetchingPatients: false,
-  fetchPatientsError: null,
+  // fetchingPatients: false,
+  // fetchPatientsError: null,
+  showSnackbar: false,
+  message: "",
 };
 
 const counselorSlice = createSlice({
@@ -24,30 +33,54 @@ const counselorSlice = createSlice({
   initialState,
   reducers: {
     updatePatientStatusRequest: (state) => {
-      state.updatingPatientStatus = true;
-      state.updateStatusError = null;
+      state.loading = true;
+      state.success = false;
+      state.error = false;
+      state.message = "Updating patient status...";
+      state.showSnackbar = true;
     },
-    updatePatientStatusSuccess: (state) => {
-      state.updatingPatientStatus = false;
-      state.updateStatusError = null;
+    updatePatientStatusSuccess: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.success = true;
+      state.error = false;
+      state.message = action.payload;
+      state.showSnackbar = true;
     },
     updatePatientStatusFail: (state, action: PayloadAction<string>) => {
-      state.updatingPatientStatus = false;
-      state.updateStatusError = action.payload;
+      state.loading = false;
+      state.success = false;
+      state.error = true;
+      state.message = action.payload;
+      state.showSnackbar = true;
     },
     fetchPatientsRequest: (state) => {
-      state.fetchingPatients = true;
-      state.fetchPatientsError = null;
+      state.loading = true;
+      state.success = false;
+      state.error = false;
+      state.message = "Fetching patients data...";
     },
     fetchPatientsSuccess: (state, action: PayloadAction<any[]>) => {
-      state.fetchingPatients = false;
+      state.loading = false;
+      state.success = true;
+      state.error = false;
       state.patients = action.payload;
-      state.fetchPatientsError = null;
     },
     fetchPatientsFail: (state, action: PayloadAction<string>) => {
-      state.fetchingPatients = false;
-      state.fetchPatientsError = action.payload;
+      state.loading = false;
+      state.success = false;
+      state.error = true;
+      state.message = action.payload;
     },
+    closeSnackbar: (state) => {
+      state.showSnackbar = false;
+    },
+    newError: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.success = false;
+      state.error = true;
+      state.message = action.payload;
+      state.showSnackbar = true;
+    }
   },
 });
 
@@ -58,23 +91,51 @@ export const {
   fetchPatientsFail,
   fetchPatientsRequest,
   fetchPatientsSuccess,
+  closeSnackbar,
+  newError,
 } = counselorSlice.actions;
 
 
-// not used, refer to the doctor's one
-export const updatePatientStatus = (email: string, status: string, reason: string) => async (
+export const updatePatientStatus = (email: string, expertEmail: string, status: string, reason: string, token: string | undefined, role: string | undefined) => async (
   dispatch: AppDispatch
 ) => {
   dispatch(updatePatientStatusRequest());
   try {
-    const response = await axios.post('/api/v1/counsellor/updatePatientStatus', {
-      email,
-      status,
-      reason,
-    });
-    dispatch(updatePatientStatusSuccess());
+    let response: AxiosResponse<any, any>;
+    if(role === "counsellor"){
+      response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
+        patientEmail: email,
+        status,
+        reason,
+        counsellorEmail: expertEmail,
+      },
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+    }else {
+      response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
+        patientEmail: email,
+        status,
+        reason,
+        doctorEmail: expertEmail,
+      },
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+    }
+    dispatch(updatePatientStatusSuccess(response.data.response));
+    console.log("updatePatientStatusSuccess");
+    console.log(response);
+    if(token){
+      dispatch(fetchPatients(email, token));
+    }
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message;
+    console.log("Update Patient Status error: " + errorMessage);
     dispatch(updatePatientStatusFail(errorMessage));
   }
 };

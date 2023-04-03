@@ -18,7 +18,7 @@ import {
   DialogContent,
   Card,
   CardContent,
-  Grid, DialogContentText, TextField, DialogActions
+  Grid, DialogContentText, TextField, DialogActions, Snackbar, Alert
 } from "@mui/material";
 import React, { useEffect } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -33,12 +33,15 @@ import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { flexbox } from "@mui/system";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { selectDoctor, updatePatientStatus } from "../features/doctor/doctorSlice";
+import { selectDoctor } from "../features/doctor/doctorSlice";
 import { Patient } from "../types/PatientDataType";
 import { ansList, questions } from "./PatientAssessmentScreen";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { fetchPatients, selectConselor } from "../features/counselor/counselorSlice"
 import { setPatient } from "../features/counselor/counselorAssignmentSlice";
+import { updatePatientStatus, closeSnackbar } from "../features/counselor/counselorSlice";
+import getSnackbarSeverity from "../utils/GetSnackBarSeverity";
+import ReduxSnackbar from "../components/ReduxSnackbar";
 
 export default function CounselorDashboardScreen(props: any) {
 
@@ -368,6 +371,15 @@ export default function CounselorDashboardScreen(props: any) {
           </DialogActions>
 
         </Dialog>
+        <ReduxSnackbar
+          show={counselor.showSnackbar}
+          loading={counselor.loading}
+          success={counselor.success}
+          error={counselor.error}
+          message={counselor.message}
+          onClose={() => dispatch(closeSnackbar())}
+          autoHideDuration={5000} />
+
       </Stack>
     </ThemeProvider>
   );
