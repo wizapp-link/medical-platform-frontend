@@ -73,8 +73,8 @@ export const selectCounselorAssignment = (state: RootState) => state.counselorAs
 export const assignSelf = (token: string, patient: Patient, counselor: UserData, reason: string) => async (dispatch: AppDispatch) => {
 	dispatch(assignRequest());
   try {
-		const body = 		{
-			email: patient.email,
+		const body = {
+			patientEmail: patient.email,
 			counsellorEmail: counselor.email,
 			status: "SELF_ASSIGN",
 			reason,
@@ -99,7 +99,7 @@ export const assignDoctor = (token: string, patient: Patient, counselor: UserDat
     const { data } = await axios.post(
 			'/api/v1/counsellor/updatePatientStatus', 
 		{
-			email: patient.email,
+			patientEmail: patient.email,
 			counsellorEmail: counselor.email,
 			reason,
 			status: "ASSIGN_DOCTOR",
