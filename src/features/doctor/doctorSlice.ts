@@ -121,10 +121,10 @@ export const updatePatientStatus = (email: string, expertEmail: string, status: 
   dispatch(updatePatientStatusRequest());
   try {
     const response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
-        email,
+        patientEmail: email,
         status,
         reason,
-        expertEmail,
+        doctorEmail: expertEmail,
       },
       {
         headers: {
