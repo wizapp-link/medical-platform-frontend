@@ -99,7 +99,7 @@ export const assignDoctor = (token: string, patient: Patient, counselor: UserDat
     const { data } = await axios.post(
 			'/api/v1/counsellor/updatePatientStatus', 
 		{
-			email: patient.email,
+			patientEmail: patient.email,
 			counsellorEmail: counselor.email,
 			reason,
 			status: "ASSIGN_DOCTOR",
