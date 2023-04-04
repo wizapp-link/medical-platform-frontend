@@ -95,7 +95,8 @@ export default function PatientAssessmentScreen(props: any) {
     message,
     loading,
     error,
-    success,
+    removeSuccess,
+    submitSuccess,
     // cancelSuccess,
   } = assessment;
   const [showSummary, setShowSummary] = useState(false);
@@ -168,17 +169,18 @@ export default function PatientAssessmentScreen(props: any) {
   };
 
   useEffect(() => {
-    if (Object.keys(answers).length == 0 && success === true) {
+    console.log("success: " + removeSuccess + " | Object(answer).length" + Object(answer).length)
+    if (Object(answer).length == 1 && removeSuccess === true) {
       setTaken(false);
+      dispatch(reset());
       dispatch(setCurrentQuestionIndex(0));
       setShowSummary(false);
-      dispatch(reset());
     }
   }, [answers]);
 
   useEffect(() => {
-    if (taken || success) setShowSummary(true);
-  }, [taken, success]);
+    if (taken || submitSuccess) setShowSummary(true);
+  }, [taken, submitSuccess]);
 
   useEffect(() => {
     setAnswerText(answers[currentQuestion.id] || "");
@@ -245,7 +247,7 @@ export default function PatientAssessmentScreen(props: any) {
                 setShowSummary(false);
               }}
               sx={{ textTransform: "none", fontSize: 16 }}
-              disabled={success || taken}
+              disabled={submitSuccess || taken}
             >
               Edit Answers
             </Button>
