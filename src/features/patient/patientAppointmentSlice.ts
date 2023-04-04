@@ -8,7 +8,7 @@ import type { AppDispatch } from '../../app/store';
 import { positionToRole, roleToPosition } from '../../constants/PositionRoleMap';
 import roles from '../../constants/Roles';
 import { Appointment, RawAppointment } from '../../types/AppointmentType';
-import { flattenAndAddDatesToRawAppointments } from '../../utils/AppointmentConversion';
+import { flattenAndAddDatesToRawAppointments, getFutureAppointments } from '../../utils/AppointmentConversion';
 
 export type appointmentListState = {
 	loading: boolean,
@@ -19,6 +19,8 @@ export type appointmentListState = {
 	appointmentUpdateSuccess: boolean,
 	appointmentUpdateMessage: string,
 	appointments: Appointment[],
+	acceptedFutureAppointments: Appointment[],
+	pendingFutureAppointments: Appointment[],
 }
 
 
@@ -31,6 +33,8 @@ const initialState: appointmentListState = {
 	appointmentUpdateSuccess: false,
 	appointmentUpdateMessage: "",
 	appointments: [],
+	acceptedFutureAppointments: [],
+	pendingFutureAppointments: [],
 };
 
 const patientAppointmentListSlice = createSlice({
@@ -57,6 +61,8 @@ const patientAppointmentListSlice = createSlice({
 		appointmentListSuccess: (state, action: PayloadAction<Appointment[]>) => {
 			state.loading = false;
 			state.appointments = action.payload;
+			state.acceptedFutureAppointments = getFutureAppointments(action.payload, "ACCEPTED");
+			state.pendingFutureAppointments = getFutureAppointments(action.payload, "ASSIGNED");
 		},
 		appointmentUpdateSuccess: (state, action: PayloadAction<string>) => {
 			state.appointmentUpdateLoading = false;
