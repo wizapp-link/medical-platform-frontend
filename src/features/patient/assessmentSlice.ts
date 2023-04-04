@@ -1,10 +1,11 @@
 
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppDispatch } from "../../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import axios from "axios";
 import { userLogInFail, userLogInRequest, userLogInSuccess } from "../auth/userLogInSlice";
-import { UserInfo } from "../../types/UserDataType";
+import { UserData, UserInfo } from "../../types/UserDataType";
+import { getUserInfo } from '../auth/userLogInSlice';
 
 interface AssessmentState {
   answers: { [key: number]: string };
@@ -13,8 +14,9 @@ interface AssessmentState {
   error: boolean,
   success: boolean,
   message: string,
-  cancelError: boolean,
-  cancelSuccess: boolean,
+  showSnackbar: boolean,
+  // cancelError: boolean,
+  // cancelSuccess: boolean,
 
 }
 
@@ -25,8 +27,9 @@ const initialState: AssessmentState = {
   error: false,
   success: false,
   message: "",
-  cancelError: false,
-  cancelSuccess: false,
+  showSnackbar: false,
+  // cancelError: false,
+  // cancelSuccess: false,
 };
 
 export const assessmentSlice = createSlice({
@@ -42,18 +45,21 @@ export const assessmentSlice = createSlice({
     submitRequest: (state) => {
       state.loading = true;
       state.error = false;
+      state.message = "Submitting..."
+      state.showSnackbar = true;
     },
     submitSuccess: (state, action) => {
       state.loading = false;
       state.error = false;
       state.success = true;
       state.message = action.payload;
-
+      state.showSnackbar = true;
     },
     submitFail: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = true;
       state.message = action.payload;
+      state.showSnackbar = true;
     },
     setAllAnswer: (state, action: PayloadAction<string[]>) => {
       if(action.payload) {
@@ -64,26 +70,50 @@ export const assessmentSlice = createSlice({
     },
     cancelRequest: (state) => {
       state.loading = true;
-      state.cancelError = false;
+      state.success = false;
+      state.error = false;
+      // state.cancelError = false;
+      state.message = "Canceling assessment...";
+      state.showSnackbar = true;
     },
-    cancelSuccess: (state,action) => {
+    cancelSuccess: (state,action: PayloadAction<string>) => {
       state.loading = false;
-      state.cancelError = false;
-      state.cancelSuccess = true;
+      // state.cancelError = false;
+      // state.cancelSuccess = true;
+      state.success = true;
+      state.error = false;
       state.message = action.payload;
       state.answers = {}
-
+      state.showSnackbar = true;
     },
     cancelFail: (state, action: PayloadAction<string>) => {
       state.loading = false;
-      state.cancelError = true;
+      state.success = false;
+      state.error = true;
+      // state.cancelError = true;
       state.message = action.payload;
+      state.showSnackbar = true;
     },
     reset: (state) => {
+      state.loading = initialState.loading;
+      state.success = initialState.success;
+      state.error = initialState.error;
+      state.message = initialState.message;
+      state.answers = initialState.answers;
+      state.currentQuestionIndex = initialState.currentQuestionIndex;
+      state.showSnackbar = initialState.showSnackbar;
+      // state.cancelError = false;
+      // state.cancelSuccess = false;
+    },
+    newError: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.success = false;
-      state.cancelError = false;
-      state.cancelSuccess = false;
+      state.error = true;
+      state.showSnackbar = true;
+      state.message = action.payload;
+    },
+    closeSnackbar: (state) => {
+      state.showSnackbar = false;
     }
   },
 });
@@ -98,6 +128,9 @@ export const submitAssessment = (questionAnswers: { email: string, assessmentOpt
     });
     dispatch(submitSuccess(data.response));
     console.log(data.response);
+    setTimeout(() => {
+      dispatch(getUserInfo(token, questionAnswers.email))
+    }, 500);
     // localStorage.setItem('userData', JSON.stringify(data));
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
@@ -115,6 +148,9 @@ export const removeAssessment = (email: string, token: string) => async (dispatc
     });
     dispatch(cancelSuccess(data.response));
     console.log(data.response);
+    setTimeout(() => {
+      dispatch(getUserInfo(token, email))
+    }, 500);
     // localStorage.setItem('userData', JSON.stringify(data));
   } catch (err: any) {
     const cancelErrorMessage = err.response ? err.response.data.response : err.message
@@ -123,6 +159,7 @@ export const removeAssessment = (email: string, token: string) => async (dispatc
   }
 };
 
-export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail, setAllAnswer, cancelRequest, cancelFail, cancelSuccess, reset } = assessmentSlice.actions;
+export const { setAnswer, setCurrentQuestionIndex, submitRequest, submitSuccess, submitFail, setAllAnswer, cancelRequest, cancelFail, cancelSuccess, reset, newError, closeSnackbar } = assessmentSlice.actions;
+export const selectAssessment = (state: RootState) => state.assessment;
 export default assessmentSlice.reducer;
 

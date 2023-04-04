@@ -28,7 +28,13 @@ const userLogInSlice = createSlice({
     },
     userLogInSuccess: (state, action: PayloadAction<UserInfo>) => {
       state.loading = false;
-      state.userInfo = action.payload;
+      if(action.payload.token!=null){
+        state.userInfo = action.payload;
+      }else{
+        if(state.userInfo){
+          state.userInfo.userData = action.payload.userData;
+        }
+      }
       state.error = false;
     },
     userLogInFail: (state, action: PayloadAction<string>) => {
@@ -65,5 +71,30 @@ export const logOut = () => (dispatch: AppDispatch) => {
   // localStorage.removeItem('userData');
   dispatch(userLogOut());
 };
+
+
+
+export const getUserInfo = (token: string | undefined, email: string) => async (dispatch: AppDispatch) => {
+	// dispatch(appointmentListRequest);
+	try {
+		console.log("in getUserInfo");
+		const queryStr = `/api/v1/fetchProfile?userEmail=${email}`
+
+		const { data } = await axios({
+					method: "post",
+					url: queryStr,
+					headers: { 'Authorization': `Bearer ${token}` },
+				});
+
+		console.log("getAssessment via fetching UserData:");
+		console.log(data);
+    dispatch(userLogInSuccess(data));
+		// dispatch(appointmentListSuccess(appointments));
+	} catch (err: any) {
+		const errorMessage = err.response ? err.response.data.response : err.message
+		console.log(errorMessage);
+		// dispatch(appointmentListFail(errorMessage));
+	}
+}
 
 export default userLogInSlice.reducer;
