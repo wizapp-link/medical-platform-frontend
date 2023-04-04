@@ -25,18 +25,41 @@ import {
 import * as React from "react";
 import { patientTheme } from "../Themes";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { selectPatientAppointmentList, updateAppointment } from "../features/patient/patientAppointmentSlice";
+import { Appointment } from "../types/AppointmentType";
+import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import dayjs from "dayjs";
 
 
 export default function PatientAppointmentScreen(props: any) {
   const [showDetailDialog, setShowDetailDialog] = useState(false);
-  const handleDetailButtonClick = () => {
+  const [appointmentDetail, setAppointmentDetail] = useState<Appointment>();
+  const { userInfo } = useAppSelector(selectUserLogIn);
+  const patientAppointmentList = useAppSelector(selectPatientAppointmentList);
+  const dispatch = useAppDispatch();
+
+  const handleDetailButtonClick = (appointment: Appointment) => {
     // setSelectedPatient(patient);
+    setAppointmentDetail(appointment);
     setShowDetailDialog(true);
   };
   const handleClose = () => {
     // setShowAssessmentDialog(false);
     setShowDetailDialog(false);
   };
+  const handleAccept = (appointment: Appointment) => {
+    if (userInfo) {
+      dispatch(updateAppointment(userInfo.token, userInfo.userData, appointment, "ACCEPTED"));
+    }
+  }
+  const handleReject = (appointment: Appointment) => {
+    if (userInfo) {
+      dispatch(updateAppointment(userInfo.token, userInfo.userData, appointment, "REJECTED"));
+    }
+  }
+
+
   return (
     <ThemeProvider theme={patientTheme}>
       <Stack>
@@ -44,88 +67,137 @@ export default function PatientAppointmentScreen(props: any) {
           Appointment History
         </Typography>
         <List>
-          <ListItem>
+          {patientAppointmentList.appointments.map((appointment) =>
+          (<ListItem key=
+            {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+          >
             <Box sx={{ width: "100%" }}>
-              <Card sx={{ boxShadow: 3, marginTop: 2 }}>
+              <Card sx={{ marginTop: 2, boxShadow: 3 }}>
                 <CardContent>
-                  <Stack direction="row" justifyContent={"space-between"}>
+                  <Stack direction="row" justifyContent="space-between">
                     <Stack direction="row">
                       <ListItemAvatar sx={{ display: "flex" }}>
-                        <Avatar alt="doctor"
+                        <Avatar
+                          alt="doctor"
                           src="/static/images/doctor/sampleDoctor.jpg"
-                          sx={{ alignSelf: "center" }} />
+                          sx={{ alignSelf: "center" }}
+                        />
                       </ListItemAvatar>
-                      <Stack direction={"column"} >
-                        <Typography>Dr. Gregory House</Typography>
-                        <Typography>Date: 2023-02-12</Typography>
+                      <Stack direction={"column"}>
+                        <Typography>{appointment.name}</Typography>
+                        <Typography>Date:{appointment.slotDate}</Typography>
                       </Stack>
                     </Stack>
                     <Stack direction={"row"}>
                       <Button
                         variant="contained"
-                        onClick={() => handleDetailButtonClick()}
+                        // variant="outlined"
+                        onClick={() => handleDetailButtonClick(appointment)}
                         sx={{
                           marginRight: 2,
-                          backgroundColor: "primary.dark",
+                          backgroundColor: "primary",
                           color: "primary.contrastText",
-                          ":hover": { backgroundColor: "primary.main" },
+                          ":hover": {
+                            color: "primary.contrastText",
+                            backgroundColor: "secondary.main",
+                          },
                         }}
                       >
                         Details
                       </Button>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        sx={{
-                          color: "primary.contrastText",
-                          borderColor: "secondary.dark",
-                          ":hover": { backgroundColor: "secondary.dark" },
-                        }}
-                      >
-                        Reject
-                      </Button>
+                      {appointment.status !== "ACCEPTED" &&
+                        appointment.status !== "REJECTED" &&
+                        !isAppointmentExpired(appointment) &&
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          sx={{
+                            color: "primary.contrastText",
+                            marginRight: 2,
+                            borderColor: "secondary.dark",
+                            ":hover": { backgroundColor: "secondary.dark" },
+                          }}
+                          onClick={() => handleReject(appointment)}
+                        >
+                          Reject
+                        </Button>
+                      }
+                      {appointment.status !== "ACCEPTED" &&
+                        appointment.status !== "REJECTED" &&
+                        !isAppointmentExpired(appointment) &&
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleAccept(appointment)}
+                          sx={{
+                            backgroundColor: "primary.dark",
+                            color: "primary.contrastText",
+                            ":hover": { backgroundColor: "primary.main" },
+                          }}
+                        >
+                          Accept
+                        </Button>
+                      }
+
+                      {(appointment.status === "ACCEPTED" ||
+                        appointment.status === "REJECTED" ||
+                        isAppointmentExpired(appointment)) &&
+                        <Button
+                          variant="outlined"
+                          disabled
+                        >
+                          {appointment.status}
+                          {isAppointmentExpired(appointment) && " EXPIRED"}
+                        </Button>
+                      }
                     </Stack>
                   </Stack>
                 </CardContent>
               </Card>
             </Box>
-          </ListItem>
+          </ListItem>)
+          )}
+
         </List>
+
       </Stack>
       <Dialog open={showDetailDialog} onClose={handleClose}>
-          <DialogTitle sx={{ fontWeight: "bold" }}>
-            Patient Name: Rui
-          </DialogTitle>
-          <DialogContent>
-            <Typography variant="subtitle1">
-              Patient ID: 1
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Assessment Test
-            </Typography>
-            <Typography variant="subtitle1">
-              Status: Pass
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Assignment Comment
-            </Typography>
-            <Typography variant="subtitle1">
-              Counselor: Harsh Singh
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Appointment Comment
-            </Typography>
-            <Typography variant="subtitle1">
-              Doctor: Dr. Gregory House
-            </Typography>
-            <Typography variant="subtitle1">
-              Date: 2023-02-12
-            </Typography>
-            <Typography variant="subtitle1">
-              Notes: 
-            </Typography>
-          </DialogContent>
-        </Dialog>
+        <DialogTitle sx={{ fontWeight: "bold" }}>
+          Patient Name: Rui
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="subtitle1">
+            Patient ID: 1
+          </Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Assessment Test
+          </Typography>
+          <Typography variant="subtitle1">
+            Status: Pass
+          </Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Assignment Comment
+          </Typography>
+          <Typography variant="subtitle1">
+            Counselor: Harsh Singh
+          </Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Appointment Comment
+          </Typography>
+          <Typography variant="subtitle1">
+            Doctor: Dr. Gregory House
+          </Typography>
+          <Typography variant="subtitle1">
+            Date: 2023-02-12
+          </Typography>
+          <Typography variant="subtitle1">
+            Notes:
+          </Typography>
+        </DialogContent>
+      </Dialog>
     </ThemeProvider>
   );
+}
+
+const isAppointmentExpired = (appointment: Appointment) => {
+  return dayjs().isAfter(`${appointment.slotDate} ${appointment.slotTime.split("-")[0]}`);
 }
