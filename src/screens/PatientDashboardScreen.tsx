@@ -115,16 +115,111 @@ export default function PatientDashboardScreen(props: any) {
         </Button>
         <Divider />
 
+
         <Stack>
+          {patientAppointmentList.acceptedFutureAppointments.length > 0 && <Typography variant="h5" color="primary.contrastText">
+            Accepted Future Appointments
+          </Typography>}
+          {patientAppointmentList.acceptedFutureAppointments.length > 0 &&
+            <List>
+              {patientAppointmentList.acceptedFutureAppointments.map((appointment) =>
+              (<ListItem key=
+                {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+              >
+                <Box sx={{ width: "100%" }}>
+                  <Card sx={{ marginTop: 2, boxShadow: 3 }}>
+                    <CardContent>
+                      <Stack direction="row" justifyContent="space-between">
+                        <Stack direction="row">
+                          <ListItemAvatar sx={{ display: "flex" }}>
+                            <Avatar
+                              alt="doctor"
+                              src="/static/images/doctor/sampleDoctor.jpg"
+                              sx={{ alignSelf: "center" }}
+                            />
+                          </ListItemAvatar>
+                          <Stack direction={"column"}>
+                            <Typography>{appointment.name}</Typography>
+                            <Typography>Date:{appointment.slotDate}</Typography>
+                          </Stack>
+                        </Stack>
+                        <Stack direction={"row"}>
+                          <Button
+                            variant="contained"
+                            // variant="outlined"
+                            onClick={() => handleDetailButtonClick(appointment)}
+                            sx={{
+                              marginRight: 2,
+                              backgroundColor: "primary",
+                              color: "primary.contrastText",
+                              ":hover": {
+                                color: "primary.contrastText",
+                                backgroundColor: "secondary.main",
+                              },
+                            }}
+                          >
+                            Details
+                          </Button>
+                          {appointment.status !== "ACCEPTED" &&
+                            appointment.status !== "REJECTED" &&
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              sx={{
+                                color: "primary.contrastText",
+                                marginRight: 2,
+                                borderColor: "secondary.dark",
+                                ":hover": { backgroundColor: "secondary.dark" },
+                              }}
+                              onClick={() => handleReject(appointment)}
+                            >
+                              Reject
+                            </Button>
+                          }
+                          {appointment.status !== "ACCEPTED" &&
+                            appointment.status !== "REJECTED" &&
+                            <Button
+                              variant="outlined"
+                              onClick={() => handleAccept(appointment)}
+                              sx={{
+                                backgroundColor: "primary.dark",
+                                color: "primary.contrastText",
+                                ":hover": { backgroundColor: "primary.main" },
+                              }}
+                            >
+                              Accept
+                            </Button>
+                          }
+
+                          {(appointment.status === "ACCEPTED" ||
+                            appointment.status === "REJECTED") &&
+                            <Button
+                              variant="outlined"
+                              disabled
+                            >
+                              {appointment.status}
+                            </Button>
+                          }
+                        </Stack>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Box>
+              </ListItem>)
+              )}
+
+            </List>
+          }
+
+
           <Typography variant="h5" color="primary.contrastText">
-            Upcoming Appointments
+            Incoming Appointments
           </Typography>
 
           <List>
-            {patientAppointmentList.appointments.map((appointment) =>
+            {patientAppointmentList.pendingFutureAppointments.map((appointment) =>
             (<ListItem key=
               {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
-            // {appointment.name.concat(appointment.slotDate).concat(appointment.slotTime)}
             >
               <Box sx={{ width: "100%" }}>
                 <Card sx={{ marginTop: 2, boxShadow: 3 }}>
