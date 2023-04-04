@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Appointment, RawAppointment } from "../types/AppointmentType";
 
 export const flattenAndAddDatesToRawAppointments = (rawAppointments: any) => {
@@ -20,6 +21,21 @@ export const flattenAndAddDatesToRawAppointments = (rawAppointments: any) => {
 	)
 	return appointments;
 }
+
+export const getFutureAppointments = (appointments: Appointment[], status: string) => {
+	const now = dayjs();
+	return appointments.filter((appointment) => {
+		if (appointment.status !== status) {
+			return false;
+		}
+		const appointmentDateTime = new Date(`${appointment.slotDate} ${appointment.slotTime.split("-")[0]}`)
+		if (now.isAfter(appointmentDateTime)) {
+			return false;
+		}
+		return true;
+	})
+}
+
 
 // Sample raw appointments 
 // "appointments": {
