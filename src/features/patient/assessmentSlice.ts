@@ -12,7 +12,8 @@ interface AssessmentState {
   currentQuestionIndex: number;
   loading: boolean,
   error: boolean,
-  success: boolean,
+  submitSuccess: boolean,
+  removeSuccess: boolean,
   message: string,
   showSnackbar: boolean,
   // cancelError: boolean,
@@ -25,7 +26,8 @@ const initialState: AssessmentState = {
   currentQuestionIndex: 0,
   loading: false,
   error: false,
-  success: false,
+  submitSuccess: false,
+  removeSuccess: false,
   message: "",
   showSnackbar: false,
   // cancelError: false,
@@ -45,13 +47,14 @@ export const assessmentSlice = createSlice({
     submitRequest: (state) => {
       state.loading = true;
       state.error = false;
+      state.submitSuccess = false;
       state.message = "Submitting..."
       state.showSnackbar = true;
     },
     submitSuccess: (state, action) => {
       state.loading = false;
       state.error = false;
-      state.success = true;
+      state.submitSuccess = true;
       state.message = action.payload;
       state.showSnackbar = true;
     },
@@ -70,7 +73,7 @@ export const assessmentSlice = createSlice({
     },
     cancelRequest: (state) => {
       state.loading = true;
-      state.success = false;
+      state.removeSuccess = false;
       state.error = false;
       // state.cancelError = false;
       state.message = "Canceling assessment...";
@@ -80,7 +83,7 @@ export const assessmentSlice = createSlice({
       state.loading = false;
       // state.cancelError = false;
       // state.cancelSuccess = true;
-      state.success = true;
+      state.removeSuccess = true;
       state.error = false;
       state.message = action.payload;
       state.answers = {}
@@ -88,7 +91,7 @@ export const assessmentSlice = createSlice({
     },
     cancelFail: (state, action: PayloadAction<string>) => {
       state.loading = false;
-      state.success = false;
+      state.removeSuccess = false;
       state.error = true;
       // state.cancelError = true;
       state.message = action.payload;
@@ -96,9 +99,9 @@ export const assessmentSlice = createSlice({
     },
     reset: (state) => {
       state.loading = initialState.loading;
-      state.success = initialState.success;
+      state.removeSuccess = initialState.removeSuccess;
+      state.submitSuccess = initialState.submitSuccess;
       state.error = initialState.error;
-      state.message = initialState.message;
       state.answers = initialState.answers;
       state.currentQuestionIndex = initialState.currentQuestionIndex;
       state.showSnackbar = initialState.showSnackbar;
@@ -107,7 +110,8 @@ export const assessmentSlice = createSlice({
     },
     newError: (state, action: PayloadAction<string>) => {
       state.loading = false;
-      state.success = false;
+      state.removeSuccess = false;
+      state.submitSuccess = false;
       state.error = true;
       state.showSnackbar = true;
       state.message = action.payload;
