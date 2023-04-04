@@ -33,6 +33,7 @@ import ManagerProfileScreen from './screens/ManagerProfileScreen';
 import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
 import CounselorModifyAppointmentScreen from './screens/CounselorModifyAppointmentScreen';
 import DoctorModifyAppointmentScreen from "./screens/DoctorModifyAppointmentScreen";
+import ManagerReportScreen from "./screens/ManagerReportScreen";
 
 
 const patientTheme = createTheme({
@@ -106,6 +107,7 @@ function App() {
 						<Route path="members" element={<ManagerMembersScreen />} />
 						<Route path="profile" element={<ManagerProfileScreen />} />
 						<Route path="settings" element={<ManagerSettingsScreen />} />
+						<Route path="report" element={<ManagerReportScreen />} />
 					</Route>
 				</Routes>
 			</div>
