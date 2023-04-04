@@ -5,7 +5,7 @@ import { counselorTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppSelector } from '../app/hooks';
 
-export default function CounselorSettingsScreen(props: any) {
+export default function CounselorChangePasswordScreen(props: any) {
 
 	const { userInfo } = useAppSelector(selectUserLogIn);
 

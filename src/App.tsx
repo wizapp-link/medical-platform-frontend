@@ -23,7 +23,7 @@ import CounselorHomeScreen from './screens/CounselorHomeScreen';
 import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
 import CounselorDashboardScreen from './screens/CounselorDashboardScreen';
 import CounselorProfileScreen from './screens/CounselorProfileScreen';
-import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
+import CounselorChangePasswordScreen from './screens/CounselorChangePasswordScreen';
 import CounselorAssignmentScreen from './screens/CounselorAssignmentScreen';
 {/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/ }
 import MangerHomeScreen from './screens/MangerHomeScreen';
@@ -92,7 +92,7 @@ function App() {
 						<Route path="assignment" element={<CounselorAssignmentScreen />} />
 						<Route path="modify_appointment" element={<CounselorModifyAppointmentScreen />} />
 						<Route path="profile" element={<CounselorProfileScreen />} />
-						<Route path="settings" element={<CounselorSettingsScreen />} />
+						<Route path="changepassword" element={<CounselorChangePasswordScreen />} />
 					</Route>
 
 					{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
