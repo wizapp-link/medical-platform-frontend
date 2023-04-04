@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../../app/store";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { Patient } from "../../types/PatientDataType";
 
 const TestPatient: Patient[] = [{
@@ -120,17 +120,32 @@ export const updatePatientStatus = (email: string, expertEmail: string, status: 
 ) => {
   dispatch(updatePatientStatusRequest());
   try {
-    const response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
-        email,
+    let response: AxiosResponse<any, any>;
+    if(role === "counsellor"){
+      response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
+        patientEmail: email,
         status,
         reason,
-        expertEmail,
+        counsellorEmail: expertEmail,
       },
       {
         headers: {
           "Authorization": `Bearer ${token}`
         }
       });
+    }else {
+      response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
+        patientEmail: email,
+        status,
+        reason,
+        doctorEmail: expertEmail,
+      },
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+    }
     dispatch(updatePatientStatusSuccess());
     console.log("updatePatientStatusSuccess");
     console.log(response);

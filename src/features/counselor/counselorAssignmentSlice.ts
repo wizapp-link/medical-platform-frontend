@@ -14,6 +14,7 @@ const initialState: AssignmentScreenState = {
 	message: "",
 	patient: defaultPatient,
 	expertRole: "",
+	showSnackbar: false,
 }
 
 export type AssignmentScreenState = {
@@ -23,6 +24,7 @@ export type AssignmentScreenState = {
 	success: boolean,
 	message: string,
 	expertRole: string,
+	showSnackbar: boolean,
 }
 
 const counselorAssignmentSlice = createSlice({
@@ -33,39 +35,54 @@ const counselorAssignmentSlice = createSlice({
       state.loading = true;
 			state.error = false;
 			state.success = false;
-			state.message = "";
+			state.message = "Assigning...";
+			state.showSnackbar = true;
     },
     assignSuccess: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.message = action.payload;
       state.error = false;
 			state.success = true;
+			state.showSnackbar = true;
     },
     assignFail: (state, action: PayloadAction<string>) => {
       state.loading = false;
 			state.error = true;
       state.message = action.payload;
 			state.success = false;
+			state.showSnackbar = true;
     },
 		setPatient: (state, action: PayloadAction<Patient>) => {
 			state.patient = action.payload;
 		},
 		resetToInitialState: (state) => {
+			state.patient = initialState.patient;
 			state.loading = initialState.loading;
 			state.error = initialState.error;
 			state.message = initialState.message;
 			// state.patient = initialState.patient;
 			state.success = initialState.success;
 			state.expertRole = initialState.expertRole;
+			state.showSnackbar = initialState.showSnackbar;
 		},
 		setExpertRole: (state, action: PayloadAction<string>) => {
 			state.expertRole = action.payload;
+		},
+		closeSnackbar: (state) => {
+			state.showSnackbar = false;
+		},
+		newError:  (state, action: PayloadAction<string>) => {
+			state.loading = false;
+			state.success = false;
+			state.error = true;
+			state.message = action.payload;
+			state.showSnackbar = true;
 		}
   },
 });
 
 export const {
-  assignRequest, assignSuccess, assignFail, setPatient, resetToInitialState, setExpertRole
+  assignRequest, assignSuccess, assignFail, setPatient, resetToInitialState, setExpertRole, newError, closeSnackbar
 } = counselorAssignmentSlice.actions;
 
 export const selectCounselorAssignment = (state: RootState) => state.counselorAssignment;
@@ -73,8 +90,8 @@ export const selectCounselorAssignment = (state: RootState) => state.counselorAs
 export const assignSelf = (token: string, patient: Patient, counselor: UserData, reason: string) => async (dispatch: AppDispatch) => {
 	dispatch(assignRequest());
   try {
-		const body = 		{
-			email: patient.email,
+		const body = {
+			patientEmail: patient.email,
 			counsellorEmail: counselor.email,
 			status: "SELF_ASSIGN",
 			reason,
@@ -99,7 +116,7 @@ export const assignDoctor = (token: string, patient: Patient, counselor: UserDat
     const { data } = await axios.post(
 			'/api/v1/counsellor/updatePatientStatus', 
 		{
-			email: patient.email,
+			patientEmail: patient.email,
 			counsellorEmail: counselor.email,
 			reason,
 			status: "ASSIGN_DOCTOR",
@@ -140,6 +157,7 @@ export const markCounsellingDone = (patientEmail: string) => async (dispatch: Ap
   } catch (err: any) {
     const errorMessage = err.response ? err.response.data.response : err.message
     console.log(errorMessage);
+		dispatch(newError(errorMessage));
   }
 }
 

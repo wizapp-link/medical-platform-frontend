@@ -96,7 +96,7 @@ export default function PatientAssessmentScreen(props: any) {
     loading,
     error,
     success,
-    cancelSuccess,
+    // cancelSuccess,
   } = assessment;
   const [showSummary, setShowSummary] = useState(false);
 
@@ -168,13 +168,13 @@ export default function PatientAssessmentScreen(props: any) {
   };
 
   useEffect(() => {
-    if (cancelSuccess) {
+    if (Object.keys(answers).length == 0 && success === true) {
       setTaken(false);
       dispatch(setCurrentQuestionIndex(0));
       setShowSummary(false);
       dispatch(reset());
     }
-  }, [cancelSuccess]);
+  }, [answers]);
 
   useEffect(() => {
     if (taken || success) setShowSummary(true);
@@ -213,9 +213,8 @@ export default function PatientAssessmentScreen(props: any) {
                 </Typography>
                 <Typography variant="body1">
                   {answers[question.id]
-                    ? `${answers[question.id].toUpperCase()}. ${
-                        ansList[answers[question.id].charCodeAt(0) - 97]
-                      }`
+                    ? `${answers[question.id].toUpperCase()}. ${ansList[answers[question.id].charCodeAt(0) - 97]
+                    }`
                     : ""}
                 </Typography>
               </Paper>
