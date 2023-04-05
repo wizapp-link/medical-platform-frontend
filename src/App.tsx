@@ -17,7 +17,7 @@ import DoctorHomeScreen from './screens/DoctorHomeScreen';
 import DoctorDashboardScreen from './screens/DoctorDashboardScreen';
 import DoctorAppointmentScreen from './screens/DoctorAppointmentScreen';
 import DoctorProfileScreen from './screens/DoctorProfileScreen';
-import DoctorSettingsScreen from './screens/DoctorSettingsScreen';
+import DoctorChangePasswordScreen from './screens/DoctorChangePasswordScreen';
 {/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/ }
 import CounselorHomeScreen from './screens/CounselorHomeScreen';
 import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
@@ -80,7 +80,7 @@ function App() {
 						<Route path="dashboard" element={<DoctorDashboardScreen />} />
 						<Route path="appointments" element={<DoctorAppointmentScreen />} />
 						<Route path="profile" element={<DoctorProfileScreen />} />
-						<Route path="settings" element={<DoctorSettingsScreen />} />
+						<Route path="changepassword" element={<DoctorChangePasswordScreen />} />
 						<Route path="modify_appointment" element={<DoctorModifyAppointmentScreen />} />
 					</Route>
 

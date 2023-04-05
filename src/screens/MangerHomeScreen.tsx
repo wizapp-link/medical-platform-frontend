@@ -25,20 +25,24 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import AssessmentIcon from '@mui/icons-material/Assessment';
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import DrawerOptionTextIconsType from "../types/DrawerOptionTextIconsType";
-import Drawer from '@mui/material/Drawer';
+import Drawer from "@mui/material/Drawer";
+import ManagerProfileMenu from "../components/ManagerProfileMenu";
 import {
-	BrowserRouter as Router,
-	Routes,
-	Route,
-	Outlet,
-	useNavigate,
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+  useNavigate,
 } from "react-router-dom";
 import UserProfileMenu from "../components/UserProfileMenu";
 import { Stack, Avatar } from "@mui/material";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import { ThemeProvider } from "@emotion/react";
+import { managerTheme } from "../Themes";
+import MainLogo from "../assets/images/main_logo.png";
 
 const drawerWidth = 240;
 const backgroundColor = "#388087";
@@ -71,36 +75,36 @@ const text = "Manager's Dashboard";
 // });
 
 const DrawerHeader = styled("div")(({ theme }) => ({
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "flex-end",
-	padding: theme.spacing(0, 1),
-	// necessary for content to be below app bar
-	...theme.mixins.toolbar,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
 }));
 
 interface AppBarProps extends MuiAppBarProps {
-	open?: boolean;
+  open?: boolean;
 }
 
 const AppBar = styled(MuiAppBar, {
-	shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== "open",
 })<AppBarProps>(({ theme, open }) => ({
-	zIndex: theme.zIndex.drawer + 1,
-	transition: theme.transitions.create(["width", "margin"], {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
-	...(open && {
-		marginLeft: drawerWidth,
-		width: `calc(100% - ${drawerWidth}px)`,
-		transition: theme.transitions.create(["width", "margin"], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	}),
-	backgroundColor: backgroundColor,
-	color: textColor,
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+  backgroundColor: backgroundColor,
+  color: textColor,
 }));
 
 // const Drawer = styled(MuiDrawer, {
@@ -121,114 +125,121 @@ const AppBar = styled(MuiAppBar, {
 // }));
 
 export default function ManagerHomeScreen() {
-	const { userInfo } = useAppSelector(selectUserLogIn);
+  const { userInfo } = useAppSelector(selectUserLogIn);
 
-	const theme = useTheme();
-	const [open, setOpen] = React.useState(false);
-	const navigate = useNavigate();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
-	const handleIconButtonClicks = (text: string) => () => {
-		// change text to lower case and remove whitespace, nagigate to the destination
-		if (text === "Sign Out") {
-			navigate("/signout");
-		} else {
-			navigate(text.toLowerCase().replace(/\s/g, ""));
-		}
-	};
+  const handleIconButtonClicks = (text: string) => () => {
+    // change text to lower case and remove whitespace, nagigate to the destination
+    if (text === "Sign Out") {
+      navigate("/signout");
+    } else {
+      navigate(text.toLowerCase().replace(/\s/g, ""));
+    }
+  };
 
-	const drawerUserOptionsTextIcons: DrawerOptionTextIconsType[] = [
-		{ text: "Dashboard", icon: HomeIcon },
-		{ text: "Members", icon: People },
-		{ text: "Report", icon: AssessmentIcon}
-	];
-	const drawerUserOptionsList = (
-		<List>
-			{drawerUserOptionsTextIcons.map((item) => (
-				<ListItem key={item.text} disablePadding sx={{ display: "block" }}>
-					<ListItemButton
-						sx={{
-							minHeight: 48,
-							justifyContent: open ? "initial" : "center",
-							px: 2.5,
-							color: textColor,
-						}}
-						onClick={handleIconButtonClicks(item.text)}
-					>
-						<ListItemIcon
-							sx={{
-								minWidth: 0,
-								mr: open ? 3 : "auto",
-								justifyContent: "center",
-								color: textColor,
-							}}
-						>
-							<item.icon />
-						</ListItemIcon>
-						<ListItemText primary={item.text} sx={{ opacity: 1, marginLeft: 3 }} />
-					</ListItemButton>
-				</ListItem>
-			))}
-		</List>
-	);
-	const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [
-		{ text: "Settings", icon: SettingsIcon },
-		{ text: "Sign Out", icon: LogoutIcon },
-	];
-	const drawerAccountOptionsList = (
-		<List>
-			{drawerAccountOptionsTextIcons.map((item) => (
-				<ListItem
-					key={`${item.text}-ListItem`}
-					disablePadding
-					sx={{ display: "block" }}
-				>
-					<ListItemButton
-						sx={{
-							minHeight: 48,
-							justifyContent: open ? "initial" : "center",
-							px: 2.5,
-							color: textColor,
-						}}
-						onClick={handleIconButtonClicks(item.text)}
-					>
-						<ListItemIcon
-							sx={{
-								minWidth: 0,
-								mr: open ? 3 : "auto",
-								justifyContent: "center",
-								color: textColor,
-							}}
-						>
-							<item.icon />
-						</ListItemIcon>
-						<ListItemText
-							primary={item.text}
-							sx={{ opacity: 1, color: textColor, marginLeft: 3 }}
-						/>
-					</ListItemButton>
-				</ListItem>
-			))}
-		</List>
-	);
+  const drawerUserOptionsTextIcons: DrawerOptionTextIconsType[] = [
+    { text: "Dashboard", icon: HomeIcon },
+    { text: "Members", icon: People },
+    { text: "Report", icon: AssessmentIcon },
+  ];
+  const drawerUserOptionsList = (
+    <List>
+      {drawerUserOptionsTextIcons.map((item) => (
+        <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+              color: textColor,
+            }}
+            onClick={handleIconButtonClicks(item.text)}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+                color: textColor,
+              }}
+            >
+              <item.icon />
+            </ListItemIcon>
+            <ListItemText
+              primary={item.text}
+              sx={{ opacity: 1, marginLeft: 3 }}
+            />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  );
+  const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [
+    { text: "Settings", icon: SettingsIcon },
+    { text: "Sign Out", icon: LogoutIcon },
+  ];
+  const drawerAccountOptionsList = (
+    <List>
+      {drawerAccountOptionsTextIcons.map((item) => (
+        <ListItem
+          key={`${item.text}-ListItem`}
+          disablePadding
+          sx={{ display: "block" }}
+        >
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+              color: textColor,
+            }}
+            onClick={handleIconButtonClicks(item.text)}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+                color: textColor,
+              }}
+            >
+              <item.icon />
+            </ListItemIcon>
+            <ListItemText
+              primary={item.text}
+              sx={{ opacity: 1, color: textColor, marginLeft: 3 }}
+            />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  );
 
-	const handleDrawerOpen = () => {
-		setOpen(true);
-	};
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
 
-	const handleDrawerClose = () => {
-		setOpen(false);
-	};
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
 
-	return (
-		<Box sx={{ display: "flex" }}>
-			<CssBaseline />
-			<AppBar
-				position="fixed"
-				open={open}
-				sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-			>
-				<Toolbar>
-					{/* <IconButton
+  return (
+    <ThemeProvider theme={managerTheme}>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          open={open}
+          sx={{
+            width: `calc(100% - ${drawerWidth}px)`,
+            ml: `${drawerWidth}px`,
+          }}
+        >
+          <Toolbar>
+            {/* <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -241,55 +252,69 @@ export default function ManagerHomeScreen() {
           >
             <MenuIcon />
           </IconButton> */}
-					<Stack
-						direction="row"
-						sx={{ justifyContent: "center", flexGrow: 1, alignItems: "center" }}
-					>
-						<Typography
+            <Stack
+              direction="row"
+              sx={{ justifyContent: "end", flexGrow: 1, alignItems: "center" }}
+            >
+              {/* <Typography
 							variant="h5"
 							noWrap
 							component="div"
 							color={"primary.contrastText"}
 						>
 							We Care
-						</Typography>
-						{/* <UserProfileMenu /> */}
-					</Stack>
-				</Toolbar>
-			</AppBar>
-			<Drawer
-				variant="permanent"
-				anchor="left"
-				sx={{
-					width: drawerWidth,
-					flexShrink: 0,
-					"& .MuiDrawer-paper": {
-						width: drawerWidth,
-						boxSizing: "border-box",
-						backgroundColor: backgroundColor,
-						color: textColor
-					},
-				}}
-			>
-				<DrawerHeader sx={{ justifyContent: "space-between" }}>
-					<Typography sx={{ marginLeft: 1.5, marginTop: 0.25, fontSize: 19 }}>
-						{text}
-					</Typography>
-					{/* <Avatar>{userInfo?.userData.name.charAt(0)}</Avatar> */}
-					{/* <Typography>{userInfo?.userData.name}</Typography> */}
-					{/* <IconButton onClick={handleDrawerClose} sx={{color: textColor}}>
+						</Typography> */}
+              <ManagerProfileMenu />
+            </Stack>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          anchor="left"
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+              backgroundColor: backgroundColor,
+              color: textColor,
+            },
+          }}
+        >
+          <DrawerHeader sx={{ justifyContent: "space-between" }}>
+            <Box sx={{ marginRight: 3 }}>
+              <Stack direction={"row"}>
+                <img src={MainLogo} height="70" width="70" />
+                <Typography
+                  align="center"
+                  fontSize={20}
+                  sx={{
+                    marginTop: 2.5,
+                    fontSize: 25,
+                    fontWeight: "bold",
+                    marginLeft: 1.5,
+                  }}
+                >
+                  We Care
+                </Typography>
+              </Stack>
+            </Box>
+            {/* <Avatar>{userInfo?.userData.name.charAt(0)}</Avatar> */}
+            {/* <Typography>{userInfo?.userData.name}</Typography> */}
+            {/* <IconButton onClick={handleDrawerClose} sx={{color: textColor}}>
 						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
 					</IconButton>  */}
-				</DrawerHeader>
-				<Divider />
-				{drawerUserOptionsList}
-				<Divider />
-				{drawerAccountOptionsList}
-			</Drawer>
-			<Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-				<DrawerHeader />
-				<Outlet />
-			</Box>
-		</Box>
-	);
+          </DrawerHeader>
+          {drawerUserOptionsList}
+          <Divider />
+          {drawerAccountOptionsList}
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <DrawerHeader />
+          <Outlet />
+        </Box>
+      </Box>
+    </ThemeProvider>
+  );
 }

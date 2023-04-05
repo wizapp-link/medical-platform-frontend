@@ -133,13 +133,16 @@ export default function CounselorHomeScreen() {
 
   const handleIconButtonClicks = (text: string) => () => {
     // change text to lower case and remove whitespace, nagigate to the destination
-    navigate(text.toLowerCase().replace(/\s/g, ""));
+    if (text === "Sign Out") {
+      navigate("/signout");
+    } else {
+      navigate(text.toLowerCase().replace(/\s/g, ""));
+    }
   };
 
   const drawerUserOptionsTextIcons: DrawerOptionTextIconsType[] = [
     { text: "Dashboard", icon: HomeIcon },
     { text: "Appointments", icon: CalendarMonthIcon },
-    
   ];
   const drawerUserOptionsList = (
     <List>
@@ -163,15 +166,19 @@ export default function CounselorHomeScreen() {
             >
               <item.icon />
             </ListItemIcon>
-            <ListItemText primary={item.text} sx={{ opacity:1, marginLeft: 3}} />
+            <ListItemText
+              primary={item.text}
+              sx={{ opacity: 1, marginLeft: 3 }}
+            />
           </ListItemButton>
         </ListItem>
       ))}
     </List>
   );
   const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [
-	{ text: "Profile", icon: AccountBoxIcon },
-    { text: "Change Password", icon: SettingsIcon }
+    { text: "Profile", icon: AccountBoxIcon },
+    { text: "Change Password", icon: SettingsIcon },
+    { text: "Sign Out", icon: LogoutIcon },
   ];
   const drawerAccountOptionsList = (
     <List>
@@ -199,7 +206,10 @@ export default function CounselorHomeScreen() {
             >
               <item.icon />
             </ListItemIcon>
-            <ListItemText primary={item.text} sx={{ opacity:1, marginLeft: 3}} />
+            <ListItemText
+              primary={item.text}
+              sx={{ opacity: 1, marginLeft: 3 }}
+            />
           </ListItemButton>
         </ListItem>
       ))}
