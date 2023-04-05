@@ -7,7 +7,9 @@ export type AssessmentSummary = {
 export default function generateResultFromSelfAssessmentResult(assessmentOptionsSelected: string[]): AssessmentSummary {
 	let totalScore = 0;
 	for (let i = 0; i < assessmentOptionsSelected.length; i++) {
-		totalScore += (assessmentOptionsSelected[i].charCodeAt(0) - "a".charCodeAt(0))
+		if (assessmentOptionsSelected[i]) {
+			totalScore += (assessmentOptionsSelected[i].charCodeAt(0) - "a".charCodeAt(0));
+		}
 	}
 
 	const assessmentSummary = {

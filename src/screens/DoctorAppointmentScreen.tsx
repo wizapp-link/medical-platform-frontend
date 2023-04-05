@@ -65,6 +65,7 @@ export default function DoctorAppointmentScreen(props: any) {
         </Typography>
         <List>
           {patients.map((patient) => (
+            patient.assessmentTaken && patient.assessmentOptionsSelected[0] != null &&
             <ListItem key={patient.id}>
               <Box sx={{ width: "100%" }}>
                 <Card sx={{ boxShadow: 3, marginTop: 1 }}>
@@ -85,7 +86,7 @@ export default function DoctorAppointmentScreen(props: any) {
                           color="primary"
                           onClick={() => handleAssessmentButtonClick(patient)}
                           sx={{ marginRight: 2 }}
-                          disabled={patient.assessmentOptionsSelected.length === 0}
+                        // disabled={patient.assessmentTaken === false || patient.assessmentOptionsSelected.length === 0}
                         >
                           Self-Assessment
                         </Button>
@@ -126,8 +127,8 @@ export default function DoctorAppointmentScreen(props: any) {
                   <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
                   <Typography
                     variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
-                    ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
-                  }`}</Typography>
+                      ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
+                      }`}</Typography>
                 </Paper>
               ))}
             </Stack>
