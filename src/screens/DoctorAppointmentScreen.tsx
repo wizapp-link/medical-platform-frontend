@@ -77,7 +77,7 @@ export default function DoctorAppointmentScreen(props: any) {
                         </ListItemAvatar>
                         <Stack direction={"column"}>
                           <Typography>{patient.name}</Typography>
-                          <Typography>{`ID: ${patient.id}`}2</Typography>
+                          <Typography>{`Email: ${patient.email}`}</Typography>
                         </Stack>
                       </Stack>
                       <Stack direction={"row"}>
