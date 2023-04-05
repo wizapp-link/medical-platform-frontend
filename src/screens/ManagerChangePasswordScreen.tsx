@@ -24,7 +24,7 @@ export default function ManagerChangePasswordScreen(props: any) {
 				<Container>
 					<form onSubmit={handleSubmit}>
 						<Stack spacing={5} padding={5}>
-							<Typography variant="h4" color={'primary.contrastText'}>Settings</Typography>
+							<Typography variant="h4">Change Password</Typography>
 							<TextField
 								id="email-field"
 								label="E-mail"
