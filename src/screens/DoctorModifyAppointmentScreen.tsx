@@ -23,13 +23,14 @@ import {
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import SelfAssessmentForm from "../components/SelfAssessmentForm";
 import timeslots from "../constants/Timeslots";
-import { getTimeslot, selectAppointment, setAppointmentDateTime } from "../features/appointment/appointmentSlice";
+import { closeSnackbar, getTimeslot, modifyAppointmentDateTime, reset, selectAppointment, setAppointmentDateTime } from "../features/appointment/appointmentSlice";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { useNavigate } from "react-router-dom";
+import ReduxSnackbar from "../components/ReduxSnackbar";
 
 export default function DoctorModifyAppointmentScreen() {
   const [date, setDate] = useState<string | null>(null);
@@ -64,10 +65,23 @@ export default function DoctorModifyAppointmentScreen() {
   const handleSubmit = (event: React.MouseEvent) => {
     event.preventDefault();
     if (userInfo && date) {
-      dispatch(setAppointmentDateTime(userInfo.token, userInfo?.userData, appointment.patient, dayjs(date).format("YYYY-MM-DD"), value));
+      if (appointment.patient.role === "") {
+        // if role is empty string, it's created by the defaultPatient for modifying appointments
+        dispatch(modifyAppointmentDateTime(userInfo.token, userInfo.userData, appointment.patient.email, appointment.lastDate, appointment.lastTimeslot, dayjs(date).format("YYYY-MM-DD"), value));
+      } else {
+        dispatch(setAppointmentDateTime(userInfo.token, userInfo?.userData, appointment.patient, dayjs(date).format("YYYY-MM-DD"), value, comment));
+      }
+
       navigate("/doctor/dashboard");
     }
   };
+
+  useEffect(() => {
+    if (appointment.finalSuccess) {
+      dispatch(reset());
+      navigate("/counselor/dashboard");
+    }
+  }, [appointment.finalSuccess])
 
   const handleReset = () => {
     setDate(null);
@@ -197,11 +211,11 @@ export default function DoctorModifyAppointmentScreen() {
 
                 <Box display="flex">
                   <Button variant="contained" color="secondary"
-                          sx={{ marginLeft: "1rem", marginRight: 3, fontSize: 18 }} onClick={handleReset}>
+                    sx={{ marginLeft: "1rem", marginRight: 3, fontSize: 18 }} onClick={handleReset}>
                     RESET
                   </Button>
                   <Button variant="contained" color="secondary"
-                          sx={{ marginLeft: "1rem", fontSize: 18, marginRight: 12 }} onClick={handleSubmit}>
+                    sx={{ marginLeft: "1rem", fontSize: 18, marginRight: 12 }} onClick={handleSubmit}>
                     SUBMIT
                   </Button>
                 </Box>
@@ -240,6 +254,15 @@ export default function DoctorModifyAppointmentScreen() {
 					<Button onClick={handleSubmit}>Submit</Button>
 				</DialogActions>
 			</Dialog> */}
+      <ReduxSnackbar
+        loading={appointment.loading}
+        success={appointment.success}
+        error={appointment.error}
+        show={appointment.showSnackbar}
+        message={appointment.message}
+        onClose={() => dispatch(closeSnackbar())}
+        autoHideDuration={5000}
+      />
     </Box>
   );
 }

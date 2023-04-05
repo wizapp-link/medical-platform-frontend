@@ -24,12 +24,13 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { patientTheme } from "../Themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { selectPatientAppointmentList, updateAppointment } from "../features/patient/patientAppointmentSlice";
+import { listAppointment, selectPatientAppointmentList, updateAppointment } from "../features/patient/patientAppointmentSlice";
 import { Appointment } from "../types/AppointmentType";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import dayjs from "dayjs";
+import { isAppointmentExpired } from "../utils/AppointmentConversion";
 
 
 export default function PatientAppointmentScreen(props: any) {
@@ -59,6 +60,11 @@ export default function PatientAppointmentScreen(props: any) {
     }
   }
 
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(listAppointment(userInfo.token, userInfo.userData))
+    }
+  }, [])
 
   return (
     <ThemeProvider theme={patientTheme}>
@@ -105,8 +111,7 @@ export default function PatientAppointmentScreen(props: any) {
                       >
                         Details
                       </Button>
-                      {appointment.status !== "ACCEPTED" &&
-                        appointment.status !== "REJECTED" &&
+                      {appointment.status === "ASSIGNED" &&
                         !isAppointmentExpired(appointment) &&
                         <Button
                           variant="contained"
@@ -122,8 +127,7 @@ export default function PatientAppointmentScreen(props: any) {
                           Reject
                         </Button>
                       }
-                      {appointment.status !== "ACCEPTED" &&
-                        appointment.status !== "REJECTED" &&
+                      {appointment.status === "ASSIGNED" &&
                         !isAppointmentExpired(appointment) &&
                         <Button
                           variant="outlined"
@@ -138,8 +142,7 @@ export default function PatientAppointmentScreen(props: any) {
                         </Button>
                       }
 
-                      {(appointment.status === "ACCEPTED" ||
-                        appointment.status === "REJECTED" ||
+                      {(appointment.status !== "ASSIGNED" ||
                         isAppointmentExpired(appointment)) &&
                         <Button
                           variant="outlined"
@@ -196,8 +199,4 @@ export default function PatientAppointmentScreen(props: any) {
       </Dialog>
     </ThemeProvider>
   );
-}
-
-const isAppointmentExpired = (appointment: Appointment) => {
-  return dayjs().isAfter(`${appointment.slotDate} ${appointment.slotTime.split("-")[0]}`);
 }

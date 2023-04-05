@@ -23,13 +23,14 @@ import {
 import { LocalizationProvider, StaticDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import SelfAssessmentForm from "../components/SelfAssessmentForm";
 import timeslots from "../constants/Timeslots";
-import { getTimeslot, selectAppointment, setAppointmentDateTime } from "../features/appointment/appointmentSlice";
+import { closeSnackbar, getTimeslot, modifyAppointmentDateTime, reset, selectAppointment, setAppointmentDateTime } from "../features/appointment/appointmentSlice";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import ReduxSnackbar from "../components/ReduxSnackbar";
 
 export default function CounselorModifyAppointmentScreen() {
 
@@ -56,24 +57,37 @@ export default function CounselorModifyAppointmentScreen() {
 		setOpen(false);
 	};
 
-	const [comment, setComment] = React.useState("");
+	// const [comment, setComment] = React.useState("");
 
-	const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setComment(event.target.value);
-	};
+	// const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	// 	setComment(event.target.value);
+	// };
 
 	const handleSubmit = (event: React.MouseEvent) => {
 		event.preventDefault();
 		if (userInfo && date) {
-			dispatch(setAppointmentDateTime(userInfo.token, userInfo?.userData, appointment.patient, dayjs(date).format("YYYY-MM-DD"), value));
-			navigate("/counselor");
+			if (appointment.patient.role === "") {
+				// if role is empty string, it's created by the defaultPatient for modifying appointments
+				dispatch(modifyAppointmentDateTime(userInfo.token, userInfo.userData, appointment.patient.email, appointment.lastDate, appointment.lastTimeslot, dayjs(date).format("YYYY-MM-DD"), value));
+			} else {
+				dispatch(setAppointmentDateTime(userInfo.token, userInfo?.userData, appointment.patient, dayjs(date).format("YYYY-MM-DD"), value));
+			}
+
+			// navigate("/doctor/dashboard");
 		}
 	};
+
+	useEffect(() => {
+		if (appointment.finalSuccess) {
+			dispatch(reset());
+			navigate("/counselor/dashboard");
+		}
+	}, [appointment.finalSuccess])
 
 	const handleReset = () => {
 		setDate(null);
 		setValue("");
-		setComment("");
+		// setComment("");
 	}
 
 	const handleDateChange = (dateStr: string | null) => {
@@ -176,7 +190,7 @@ export default function CounselorModifyAppointmentScreen() {
 							</CardContent>
 						</Card>
 						<Box sx={{ marginTop: 5 }}>
-							<Box display="flex" marginRight="11rem" marginLeft="2rem">
+							{/* <Box display="flex" marginRight="11rem" marginLeft="2rem">
 								<TextField
 									id="outlined-multiline-flexible"
 									label="Comment"
@@ -188,7 +202,7 @@ export default function CounselorModifyAppointmentScreen() {
 									onChange={handleCommentChange}
 									sx={{ flexGrow: 1 }}
 								/>
-							</Box>
+							</Box> */}
 
 							<Stack
 								direction={"row"}
@@ -239,6 +253,15 @@ export default function CounselorModifyAppointmentScreen() {
 					<Button onClick={handleSubmit}>Submit</Button>
 				</DialogActions>
 			</Dialog> */}
+			<ReduxSnackbar
+				loading={appointment.loading}
+				success={appointment.success}
+				error={appointment.error}
+				show={appointment.showSnackbar}
+				message={appointment.message}
+				onClose={() => dispatch(closeSnackbar())}
+				autoHideDuration={5000}
+			/>
 		</Box>
 	);
 }

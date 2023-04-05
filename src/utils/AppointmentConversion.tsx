@@ -8,13 +8,16 @@ export const flattenAndAddDatesToRawAppointments = (rawAppointments: any) => {
 		(dateStr) => {
 			const rawAppointmentsByDate: RawAppointment[] = rawAppointments[dateStr];
 			rawAppointmentsByDate.forEach(
-				(rawAppointments) => {
-					appointments.push(
-						{
-							...rawAppointments,
-							slotDate: dateStr,
-						} as Appointment
-					)
+				(rawAppointment) => {
+					if (rawAppointment.name != null) {
+						appointments.push(
+							{
+								...rawAppointment,
+								slotDate: dateStr,
+							} as Appointment
+						)
+					}
+
 				}
 			)
 		}
@@ -36,6 +39,9 @@ export const getFutureAppointments = (appointments: Appointment[], status: strin
 	})
 }
 
+export const isAppointmentExpired = (appointment: Appointment) => {
+	return dayjs().isAfter(`${appointment.slotDate} ${appointment.slotTime.split("-")[0]}`);
+}
 
 // Sample raw appointments 
 // "appointments": {

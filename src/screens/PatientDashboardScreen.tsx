@@ -212,9 +212,9 @@ export default function PatientDashboardScreen(props: any) {
           }
 
 
-          <Typography variant="h5" color="primary.contrastText">
+          {patientAppointmentList.pendingFutureAppointments && patientAppointmentList.pendingFutureAppointments.length > 0 && <Typography variant="h5" color="primary.contrastText">
             Incoming Appointments
-          </Typography>
+          </Typography>}
 
           <List>
             {patientAppointmentList.pendingFutureAppointments.map((appointment) =>
