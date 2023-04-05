@@ -5,7 +5,7 @@ import { managerTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppSelector } from '../app/hooks';
 
-export default function ManagerSettingsScreen(props: any) {
+export default function ManagerChangePasswordScreen(props: any) {
 
 	const { userInfo } = useAppSelector(selectUserLogIn);
 

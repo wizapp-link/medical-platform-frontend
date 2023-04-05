@@ -178,7 +178,7 @@ export default function ManagerHomeScreen() {
     </List>
   );
   const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [
-    { text: "Settings", icon: SettingsIcon },
+    { text: "Change Password", icon: SettingsIcon },
     { text: "Sign Out", icon: LogoutIcon },
   ];
   const drawerAccountOptionsList = (
