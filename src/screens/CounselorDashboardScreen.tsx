@@ -200,7 +200,8 @@ export default function CounselorDashboardScreen(props: any) {
             </Typography>
             <List sx={{ flexGrow: 1 }}>
               {counselor.patients.map((patient) => (
-                patient.assessmentTaken && <ListItem key={patient.id}>
+                patient.assessmentTaken && patient.assessmentOptionsSelected[0] != null
+                && <ListItem key={patient.id}>
                   <Box sx={{ width: "100%" }}>
                     <Card sx={{ boxShadow: 3, marginTop: 1 }}>
                       <CardContent>
