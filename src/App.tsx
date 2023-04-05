@@ -17,13 +17,13 @@ import DoctorHomeScreen from './screens/DoctorHomeScreen';
 import DoctorDashboardScreen from './screens/DoctorDashboardScreen';
 import DoctorAppointmentScreen from './screens/DoctorAppointmentScreen';
 import DoctorProfileScreen from './screens/DoctorProfileScreen';
-import DoctorSettingsScreen from './screens/DoctorSettingsScreen';
+import DoctorChangePasswordScreen from './screens/DoctorChangePasswordScreen';
 {/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/ }
 import CounselorHomeScreen from './screens/CounselorHomeScreen';
 import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
 import CounselorDashboardScreen from './screens/CounselorDashboardScreen';
 import CounselorProfileScreen from './screens/CounselorProfileScreen';
-import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
+import CounselorChangePasswordScreen from './screens/CounselorChangePasswordScreen';
 import CounselorAssignmentScreen from './screens/CounselorAssignmentScreen';
 {/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/ }
 import MangerHomeScreen from './screens/MangerHomeScreen';
@@ -80,7 +80,7 @@ function App() {
 						<Route path="dashboard" element={<DoctorDashboardScreen />} />
 						<Route path="appointments" element={<DoctorAppointmentScreen />} />
 						<Route path="profile" element={<DoctorProfileScreen />} />
-						<Route path="settings" element={<DoctorSettingsScreen />} />
+						<Route path="changepassword" element={<DoctorChangePasswordScreen />} />
 						<Route path="modify_appointment" element={<DoctorModifyAppointmentScreen />} />
 					</Route>
 
@@ -93,7 +93,7 @@ function App() {
 						<Route path="assignment" element={<CounselorAssignmentScreen />} />
 						<Route path="modify_appointment" element={<CounselorModifyAppointmentScreen />} />
 						<Route path="profile" element={<CounselorProfileScreen />} />
-						<Route path="settings" element={<CounselorSettingsScreen />} />
+						<Route path="changepassword" element={<CounselorChangePasswordScreen />} />
 					</Route>
 
 					{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
