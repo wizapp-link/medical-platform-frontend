@@ -30,7 +30,7 @@ import MangerHomeScreen from './screens/MangerHomeScreen';
 import ManagerMembersScreen from './screens/ManagerMembersScreen';
 import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
 import ManagerProfileScreen from './screens/ManagerProfileScreen';
-import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
+import ManagerChangePasswordScreen from './screens/ManagerChangePasswordScreen';
 import CounselorModifyAppointmentScreen from './screens/CounselorModifyAppointmentScreen';
 import DoctorModifyAppointmentScreen from "./screens/DoctorModifyAppointmentScreen";
 import ManagerReportScreen from "./screens/ManagerReportScreen";
@@ -106,7 +106,7 @@ function App() {
 						<Route path="dashboard" element={<ManagerDashboardScreen />} />
 						<Route path="members" element={<ManagerMembersScreen />} />
 						<Route path="profile" element={<ManagerProfileScreen />} />
-						<Route path="settings" element={<ManagerSettingsScreen />} />
+						<Route path="changepassword" element={<ManagerChangePasswordScreen />} />
 						<Route path="report" element={<ManagerReportScreen />} />
 					</Route>
 				</Routes>
