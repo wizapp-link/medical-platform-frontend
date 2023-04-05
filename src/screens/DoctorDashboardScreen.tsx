@@ -120,6 +120,7 @@ export default function DoctorDashboardScreen(props: any) {
           <List sx={{ flexGrow: 1 }}>
             {patients.map(
               patient => (
+                patient.assessmentTaken && patient.assessmentOptionsSelected[0] != null &&
                 <ListItem key={patient.id}>
                   <Box width={"100%"}>
                     <Card sx={{ boxShadow: 3, marginTop: 1 }}>
