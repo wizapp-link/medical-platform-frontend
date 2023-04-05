@@ -17,20 +17,20 @@ import DoctorHomeScreen from './screens/DoctorHomeScreen';
 import DoctorDashboardScreen from './screens/DoctorDashboardScreen';
 import DoctorAppointmentScreen from './screens/DoctorAppointmentScreen';
 import DoctorProfileScreen from './screens/DoctorProfileScreen';
-import DoctorSettingsScreen from './screens/DoctorSettingsScreen';
+import DoctorChangePasswordScreen from './screens/DoctorChangePasswordScreen';
 {/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/ }
 import CounselorHomeScreen from './screens/CounselorHomeScreen';
 import CounselorAppointmentScreen from './screens/CounselorAppointmentScreen';
 import CounselorDashboardScreen from './screens/CounselorDashboardScreen';
 import CounselorProfileScreen from './screens/CounselorProfileScreen';
-import CounselorSettingsScreen from './screens/CounselorSettingsScreen';
+import CounselorChangePasswordScreen from './screens/CounselorChangePasswordScreen';
 import CounselorAssignmentScreen from './screens/CounselorAssignmentScreen';
 {/* ~~~~~~~~~~this is for manager ~~~~~~~~~~*/ }
 import MangerHomeScreen from './screens/MangerHomeScreen';
 import ManagerMembersScreen from './screens/ManagerMembersScreen';
 import ManagerDashboardScreen from './screens/ManagerDashboardScreen';
 import ManagerProfileScreen from './screens/ManagerProfileScreen';
-import ManagerSettingsScreen from './screens/ManagerSettingsScreen';
+import ManagerChangePasswordScreen from './screens/ManagerChangePasswordScreen';
 import CounselorModifyAppointmentScreen from './screens/CounselorModifyAppointmentScreen';
 import DoctorModifyAppointmentScreen from "./screens/DoctorModifyAppointmentScreen";
 import ManagerReportScreen from "./screens/ManagerReportScreen";
@@ -80,7 +80,7 @@ function App() {
 						<Route path="dashboard" element={<DoctorDashboardScreen />} />
 						<Route path="appointments" element={<DoctorAppointmentScreen />} />
 						<Route path="profile" element={<DoctorProfileScreen />} />
-						<Route path="settings" element={<DoctorSettingsScreen />} />
+						<Route path="changepassword" element={<DoctorChangePasswordScreen />} />
 						<Route path="modify_appointment" element={<DoctorModifyAppointmentScreen />} />
 					</Route>
 
@@ -93,7 +93,7 @@ function App() {
 						<Route path="assignment" element={<CounselorAssignmentScreen />} />
 						<Route path="modify_appointment" element={<CounselorModifyAppointmentScreen />} />
 						<Route path="profile" element={<CounselorProfileScreen />} />
-						<Route path="settings" element={<CounselorSettingsScreen />} />
+						<Route path="changepassword" element={<CounselorChangePasswordScreen />} />
 					</Route>
 
 					{/* ~~~~~~~~~~this is for counselor ~~~~~~~~~~*/}
@@ -106,7 +106,7 @@ function App() {
 						<Route path="dashboard" element={<ManagerDashboardScreen />} />
 						<Route path="members" element={<ManagerMembersScreen />} />
 						<Route path="profile" element={<ManagerProfileScreen />} />
-						<Route path="settings" element={<ManagerSettingsScreen />} />
+						<Route path="changepassword" element={<ManagerChangePasswordScreen />} />
 						<Route path="report" element={<ManagerReportScreen />} />
 					</Route>
 				</Routes>

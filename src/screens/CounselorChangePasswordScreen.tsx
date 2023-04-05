@@ -5,7 +5,7 @@ import { counselorTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
 import { useAppSelector } from '../app/hooks';
 
-export default function CounselorSettingsScreen(props: any) {
+export default function CounselorChangePasswordScreen(props: any) {
 
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
@@ -24,7 +24,7 @@ export default function CounselorSettingsScreen(props: any) {
 				<Container>
 					<form onSubmit={handleSubmit}>
 						<Stack spacing={5} padding={5}>
-							<Typography variant="h4" color={'primary.contrastText'}>Settings</Typography>
+							<Typography variant="h4" color={'primary.contrastText'}>Change Password</Typography>
 							<TextField
 								id="email-field"
 								label="E-mail"

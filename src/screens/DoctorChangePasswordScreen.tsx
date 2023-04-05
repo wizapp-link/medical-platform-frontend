@@ -8,7 +8,7 @@ import { RootState } from "../app/store";
 import { useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 
-export default function PatientSettingsScreen(props: any) {
+export default function DoctorChangePasswordScreen(props: any) {
 	const doctor = useSelector((state:RootState) => state.doctor)
 	const { userInfo } = useAppSelector(selectUserLogIn);
 	const dispatch = useDispatch()
@@ -61,7 +61,7 @@ export default function PatientSettingsScreen(props: any) {
 			<Container>
 				<form onSubmit={handleSubmit}>
 					<Stack spacing={5} padding={5}>
-						<Typography variant="h4">Settings</Typography>
+						<Typography variant="h4">Change Password</Typography>
 						<TextField
 							id="email-field"
 							label="E-mail"

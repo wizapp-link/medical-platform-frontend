@@ -136,7 +136,11 @@ export default function PatientHomeScreen() {
 
   const handleIconButtonClicks = (text: string) => () => {
     // change text to lower case and remove whitespace, nagigate to the destination
-    navigate(text.toLowerCase().replace(/\s/g, ""));
+    if (text === "Sign Out") {
+      navigate("/signout");
+    } else {
+      navigate(text.toLowerCase().replace(/\s/g, ""));
+    }
   };
 
   const drawerUserOptionsTextIcons: DrawerOptionTextIconsType[] = [
@@ -178,6 +182,7 @@ export default function PatientHomeScreen() {
   const drawerAccountOptionsTextIcons: DrawerOptionTextIconsType[] = [
     { text: "Profile", icon: AccountBoxIcon },
     { text: "Change Password", icon: SettingsIcon },
+    { text: "Sign Out", icon: LogoutIcon },
   ];
   const drawerAccountOptionsList = (
     <List>
