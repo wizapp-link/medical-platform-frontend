@@ -9,6 +9,7 @@ import counselorReducer from "../features/counselor/counselorSlice";
 import counselorAssignmentReducer from '../features/counselor/counselorAssignmentSlice';
 import appointmentReducer from '../features/appointment/appointmentSlice';
 import patientAppointmentReducer from '../features/patient/patientAppointmentSlice';
+import counselorAppointmentListReducer from '../features/counselor/counselorAppointmentSlice';
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     counselorAssignment: counselorAssignmentReducer,
     appointment: appointmentReducer,
     patientAppointmentList: patientAppointmentReducer,
+    counselorAppointmentList : counselorAppointmentListReducer,
   },
 });
 
