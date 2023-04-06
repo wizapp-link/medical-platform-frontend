@@ -7,10 +7,6 @@ import { useAppSelector, useAppDispatch } from '../app/hooks';
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { fetchReport, selectReport } from "../features/manager/reportSlice";
 
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
 interface ReportFormData {
   startDate: string;
   endDate: string;
@@ -24,6 +20,14 @@ export default function ManagerReportScreen(props: any) {
 
   const { userInfo } = useAppSelector(selectUserLogIn);
 
+  const isDateValid = () => {
+    if (formData.startDate === "" || formData.endDate === "") {
+      return false;
+    }
+    const startDate = new Date(formData.startDate);
+    const endDate = new Date(formData.endDate);
+    return startDate <= endDate;
+  };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -99,7 +103,7 @@ export default function ManagerReportScreen(props: any) {
                 variant="contained"
                 color="primary"
                 onClick={handleSubmit}
-                disabled={reportState.status === "loading"}
+                disabled={reportState.status === "loading" || !isDateValid()}
               >
                 Generate Report
               </Button>

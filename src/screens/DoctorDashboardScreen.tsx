@@ -81,7 +81,7 @@ export default function DoctorDashboardScreen(props: any) {
       dispatch(setPatient(patient))
       setTimeout(() => {
         navigate("/doctor/modify_appointment");
-      }, 2000);
+      }, 500);
     }
 
   };
