@@ -1,22 +1,42 @@
 import { Box, Button, Container, Stack, TextField, Typography } from '@mui/material';
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { createTheme, ThemeProvider, colors } from '@mui/material';
 import { patientTheme } from '../Themes';
 import { selectUserLogIn } from '../features/auth/userLogInSlice';
-import { useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import ReduxSnackbar from "../components/ReduxSnackbar";
+import { closeSnackbar, newError, requestOtp, resetPassword, selectForgotPassword } from "../features/auth/forgotPasswordSlice";
 
 export default function PatientChangePasswordScreen(props: any) {
 
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
-	const [email, setEmail] = useState(userInfo?.userData.email);
+	const [email, setEmail] = useState(userInfo ? userInfo.userData.email : "");
 	const [password, setPassword] = useState("");
 	const [newPassword1, setNewPassword1] = useState("");
 	const [newPassword2, setNewPassword2] = useState("");
+	const [otp, setOtp] = useState("");
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+		if (userInfo) {
+			if (newPassword1 === newPassword2 && newPassword1.length >= 8) {
+				dispatch(resetPassword(userInfo.token, email, otp, newPassword1));
+			} else {
+				dispatch(newError("Passwords do not match or are too short"));
+			}
+
+		}
 	};
+
+	const handleResend = () => {
+		if (userInfo) {
+			dispatch(requestOtp(userInfo.token, email));
+		}
+	}
+
+	const forgotPassoword = useAppSelector(selectForgotPassword);
+	const dispatch = useAppDispatch();
 
 	return (
 		<ThemeProvider theme={patientTheme}>
@@ -68,9 +88,23 @@ export default function PatientChangePasswordScreen(props: any) {
 								color='secondary'
 
 							/>
+							<TextField
+								id="otp-field"
+								label="OTP"
+								variant="outlined"
+								value={otp}
+								onChange={(e) => setOtp(e.target.value)}
+								required
+								color='secondary'
+							/>
 							<Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
 								<Button variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
 									Discard
+								</Button>
+								<Button variant="contained" type="submit" onClick={handleResend}
+									sx={{ backgroundColor: 'primary.dark', ":hover": { backgroundColor: 'primary.main' } }}
+								>
+									Request OTP
 								</Button>
 								<Button variant="contained" type="submit" onClick={handleSubmit}
 									sx={{ backgroundColor: 'primary.dark', ":hover": { backgroundColor: 'primary.main' } }}
@@ -81,6 +115,15 @@ export default function PatientChangePasswordScreen(props: any) {
 						</Stack>
 					</form>
 				</Container>
+				<ReduxSnackbar
+					show={forgotPassoword.showSnackbar}
+					loading={forgotPassoword.loading}
+					success={forgotPassoword.success}
+					error={forgotPassoword.error}
+					message={forgotPassoword.message}
+					onClose={() => dispatch(closeSnackbar())}
+					autoHideDuration={5000}
+				/>
 			</Box >
 		</ThemeProvider>
 	);
