@@ -18,8 +18,8 @@ interface ReportFormData {
 
 export default function ManagerReportScreen(props: any) {
   const [formData, setFormData] = useState<ReportFormData>({
-    startDate: "2023-03-22",
-    endDate: "2023-04-07",
+    startDate: "",
+    endDate: "",
   });
 
   const {userInfo} = useAppSelector(selectUserLogIn);
