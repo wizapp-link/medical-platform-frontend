@@ -12,7 +12,7 @@ export default function PatientChangePasswordScreen(props: any) {
 	const { userInfo } = useAppSelector(selectUserLogIn);
 
 	const [email, setEmail] = useState(userInfo ? userInfo.userData.email : "");
-	const [password, setPassword] = useState("");
+	// const [password, setPassword] = useState("");
 	const [newPassword1, setNewPassword1] = useState("");
 	const [newPassword2, setNewPassword2] = useState("");
 	const [otp, setOtp] = useState("");
@@ -29,7 +29,8 @@ export default function PatientChangePasswordScreen(props: any) {
 		}
 	};
 
-	const handleResend = () => {
+	const handleResend = (e: FormEvent) => {
+		e.preventDefault();
 		if (userInfo) {
 			dispatch(requestOtp(userInfo.token, email));
 		}
@@ -56,7 +57,7 @@ export default function PatientChangePasswordScreen(props: any) {
 								disabled
 								color='secondary'
 							/>
-							<TextField
+							{/* <TextField
 								id="password-field"
 								label="Current Password"
 								variant="outlined"
@@ -66,7 +67,7 @@ export default function PatientChangePasswordScreen(props: any) {
 								autoComplete="current-password"
 								required
 								color='secondary'
-							/>
+							/> */}
 							<TextField
 								id="new-password-field-1"
 								label="New Password"

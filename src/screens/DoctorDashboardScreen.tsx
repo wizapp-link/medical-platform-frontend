@@ -237,8 +237,9 @@ export default function DoctorDashboardScreen(props: any) {
                 </Typography> </Stack>
 
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-
+                {"Counselor's comment:"}
               </Typography>
+              <Typography variant="body1">{selectedPatient?.counsellingComment}</Typography>
               <Stack spacing={2} pt={1}>
                 {questions.map((question) => (
                   <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>

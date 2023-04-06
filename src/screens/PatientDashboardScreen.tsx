@@ -318,7 +318,7 @@ export default function PatientDashboardScreen(props: any) {
               Patient ID: {userInfo?.userData.id}
             </Typography>
             <Typography variant="subtitle1">
-              Patient Email: {userInfo?.userData.name}
+              Patient Name: {userInfo?.userData.name}
             </Typography>
             <Typography variant="subtitle1">
               Patient Email: {userInfo?.userData.email}

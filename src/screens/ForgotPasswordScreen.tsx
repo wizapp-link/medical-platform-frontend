@@ -33,7 +33,8 @@ export default function ForgotPasswordScreen() {
 		}
 	};
 
-	const handleResend = () => {
+	const handleResend = (e: FormEvent) => {
+		e.preventDefault();
 		dispatch(requestOtp(undefined, email));
 	}
 
