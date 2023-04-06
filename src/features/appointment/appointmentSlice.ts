@@ -326,7 +326,7 @@ export const markDone = (token: string, patient: Patient, expertRole: string) =>
 				Authorization: `Bearer ${token}`
 			}
 		});
-		console.log("markCounseloringDone success message:")
+		console.log("mark counseloring/doctoring Done success message:")
 		console.log(data);
 		dispatch(markDoneSuccess(data.response));
 	} catch (err: any) {

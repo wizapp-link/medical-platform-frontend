@@ -196,7 +196,7 @@ export default function CounselorDashboardScreen(props: any) {
         <Grid container direction="row">
           <Grid item container md={12} direction="column">
             <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
-              Patient List
+              Incoming Patient List
             </Typography>
             <List sx={{ flexGrow: 1 }}>
               {counselor.patients.map((patient) => (
