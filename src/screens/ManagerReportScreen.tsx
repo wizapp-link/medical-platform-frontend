@@ -22,7 +22,7 @@ export default function ManagerReportScreen(props: any) {
     endDate: "",
   });
 
-  const {userInfo} = useAppSelector(selectUserLogIn);
+  const { userInfo } = useAppSelector(selectUserLogIn);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -36,11 +36,11 @@ export default function ManagerReportScreen(props: any) {
   const dispatch = useAppDispatch();
 
   const handleSubmit = () => {
-    if(userInfo){
+    if (userInfo) {
       console.log("Generating report for:", formData);
       const sDate = formData.startDate.split('-');
       const eDate = formData.endDate.split('-');
-      dispatch(fetchReport(sDate[2]+'/'+sDate[1]+'/'+sDate[0], eDate[2]+'/'+eDate[1]+'/'+eDate[0], userInfo.token));
+      dispatch(fetchReport(sDate[2] + '/' + sDate[1] + '/' + sDate[0], eDate[2] + '/' + eDate[1] + '/' + eDate[0], userInfo.token));
       console.log("Data: ", reportState.formData)
 
     }
@@ -48,7 +48,7 @@ export default function ManagerReportScreen(props: any) {
   };
 
   const downloadFile = () => {
-    if(reportState.formData){
+    if (reportState.formData) {
       const url = window.URL.createObjectURL(new Blob([reportState.formData]));
       const link = document.createElement('a');
       link.href = url;
@@ -112,7 +112,7 @@ export default function ManagerReportScreen(props: any) {
                   color="secondary"
                   onClick={downloadFile}
                 >
-                  Download CSV
+                  Download Report
                 </Button>
               </Grid>
             )}
