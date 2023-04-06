@@ -69,10 +69,15 @@ export default function PatientAppointmentScreen(props: any) {
   return (
     <ThemeProvider theme={patientTheme}>
       <Stack>
-        <Typography variant="h5" color={"primary.contrastText"}>
+        <Typography variant="h4" color={"primary.contrastText"}>
           Appointment History
         </Typography>
+
         <List>
+          {patientAppointmentList.appointments.length === 0 &&
+            <Typography variant="h5">
+              Empty
+            </Typography>}
           {patientAppointmentList.appointments.map((appointment) =>
           (<ListItem key=
             {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
