@@ -39,6 +39,13 @@ import { useNavigate } from "react-router-dom";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { userRegisterReset } from "../features/auth/userRegisterSlice";
 import { listAllPersonnel } from "../features/manager/personnelsSlice";
+import Slide, { SlideProps } from "@mui/material/Slide";
+
+type TransitionProps = Omit<SlideProps, "direction">;
+
+function TransitionDown(props: TransitionProps) {
+  return <Slide {...props} direction="down" />;
+}
 
 export const questions = [
   {
@@ -132,6 +139,10 @@ export default function PatientAssessmentScreen(props: any) {
     dispatch(setCurrentQuestionIndex(currentQuestionIndex - 1));
   };
 
+  const [transition, setTransition] = React.useState<
+    React.ComponentType<TransitionProps> | undefined
+  >(undefined);
+
   const onSubmit = () => {
     if (userInfo) {
       const email = userInfo.userData.email;
@@ -141,6 +152,7 @@ export default function PatientAssessmentScreen(props: any) {
       dispatch(
         submitAssessment({ email, assessmentOptionsSelected }, userInfo.token)
       );
+      setTransition(() => TransitionDown);
       setTimeout(() => {
         setSnackBar(true);
       }, 1000);
@@ -150,6 +162,7 @@ export default function PatientAssessmentScreen(props: any) {
     if (userInfo) {
       const email = userInfo.userData.email;
       dispatch(removeAssessment(email, userInfo.token));
+      setTransition(() => TransitionDown);
       setTimeout(() => {
         setSnackBar(true);
       }, 1000);
@@ -169,7 +182,12 @@ export default function PatientAssessmentScreen(props: any) {
   };
 
   useEffect(() => {
-    console.log("success: " + removeSuccess + " | Object(answer).length" + Object(answer).length)
+    console.log(
+      "success: " +
+        removeSuccess +
+        " | Object(answer).length" +
+        Object(answer).length
+    );
     if (Object(answer).length == 1 && removeSuccess === true) {
       setTaken(false);
       dispatch(reset());
@@ -215,8 +233,9 @@ export default function PatientAssessmentScreen(props: any) {
                 </Typography>
                 <Typography variant="body1">
                   {answers[question.id]
-                    ? `${answers[question.id].toUpperCase()}. ${ansList[answers[question.id].charCodeAt(0) - 97]
-                    }`
+                    ? `${answers[question.id].toUpperCase()}. ${
+                        ansList[answers[question.id].charCodeAt(0) - 97]
+                      }`
                     : ""}
                 </Typography>
               </Paper>
@@ -234,8 +253,12 @@ export default function PatientAssessmentScreen(props: any) {
               color="primary"
               onClick={onCancel}
               size="large"
-              sx={{ textTransform: "none", backgroundColor: "secondary.dark", fontSize: 16 }}
-              disabled={!assigned}
+              sx={{
+                textTransform: "none",
+                backgroundColor: "secondary.dark",
+                fontSize: 16,
+              }}
+              //disabled={!assigned}
             >
               Cancel
             </Button>
@@ -332,8 +355,10 @@ export default function PatientAssessmentScreen(props: any) {
         <Snackbar
           open={snackBar}
           message={message}
-          autoHideDuration={3000}
+          autoHideDuration={2000}
           onClose={handleSnackbarClose}
+          sx={{ backfroundColor: "primary.main", marginTop: 10, fontSize: 23 }}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
         />
       </Container>
     </ThemeProvider>
