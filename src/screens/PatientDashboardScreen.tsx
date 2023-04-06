@@ -213,7 +213,7 @@ export default function PatientDashboardScreen(props: any) {
 
 
           <Typography variant="h5" color="primary.contrastText">
-            Incoming Appointments
+            Upcoming Appointments
           </Typography>
 
           <List>
