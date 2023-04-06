@@ -11,6 +11,7 @@ import appointmentReducer from '../features/appointment/appointmentSlice';
 import patientAppointmentReducer from '../features/patient/patientAppointmentSlice';
 import counselorAppointmentListReducer from '../features/counselor/counselorAppointmentSlice';
 import doctorAppointmentListReducer from '../features/doctor/doctorAppointmentSlice';
+import forgotPasswordReducer from '../features/auth/forgotPasswordSlice';
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     patientAppointmentList: patientAppointmentReducer,
     counselorAppointmentList : counselorAppointmentListReducer,
     doctorAppointmentList : doctorAppointmentListReducer,
+    forgotPassword: forgotPasswordReducer,
   },
 });
 

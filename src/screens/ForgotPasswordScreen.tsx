@@ -13,6 +13,8 @@ import { useLocation, useNavigate, Link as RouterLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import ReduxSnackbar from "../components/ReduxSnackbar";
+import { closeSnackbar, newError, requestOtp, resetPassword, selectForgotPassword } from "../features/auth/forgotPasswordSlice";
 
 export default function ForgotPasswordScreen() {
 	const navigate = useNavigate();
@@ -20,12 +22,26 @@ export default function ForgotPasswordScreen() {
 	const [email, setEmail] = useState("");
 	const [password1, setPassword1] = useState("");
 	const [password2, setPassword2] = useState("");
-	const [name, setName] = useState("");
+	const [otp, setOtp] = useState("");
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
+		if (password1 === password2 && password1.length >= 8) {
+			dispatch(resetPassword(undefined, email, otp, password1));
+		} else {
+			dispatch(newError("Passwords do not match or are too short"));
+		}
 	};
 
+	const handleResend = () => {
+		dispatch(requestOtp(undefined, email));
+	}
+
+	const forgotPassoword = useAppSelector(selectForgotPassword);
+	const dispatch = useAppDispatch();
+	useEffect(() => {
+		// dispatch(requestOtp(email));
+	}, []);
 
 	return (
 		<Box>
@@ -56,14 +72,14 @@ export default function ForgotPasswordScreen() {
 								id="otp-field"
 								label="OTP"
 								variant="outlined"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
+								value={otp}
+								onChange={(e) => setOtp(e.target.value)}
 								required
 							/>
-							<Button>Resend</Button>
+							<Button onClick={handleResend}>Resend</Button>
 						</Stack>
 						<TextField
-							id="password-field"
+							id="password-field1"
 							label="New Password"
 							variant="outlined"
 							value={password1}
@@ -72,7 +88,7 @@ export default function ForgotPasswordScreen() {
 							required
 						/>
 						<TextField
-							id="password-field"
+							id="password-field2"
 							label="Confirm Password"
 							variant="outlined"
 							value={password2}
@@ -92,6 +108,15 @@ export default function ForgotPasswordScreen() {
 				</form>
 			</Container>
 			<Footer />
+			<ReduxSnackbar
+				show={forgotPassoword.showSnackbar}
+				loading={forgotPassoword.loading}
+				success={forgotPassoword.success}
+				error={forgotPassoword.error}
+				message={forgotPassoword.message}
+				onClose={() => dispatch(closeSnackbar())}
+				autoHideDuration={5000}
+			/>
 		</Box >
 	);
 }
