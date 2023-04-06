@@ -211,7 +211,10 @@ export default function PatientDashboardScreen(props: any) {
             </List>
           }
 
-
+          {patientAppointmentList.pendingFutureAppointments.length === 0 && patientAppointmentList.acceptedFutureAppointments.length === 0 &&
+            <Typography variant="h5" color="primary.contrastText">
+              No Future Appointments to Process
+            </Typography>}
           {patientAppointmentList.pendingFutureAppointments && patientAppointmentList.pendingFutureAppointments.length > 0 && <Typography variant="h5" color="primary.contrastText">
             Incoming Appointments
           </Typography>}
