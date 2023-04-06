@@ -117,6 +117,7 @@ export const updateAppointment = (token: string | undefined, user: UserData, app
 			headers: { 'Authorization': `Bearer ${token}` },
 			data: {
 				date: appointment.slotDate,
+				timeSlot: appointment.slotTime,
 				assignedBy: appointment.slotAssignedBy,
 				status: newStatus,
 			}
