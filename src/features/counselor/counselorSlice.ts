@@ -101,6 +101,9 @@ export const updatePatientStatus = (email: string, expertEmail: string, status: 
 ) => {
   dispatch(updatePatientStatusRequest());
   try {
+    if(reason == null || reason === ""){
+      throw new Error("Comment cannot be empty!");
+    }
     let response: AxiosResponse<any, any>;
     if(role === "counsellor"){
       response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {
