@@ -22,6 +22,13 @@ export const flattenAndAddDatesToRawAppointments = (rawAppointments: any) => {
 			)
 		}
 	)
+	appointments.sort((a, b) => {
+		let res = a.slotDate.localeCompare(b.slotDate);
+		if (res == 0) {
+			res = a.slotTime.localeCompare(b.slotTime);
+		}
+		return 0 - res;
+	})
 	return appointments;
 }
 
