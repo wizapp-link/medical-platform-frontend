@@ -71,15 +71,13 @@ export default function DoctorModifyAppointmentScreen() {
       } else {
         dispatch(setAppointmentDateTime(userInfo.token, userInfo?.userData, appointment.patient, dayjs(date).format("YYYY-MM-DD"), value, comment));
       }
-
-      navigate("/doctor/dashboard");
     }
   };
 
   useEffect(() => {
     if (appointment.finalSuccess) {
       dispatch(reset());
-      navigate("/counselor/dashboard");
+      navigate("/doctor/dashboard");
     }
   }, [appointment.finalSuccess])
 
@@ -189,7 +187,8 @@ export default function DoctorModifyAppointmentScreen() {
               </CardContent>
             </Card>
             <Box sx={{ marginTop: 5 }}>
-              <Box display="flex" marginRight="11rem" marginLeft="2rem">
+
+              {appointment.patient.role !== "" && <Box display="flex" marginRight="11rem" marginLeft="2rem">
                 <TextField
                   id="outlined-multiline-flexible"
                   label="Comment"
@@ -201,7 +200,7 @@ export default function DoctorModifyAppointmentScreen() {
                   onChange={handleCommentChange}
                   sx={{ flexGrow: 1 }}
                 />
-              </Box>
+              </Box>}
 
               <Stack
                 direction={"row"}

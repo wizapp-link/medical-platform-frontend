@@ -116,7 +116,7 @@ export default function DoctorDashboardScreen(props: any) {
         <Divider />
 
         <Stack>
-          <Typography variant="h5">Recent Appointments</Typography>
+          <Typography variant="h5">Incoming Patients</Typography>
           <List sx={{ flexGrow: 1 }}>
             {patients.map(
               patient => (
