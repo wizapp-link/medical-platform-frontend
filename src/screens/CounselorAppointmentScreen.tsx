@@ -18,15 +18,22 @@ import {
   Grid,
 } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createTheme, ThemeProvider, colors } from "@mui/material";
 import { counselorTheme } from "../Themes";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectDoctor } from "../features/doctor/doctorSlice";
 import { Patient } from "../types/PatientDataType";
+import { listAppointment, selectCounselorAppointmentList, updateAppointment } from "../features/counselor/counselorAppointmentSlice";
+import { Appointment } from "../types/AppointmentType";
+import { selectUserLogIn } from "../features/auth/userLogInSlice";
+import { isAppointmentExpired } from "../utils/AppointmentConversion";
+import { setLastDate, setLastTimeslot, setPatient } from "../features/appointment/appointmentSlice";
+import { defaultPatient } from "../types/PatientDataType";
+import { useNavigate } from "react-router";
 
 export default function CounselorAppointmentScreen(props: any) {
-  const { patients } = useAppSelector(selectDoctor);
+  // const { patients } = useAppSelector(selectDoctor);
 
   // const [patients, setPatients] = useState<Patient[]>([
   //   {
@@ -56,7 +63,7 @@ export default function CounselorAppointmentScreen(props: any) {
   //     doctorRegistrationNumber: "77777777",
   //   },
   // ]);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  // const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   // const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   // const [showDetailDialog, setShowDetailDialog] = useState(false);
 
@@ -71,6 +78,37 @@ export default function CounselorAppointmentScreen(props: any) {
   //   doctorRegistrationNumber: string;
   // };
 
+
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [appointmentDetail, setAppointmentDetail] = useState<Appointment>();
+  const { userInfo } = useAppSelector(selectUserLogIn);
+  const counselorAppointmentList = useAppSelector(selectCounselorAppointmentList);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleDetailButtonClick = (appointment: Appointment) => {
+    setAppointmentDetail(appointment);
+    setShowDetailDialog(true);
+  };
+  const handleClose = () => {
+    setShowDetailDialog(false);
+  };
+
+  const handleModify = (appointment: Appointment) => {
+    if (userInfo) {
+      dispatch(setPatient({ ...defaultPatient, email: appointment.slotAssignedTo, name: appointment.name } as Patient))
+      dispatch(setLastDate(appointment.slotDate));
+      dispatch(setLastTimeslot(appointment.slotTime));
+      navigate("/counselor/modify_appointment");
+    }
+  }
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(listAppointment(userInfo.token, userInfo.userData))
+    }
+  }, [])
+
   return (
     <ThemeProvider theme={counselorTheme}>
       <Grid item container>
@@ -79,57 +117,78 @@ export default function CounselorAppointmentScreen(props: any) {
             Appointments Assigned
           </Typography>
           <List>
-            {patients.map((patient) => (
-              <ListItem key={patient.id}>
-                <Box sx={{ width: "100%" }}>
-                  <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                    <CardContent>
-                      <Stack direction={"row"} justifyContent={"space-between"}>
-                        <Stack direction={"row"}>
-                          <ListItemAvatar
-                            sx={{
-                              display: "flex",
-                              justifyItems: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Avatar alt="patient" src="" />
-                          </ListItemAvatar>
-                          <Stack direction={"column"} sx={{ marginRight: "1rem" }}>
-                            <Typography>{patient.name}</Typography>
-                            <Typography>{`ID: ${patient.id}`}2</Typography>
-                          </Stack>
-                          <ListItemAvatar
-                            sx={{
-                              display: "flex",
-                              justifyItems: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Avatar
-                              alt="doctor"
-                              src="/static/images/doctor/sampleDoctor.jpg"
-                            />
-                          </ListItemAvatar>
-                          <Stack direction={"column"} >
-                            <Typography>Dr. Gregory House</Typography>
-                            <Typography>Date: 2023-02-12</Typography>
-                          </Stack>
+            {counselorAppointmentList.appointments.map((appointment) =>
+            (<ListItem key=
+              {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+            >
+              <Box sx={{ width: "100%" }}>
+                <Card sx={{ marginTop: 2, boxShadow: 3 }}>
+                  <CardContent>
+                    <Stack direction="row" justifyContent="space-between">
+                      <Stack direction="row">
+                        <ListItemAvatar sx={{ display: "flex" }}>
+                          <Avatar
+                            alt="doctor"
+                            src="/static/images/doctor/sampleDoctor.jpg"
+                            sx={{ alignSelf: "center" }}
+                          />
+                        </ListItemAvatar>
+                        <Stack direction={"column"}>
+                          <Typography>{appointment.name}</Typography>
+                          <Typography>Date:{appointment.slotDate}</Typography>
                         </Stack>
-                        <Box display="flex">
-                          <Button variant="contained" color="secondary" sx={{ marginLeft: "1rem" }}>
+                      </Stack>
+                      <Stack direction={"row"}>
+                        <Button
+                          variant="contained"
+                          // variant="outlined"
+                          onClick={() => handleDetailButtonClick(appointment)}
+                          sx={{
+                            marginRight: 2,
+                            backgroundColor: "primary",
+                            color: "primary.contrastText",
+                            ":hover": {
+                              color: "primary.contrastText",
+                              backgroundColor: "secondary.main",
+                            },
+                          }}
+                        >
+                          Details
+                        </Button>
+                        {appointment.status === "ASSIGNED" &&
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            sx={{
+                              marginRight: 2,
+                              borderColor: "secondary.dark",
+                              ":hover": { backgroundColor: "secondary.dark" },
+                            }}
+                            onClick={() => handleModify(appointment)}
+                            disabled={appointment.status !== "ASSIGNED"}
+                          >
                             Modify
                           </Button>
-                          <Button variant="contained" color="secondary" sx={{ marginLeft: "1rem" }}>
-                            Remove
+                        }
+
+                        {(appointment.status !== "ASSIGNED" ||
+                          isAppointmentExpired(appointment)) &&
+                          <Button
+                            variant="outlined"
+                            disabled
+                          >
+                            {appointment.status}
+                            {isAppointmentExpired(appointment) && " EXPIRED"}
                           </Button>
-                        </Box>
+                        }
                       </Stack>
-                    </CardContent>
-                  </Card>
-                </Box>
-              </ListItem>
-            ))}
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Box>
+            </ListItem>)
+            )}
+
           </List>
 
         </Grid>
@@ -181,6 +240,41 @@ export default function CounselorAppointmentScreen(props: any) {
 
         </Grid> */}
       </Grid>
+      <Dialog open={showDetailDialog} onClose={handleClose}>
+        <DialogTitle sx={{ fontWeight: "bold" }}>
+          Patient Name: {appointmentDetail?.name}
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="subtitle1">
+            Slot Assigned By: {userInfo?.userData.email}
+          </Typography>
+          {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Assessment Test
+          </Typography>
+          <Typography variant="subtitle1">
+            Status: Pass
+          </Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Assignment Comment
+          </Typography>
+          <Typography variant="subtitle1">
+            Counselor: Harsh Singh
+          </Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Appointment Comment
+          </Typography> */}
+          <Typography variant="subtitle1">
+            Slot Assigned To: {appointmentDetail?.slotAssignedTo}
+          </Typography>
+          <Typography variant="subtitle1">
+            Date: {appointmentDetail?.slotDate}
+          </Typography>
+          <Typography variant="subtitle1">
+            Timeslot: {appointmentDetail?.slotTime}
+          </Typography>
+        </DialogContent>
+      </Dialog>
     </ThemeProvider>
   );
 }
+

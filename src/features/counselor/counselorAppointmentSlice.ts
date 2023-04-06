@@ -37,8 +37,8 @@ const initialState: appointmentListState = {
 	pendingFutureAppointments: [],
 };
 
-const patientAppointmentListSlice = createSlice({
-	name: 'patientAppointmentList',
+const counselorAppointmentListSlice = createSlice({
+	name: 'counselorAppointmentList',
 	initialState,
 	reducers: {
 		appointmentListRequest: (state) => {
@@ -75,7 +75,7 @@ const patientAppointmentListSlice = createSlice({
 	},
 });
 
-export const { appointmentListRequest, appointmentListFail, appointmentListSuccess, appointmentUpdateRequest, appointmentUpdateFail, appointmentUpdateSuccess, appointmentUpdateMessageReset } = patientAppointmentListSlice.actions;
+export const { appointmentListRequest, appointmentListFail, appointmentListSuccess, appointmentUpdateRequest, appointmentUpdateFail, appointmentUpdateSuccess, appointmentUpdateMessageReset } = counselorAppointmentListSlice.actions;
 
 export const listAppointment = (token: string | undefined, user: UserData) => async (dispatch: AppDispatch) => {
 	dispatch(appointmentListRequest);
@@ -117,7 +117,6 @@ export const updateAppointment = (token: string | undefined, user: UserData, app
 			headers: { 'Authorization': `Bearer ${token}` },
 			data: {
 				date: appointment.slotDate,
-				timeSlot: appointment.slotTime,
 				assignedBy: appointment.slotAssignedBy,
 				status: newStatus,
 			}
@@ -132,5 +131,5 @@ export const updateAppointment = (token: string | undefined, user: UserData, app
 	}
 }
 
-export const selectPatientAppointmentList = (state: RootState) => state.patientAppointmentList;
-export default patientAppointmentListSlice.reducer;
+export const selectCounselorAppointmentList = (state: RootState) => state.counselorAppointmentList;
+export default counselorAppointmentListSlice.reducer;

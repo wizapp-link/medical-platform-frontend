@@ -26,12 +26,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { useNavigate } from "react-router-dom";
-import { fetchPatients, selectDoctor, updatePatientStatus } from "../features/doctor/doctorSlice";
+import { closeSnackbar, fetchPatients, selectDoctor, updatePatientStatus } from "../features/doctor/doctorSlice";
 import { useEffect, useState } from "react";
 import { Patient } from "../types/PatientDataType";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { ansList, questions } from "./PatientAssessmentScreen";
 import { setPatient } from "../features/appointment/appointmentSlice";
+import ReduxSnackbar from "../components/ReduxSnackbar";
 
 export default function DoctorDashboardScreen(props: any) {
   const doctor = useSelector((state: RootState) => state.doctor);
@@ -86,8 +87,10 @@ export default function DoctorDashboardScreen(props: any) {
   };
 
   const handleReject = () => {
-    if (selectedPatient && userInfo)
+    if (selectedPatient && userInfo) {
       dispatch(updatePatientStatus(selectedPatient.email, userInfo?.userData.email, "REJECT_PATIENT", reason, userInfo?.token, position,));
+    }
+
     setReason("");
     setOpen(false);
     setConfirm(false);
@@ -116,7 +119,7 @@ export default function DoctorDashboardScreen(props: any) {
         <Divider />
 
         <Stack>
-          <Typography variant="h5">Recent Appointments</Typography>
+          <Typography variant="h5">Incoming Patients</Typography>
           <List sx={{ flexGrow: 1 }}>
             {patients.map(
               patient => (
@@ -250,6 +253,14 @@ export default function DoctorDashboardScreen(props: any) {
             </DialogContent>
           </Dialog>
         </Stack>
+        <ReduxSnackbar
+          show={doctor.showSnackbar}
+          loading={doctor.loading}
+          success={doctor.success}
+          error={doctor.error}
+          message={doctor.message}
+          onClose={() => dispatch(closeSnackbar())}
+          autoHideDuration={5000} />
       </Stack>
     </ThemeProvider>
   );

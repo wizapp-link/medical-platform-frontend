@@ -56,21 +56,31 @@ const TestPatient: Patient[] = [{
   }];
 
 interface DoctorState {
-  updatingPatientStatus: boolean;
-  updateStatusError: string | null;
+  // updatingPatientStatus: boolean;
+  // updateStatusError: string | null;
   patients: Patient[];
-  fetchingPatients: boolean;
-  fetchPatientsError: string | null;
+  // fetchingPatients: boolean;
+  // fetchPatientsError: string | null;
+  showSnackbar: boolean,
+  message: string,
+  success: boolean,
+  loading: boolean,
+  error: boolean,
 }
 
 const initialState: DoctorState = {
-  updatingPatientStatus: false,
-  updateStatusError: null,
+  // updatingPatientStatus: false,
+  // updateStatusError: null,
   // patients: TestPatient,
   patients: [],
   //Todo: TestPatient change to []
-  fetchingPatients: false,
-  fetchPatientsError: null
+  // fetchingPatients: false,
+  // fetchPatientsError: null,
+  showSnackbar: false,
+  message: "",
+  success: false,
+  loading: false,
+  error: false,
 };
 
 const doctorSlice = createSlice({
@@ -78,29 +88,72 @@ const doctorSlice = createSlice({
   initialState,
   reducers: {
     updatePatientStatusRequest: (state) => {
-      state.updatingPatientStatus = true;
-      state.updateStatusError = null;
+      // state.updatingPatientStatus = true;
+      // state.updateStatusError = null;
+      state.showSnackbar = true;
+      state.loading = true;
+      state.success = false;
+      state.error = false;
+      state.message = "Updating patients status..."
     },
     updatePatientStatusSuccess: (state) => {
-      state.updatingPatientStatus = false;
-      state.updateStatusError = null;
+      // state.updatingPatientStatus = false;
+      // state.updateStatusError = null;
+      state.showSnackbar = true;
+      state.loading = false;
+      state.success = true;
+      state.error = false;
+      state.message = "Updating patients status success!"
     },
     updatePatientStatusFail: (state, action: PayloadAction<string>) => {
-      state.updatingPatientStatus = false;
-      state.updateStatusError = action.payload;
+      // state.updatingPatientStatus = false;
+      // state.updateStatusError = action.payload;
+      state.showSnackbar = true;
+      state.loading = false;
+      state.success = false;
+      state.error = true;
+      state.message = action.payload;
     },
     fetchPatientsRequest: (state) => {
-      state.fetchingPatients = true;
-      state.fetchPatientsError = null;
+      // state.fetchingPatients = true;
+      // state.fetchPatientsError = null;
+
+      // state.showSnackbar = true;
+      state.loading = true;
+      state.success = false;
+      state.error = false;
+      state.message = "Fetching patients..."
     },
     fetchPatientsSuccess: (state, action: PayloadAction<Patient[]>) => {
-      state.fetchingPatients = false;
+      // state.fetchingPatients = false;
       state.patients = action.payload;
-      state.fetchPatientsError = null;
+      // state.fetchPatientsError = null;
+
+      // state.showSnackbar = true;
+      state.loading = false;
+      state.success = true;
+      state.error = false;
+      state.message = "Fetching patients status success!"
     },
     fetchPatientsFail: (state, action: PayloadAction<string>) => {
-      state.fetchingPatients = false;
-      state.fetchPatientsError = action.payload;
+      // state.fetchingPatients = false;
+      // state.fetchPatientsError = action.payload;
+
+      // state.showSnackbar = true;
+      state.loading = false;
+      state.success = false;
+      state.error = true;
+      state.message = action.payload;
+    },
+    newError: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.success = false;
+      state.error = true;
+      state.showSnackbar = true;
+      state.message = action.payload;
+    },
+    closeSnackbar: (state) => {
+      state.showSnackbar = false;
     }
   }
 });
@@ -111,7 +164,9 @@ export const {
   updatePatientStatusFail,
   fetchPatientsFail,
   fetchPatientsRequest,
-  fetchPatientsSuccess
+  fetchPatientsSuccess,
+  newError,
+  closeSnackbar,
 } = doctorSlice.actions;
 
 
@@ -120,6 +175,9 @@ export const updatePatientStatus = (email: string, expertEmail: string, status: 
 ) => {
   dispatch(updatePatientStatusRequest());
   try {
+    if(reason == null || reason === ""){
+      throw new Error("Comment cannot be empty!");
+    }
     let response: AxiosResponse<any, any>;
     if(role === "counsellor"){
       response = await axios.post(`/api/v1/${role}/updatePatientStatus`, {

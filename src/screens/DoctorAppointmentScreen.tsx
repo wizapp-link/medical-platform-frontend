@@ -16,7 +16,8 @@ import {
   Container,
   ThemeProvider,
   CardContent,
-  Card
+  Card,
+  Grid
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -27,142 +28,207 @@ import { fetchPatients, selectDoctor } from "../features/doctor/doctorSlice";
 import { ansList, questions } from "./PatientAssessmentScreen";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { roleToPosition } from "../constants/PositionRoleMap";
+import { isAppointmentExpired } from "../utils/AppointmentConversion";
+import { Appointment } from "../types/AppointmentType";
+import { setLastDate, setLastTimeslot, setPatient } from "../features/appointment/appointmentSlice";
+import { listAppointment, selectDoctorAppointmentList } from "../features/doctor/doctorAppointmentSlice";
+import { useNavigate } from "react-router";
 
 export default function DoctorAppointmentScreen(props: any) {
-  const { patients } = useAppSelector(selectDoctor);
-  const { userInfo } = useAppSelector(selectUserLogIn);
-  const dispatch = useAppDispatch();
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
-  const role = userInfo?.userData.role;
-  const position = roleToPosition.get(role ? role : "");
-  useEffect(() => {
-    if (userInfo)
-      dispatch(fetchPatients(userInfo.userData.email, userInfo.token, position));
-  }, []);
+  const [appointmentDetail, setAppointmentDetail] = useState<Appointment>();
+  const { userInfo } = useAppSelector(selectUserLogIn);
+  const doctorAppointmentList = useAppSelector(selectDoctorAppointmentList);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const handleAssessmentButtonClick = (patient: Patient) => {
-    setSelectedPatient(patient);
-    setShowAssessmentDialog(true);
-  };
-
-  const handleDetailButtonClick = (patient: Patient) => {
-    setSelectedPatient(patient);
+  const handleDetailButtonClick = (appointment: Appointment) => {
+    setAppointmentDetail(appointment);
     setShowDetailDialog(true);
   };
-
   const handleClose = () => {
-    setShowAssessmentDialog(false);
     setShowDetailDialog(false);
   };
 
+  const handleModify = (appointment: Appointment) => {
+    if (userInfo) {
+      dispatch(setPatient({ ...defaultPatient, email: appointment.slotAssignedTo, name: appointment.name } as Patient))
+      dispatch(setLastDate(appointment.slotDate));
+      dispatch(setLastTimeslot(appointment.slotTime));
+      navigate("/doctor/modify_appointment");
+    }
+  }
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(listAppointment(userInfo.token, userInfo.userData))
+    }
+  }, [])
+
   return (
     <ThemeProvider theme={doctorTheme}>
-      <Box sx={{ padding: 2 }}>
-        <Typography variant="h4" gutterBottom>
-          Assigned Patients
-        </Typography>
-        <List>
-          {patients.map((patient) => (
-            patient.assessmentTaken && patient.assessmentOptionsSelected[0] != null &&
-            <ListItem key={patient.id}>
+      <Grid item container>
+        <Grid item container direction="column" md={12}>
+          <Typography variant="h4" marginLeft="1rem">
+            Appointments Assigned
+          </Typography>
+          <List>
+            {doctorAppointmentList.appointments.map((appointment) =>
+            (<ListItem key=
+              {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+            >
               <Box sx={{ width: "100%" }}>
-                <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+                <Card sx={{ marginTop: 2, boxShadow: 3 }}>
                   <CardContent>
-                    <Stack direction={"row"} justifyContent={"space-between"}>
-                      <Stack direction={"row"}>
+                    <Stack direction="row" justifyContent="space-between">
+                      <Stack direction="row">
                         <ListItemAvatar sx={{ display: "flex" }}>
-                          <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
+                          <Avatar
+                            alt={`${appointment.name}`}
+                            src="/static/images/doctor/sampleDoctor.jpg"
+                            sx={{ alignSelf: "center" }}
+                          />
                         </ListItemAvatar>
                         <Stack direction={"column"}>
-                          <Typography>{patient.name}</Typography>
-                          <Typography>{`Email: ${patient.email}`}</Typography>
+                          <Typography>{appointment.name}</Typography>
+                          <Typography>Date:{appointment.slotDate}</Typography>
                         </Stack>
                       </Stack>
                       <Stack direction={"row"}>
                         <Button
                           variant="contained"
-                          color="primary"
-                          onClick={() => handleAssessmentButtonClick(patient)}
-                          sx={{ marginRight: 2 }}
-                        // disabled={patient.assessmentTaken === false || patient.assessmentOptionsSelected.length === 0}
+                          // variant="outlined"
+                          onClick={() => handleDetailButtonClick(appointment)}
+                          sx={{
+                            marginRight: 2,
+                            backgroundColor: "primary",
+                            color: "primary.contrastText",
+                            ":hover": {
+                              color: "primary.contrastText",
+                              backgroundColor: "secondary.main",
+                            },
+                          }}
                         >
-                          Self-Assessment
+                          Details
                         </Button>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => handleDetailButtonClick(patient)}
-                        >
-                          View Details
-                        </Button>
+                        {appointment.status === "ASSIGNED" &&
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            sx={{
+                              marginRight: 2,
+                              borderColor: "secondary.dark",
+                              ":hover": { backgroundColor: "secondary.dark" },
+                            }}
+                            onClick={() => handleModify(appointment)}
+                            disabled={appointment.status !== "ASSIGNED"}
+                          >
+                            Modify
+                          </Button>
+                        }
+
+                        {(appointment.status !== "ASSIGNED" ||
+                          isAppointmentExpired(appointment)) &&
+                          <Button
+                            variant="outlined"
+                            disabled
+                          >
+                            {appointment.status}
+                            {isAppointmentExpired(appointment) && " EXPIRED"}
+                          </Button>
+                        }
                       </Stack>
                     </Stack>
                   </CardContent>
                 </Card>
               </Box>
-            </ListItem>
-          ))}
-        </List>
-        <Dialog open={showAssessmentDialog} onClose={handleClose}>
-          <DialogTitle sx={{ fontWeight: "bold", fontSize: 30 }}>
-            {selectedPatient?.name} Self-Assessment Results
-          </DialogTitle>
-          <DialogContent>
-            <Stack direction={"row"} justifyContent={"space-around"}>
-              <Typography variant="subtitle1">
-                ID: {selectedPatient?.id}
-              </Typography>
-              <Typography variant="subtitle1">
-                Name: {selectedPatient?.name}
-              </Typography> </Stack>
+            </ListItem>)
+            )}
 
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          </List>
 
+        </Grid>
+        {/* <Grid item container direction="column" md={12} lg={6}>
+          <Grid item container md={12} lg={6} direction="column">
+            <Typography variant="h4" color={"primary.contrastText"} marginLeft="1rem">
+              Appointments for Me
             </Typography>
-            <Stack spacing={2} pt={1}>
-              {questions.map((question) => (
-                <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
-                  <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
-                  <Typography
-                    variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
-                      ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
-                      }`}</Typography>
-                </Paper>
+            <List sx={{ flexGrow: 1 }}>
+              {patients.map((patient) => (
+                <ListItem key={patient.id}>
+                  <Box sx={{ width: "100%" }}>
+                    <Card sx={{ boxShadow: 3, marginTop: 1 }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent={"space-between"}>
+                          <Stack direction="row">
+                            <ListItemAvatar sx={{ display: "flex" }}>
+                              <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
+                            </ListItemAvatar>
+                            <Stack direction={"column"} sx={{ marginRight: 3 }}>
+                              <Typography>{patient.name}</Typography>
+                              <Typography>{`ID: ${patient.id}`}2</Typography>
+                            </Stack>
+                            <Button
+                              variant="contained"
+                            >
+                              Self-Assessment
+                            </Button>
+                          </Stack>
+                          <Stack
+                            direction={"row"}
+                            spacing={2}
+                            sx={{ flexDirection: "row" }}
+                          >
+                            <Button variant="contained"
+                            >Accept</Button>
+                            <Button variant="contained" color="secondary">
+                              Reject
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                </ListItem>
               ))}
-            </Stack>
-          </DialogContent>
-        </Dialog>
-        <Dialog open={showDetailDialog} onClose={handleClose}>
-          <DialogTitle sx={{ fontWeight: "bold" }}>
-            {selectedPatient?.name}
-          </DialogTitle>
-          <DialogContent>
-            <Typography variant="subtitle1">
-              ID: {selectedPatient?.id}
-            </Typography>
-            <Typography variant="subtitle1">
-              Name: {selectedPatient?.name}
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Detailed Information
-            </Typography>
-            <Typography variant="subtitle1">
-              Address: {selectedPatient?.address}
-            </Typography>
-            <Typography variant="subtitle1">
-              Date of Birth: {selectedPatient?.dob}
-            </Typography>
-            <Typography variant="subtitle1">
-              Phone Number: {selectedPatient?.phone}
-            </Typography>
-            <Typography variant="subtitle1">
-              Email Address: {selectedPatient?.email}
-            </Typography>
-          </DialogContent>
-        </Dialog>
-      </Box>
-    </ThemeProvider>
-  );
+            </List>
+          </Grid>
+
+        </Grid> */}
+      </Grid>
+      <Dialog open={showDetailDialog} onClose={handleClose}>
+        <DialogTitle sx={{ fontWeight: "bold" }}>
+          Patient Name: {appointmentDetail?.name}
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="subtitle1">
+            Slot Assigned By: {userInfo?.userData.email}
+          </Typography>
+          {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Assessment Test
+          </Typography>
+          <Typography variant="subtitle1">
+            Status: Pass
+          </Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Assignment Comment
+          </Typography>
+          <Typography variant="subtitle1">
+            Counselor: Harsh Singh
+          </Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Appointment Comment
+          </Typography> */}
+          <Typography variant="subtitle1">
+            Slot Assigned To: {appointmentDetail?.slotAssignedTo}
+          </Typography>
+          <Typography variant="subtitle1">
+            Date: {appointmentDetail?.slotDate}
+          </Typography>
+          <Typography variant="subtitle1">
+            Timeslot: {appointmentDetail?.slotTime}
+          </Typography>
+        </DialogContent>
+      </Dialog>
+    </ThemeProvider>)
 }

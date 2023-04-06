@@ -177,5 +177,7 @@ export const updatePersonnel = (token: string | undefined, user: UserData, newSt
 	}
 }
 
+
+
 export const selectPersonnelList = (state: RootState) => state.personnelList;
 export default personnelListSlice.reducer;

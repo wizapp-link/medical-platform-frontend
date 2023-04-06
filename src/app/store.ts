@@ -9,6 +9,10 @@ import counselorReducer from "../features/counselor/counselorSlice";
 import counselorAssignmentReducer from '../features/counselor/counselorAssignmentSlice';
 import appointmentReducer from '../features/appointment/appointmentSlice';
 import patientAppointmentReducer from '../features/patient/patientAppointmentSlice';
+import counselorAppointmentListReducer from '../features/counselor/counselorAppointmentSlice';
+import doctorAppointmentListReducer from '../features/doctor/doctorAppointmentSlice';
+import reportReducer from "../features/manager/reportSlice";
+import forgotPasswordReducer from '../features/auth/forgotPasswordSlice';
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +26,10 @@ export const store = configureStore({
     counselorAssignment: counselorAssignmentReducer,
     appointment: appointmentReducer,
     patientAppointmentList: patientAppointmentReducer,
+    counselorAppointmentList : counselorAppointmentListReducer,
+    doctorAppointmentList : doctorAppointmentListReducer,
+    report: reportReducer,
+    forgotPassword: forgotPasswordReducer,
   },
 });
 
