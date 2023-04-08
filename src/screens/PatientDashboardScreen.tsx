@@ -349,14 +349,54 @@ export default function PatientDashboardScreen(props: any) {
                                   Accept
                                 </Button>
                               )}
+                          {(appointment.status === "ACCEPTED" ||
+                            appointment.status === "REJECTED") &&
+                            <Button
+                              variant="outlined"
+                              disabled
+                            >
+                              {appointment.status}
+                            </Button>
+                          }
+                        </Stack>
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Box>
+              </ListItem>)
+              )}
 
-                            {(appointment.status === "ACCEPTED" ||
-                              appointment.status === "REJECTED") && (
-                              <Button variant="outlined" disabled>
-                                {appointment.status}
-                              </Button>
-                            )}
-                          </Stack>
+            </List>
+          }
+
+          {patientAppointmentList.pendingFutureAppointments.length === 0 && patientAppointmentList.acceptedFutureAppointments.length === 0 &&
+            <Typography variant="h5" color="primary.contrastText">
+              No Future Appointments to Process
+            </Typography>}
+          {patientAppointmentList.pendingFutureAppointments && patientAppointmentList.pendingFutureAppointments.length > 0 && <Typography variant="h5" color="primary.contrastText">
+            Incoming Appointments
+          </Typography>}
+
+          <List>
+            {patientAppointmentList.pendingFutureAppointments.map((appointment) =>
+            (<ListItem key=
+              {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+            >
+              <Box sx={{ width: "100%" }}>
+                <Card sx={{ marginTop: 2, boxShadow: 3 }}>
+                  <CardContent>
+                    <Stack direction="row" justifyContent="space-between">
+                      <Stack direction="row">
+                        <ListItemAvatar sx={{ display: "flex" }}>
+                          <Avatar
+                            alt="doctor"
+                            src="/static/images/doctor/sampleDoctor.jpg"
+                            sx={{ alignSelf: "center" }}
+                          />
+                        </ListItemAvatar>
+                        <Stack direction={"column"}>
+                          <Typography>{appointment.name}</Typography>
+                          <Typography>Date:{appointment.slotDate}</Typography>
                         </Stack>
                       </CardContent>
                     </Card>
@@ -382,7 +422,7 @@ export default function PatientDashboardScreen(props: any) {
               Patient ID: {userInfo?.userData.id}
             </Typography>
             <Typography variant="subtitle1">
-              Patient Email: {userInfo?.userData.name}
+              Patient Name: {userInfo?.userData.name}
             </Typography>
             <Typography variant="subtitle1">
               Patient Email: {userInfo?.userData.email}

@@ -117,6 +117,10 @@ export default function CounselorAppointmentScreen(props: any) {
             Appointments Assigned
           </Typography>
           <List>
+            {counselorAppointmentList.appointments.length === 0 &&
+              <Typography variant="h5" color={"primary.contrastText"}>
+                Empty
+              </Typography>}
             {counselorAppointmentList.appointments.map((appointment) =>
             (<ListItem key=
               {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
