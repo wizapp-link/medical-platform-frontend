@@ -23,6 +23,10 @@ export type ProfileUpdatePayload = {
   name: string, email: string, phoneNumber: string, addr: string, dob: string
 }
 
+export type GoogleMeetLinkUpdatePayload = {
+  googleMeetLink: string
+}
+
 const userLogInSlice = createSlice({
   name: 'userLogIn',
   initialState,
@@ -58,11 +62,20 @@ const userLogInSlice = createSlice({
     userLogOut: (state) => {
       state.userInfo = null;
     },
+    userGoogleMeetLinkUpdate: (state, action: PayloadAction<GoogleMeetLinkUpdatePayload>) => {
+      if(state.userInfo){
+        state.userInfo.userData.googleMeetLink = action.payload.googleMeetLink;
+        // state.userInfo.userData.email = action.payload.email;
+        // state.userInfo.userData.phone = action.payload.phoneNumber;
+        // state.userInfo.userData.address = action.payload.addr;
+        // state.userInfo.userData.dob = action.payload.dob;
+      }
+    },
   },
 });
 
 export const {
-  userLogInFail, userLogInRequest, userLogInSuccess, userLogOut, userDataUpdate
+  userLogInFail, userLogInRequest, userLogInSuccess, userLogOut, userDataUpdate, userGoogleMeetLinkUpdate
 } = userLogInSlice.actions;
 
 export const selectUserLogIn = (state: RootState) => state.userLogIn;
@@ -85,19 +98,26 @@ export const logOut = () => (dispatch: AppDispatch) => {
   dispatch(userLogOut());
 };
 
-export const link = (googleMeetLink: string) => async (dispatch: AppDispatch) => {
-  dispatch(userLogInRequest());
-  try {
-    const { data } = await axios.post('/api/v1/login', { googleMeetLink});
-    console.log(data);
-    dispatch(userLogInSuccess(data));
-    // localStorage.setItem('userData', JSON.stringify(data));
-  } catch (err: any) {
+export const updateGoogleMeetLink = (token: string, userData: UserData,googleMeetLink: string) => async (dispatch: AppDispatch) => {
+  try{
+    console.log("updating google meet link");
+    dispatch(userGoogleMeetLinkUpdate({googleMeetLink} as GoogleMeetLinkUpdatePayload));
+    const {data} = await axios({
+      method: "post",
+      url: "/api/v1/editProfile",
+      headers:{
+        Authorization: `Bearer ${token}`
+      },
+      data: {
+        ...userData,
+        googleMeetLink
+      }
+    });
+  } catch(err: any){
     const errorMessage = err.response ? err.response.data.response : err.message
-    console.log(errorMessage);
-    dispatch(userLogInFail(errorMessage));
+    console.error(errorMessage);
   }
-};
+}
 
 
 

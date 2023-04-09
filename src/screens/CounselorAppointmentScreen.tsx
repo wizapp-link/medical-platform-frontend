@@ -41,7 +41,7 @@ import {
 } from "../features/appointment/appointmentSlice";
 import { defaultPatient } from "../types/PatientDataType";
 import { useNavigate } from "react-router";
-import { selectUserLogIn, logIn, link } from '../features/auth/userLogInSlice';
+import { selectUserLogIn, logIn, updateGoogleMeetLink } from '../features/auth/userLogInSlice';
 
 export default function CounselorAppointmentScreen(props: any) {
   // const { patients } = useAppSelector(selectDoctor);
@@ -137,8 +137,14 @@ export default function CounselorAppointmentScreen(props: any) {
 
   const handleMeetingSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		dispatch(link(meetingLink));
+		//dispatch(link(meetingLink));
     setOpen(false);
+    if (userInfo && meetingLink) {
+      dispatch(updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink))
+      //setText("Changes updated successfully!");
+    } else {
+      //setText("Check missing fields!");
+    }
 	};
 
   const handleMeetingClose = () => {
