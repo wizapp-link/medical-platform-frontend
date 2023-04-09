@@ -72,6 +72,20 @@ export const logOut = () => (dispatch: AppDispatch) => {
   dispatch(userLogOut());
 };
 
+export const link = (googleMeetLink: string) => async (dispatch: AppDispatch) => {
+  dispatch(userLogInRequest());
+  try {
+    const { data } = await axios.post('/api/v1/login', { googleMeetLink});
+    console.log(data);
+    dispatch(userLogInSuccess(data));
+    // localStorage.setItem('userData', JSON.stringify(data));
+  } catch (err: any) {
+    const errorMessage = err.response ? err.response.data.response : err.message
+    console.log(errorMessage);
+    dispatch(userLogInFail(errorMessage));
+  }
+};
+
 
 
 export const getUserInfo = (token: string | undefined, email: string) => async (dispatch: AppDispatch) => {

@@ -22,6 +22,7 @@ export type Patient = {
   doctorComment: string | null;
   creationDate: string;
   otp: string | null;
+  googleMeetLink: string
 }
 
 export const defaultPatient: Patient = {
@@ -48,4 +49,5 @@ export const defaultPatient: Patient = {
   doctorComment: null,
   creationDate: "",
   otp: null,
+  googleMeetLink: ""
 };

@@ -26,7 +26,8 @@ const TestPatient: Patient[] = [{
   registrationNo: null,
   role: "ROLE_PATIENT",
   status: "VERIFIED",
-  verificationAttempts: null
+  verificationAttempts: null,
+  googleMeetLink: ""
 },
   {
     address: "Addr2",
@@ -51,8 +52,8 @@ const TestPatient: Patient[] = [{
     registrationNo: null,
     role: "",
     status: "",
-    verificationAttempts: null
-
+    verificationAttempts: null,
+    googleMeetLink: ""
   }];
 
 interface DoctorState {
