@@ -19,6 +19,10 @@ export type UserLogInState = {
 	errorMessage: string,
 }
 
+export type ProfileUpdatePayload = {
+  name: string, email: string, phoneNumber: string, addr: string, dob: string
+}
+
 const userLogInSlice = createSlice({
   name: 'userLogIn',
   initialState,
@@ -42,6 +46,15 @@ const userLogInSlice = createSlice({
 			state.error = true;
       state.errorMessage = action.payload;
     },
+    userDataUpdate: (state, action: PayloadAction<ProfileUpdatePayload>) => {
+      if(state.userInfo){
+        state.userInfo.userData.name = action.payload.name;
+        // state.userInfo.userData.email = action.payload.email;
+        state.userInfo.userData.phone = action.payload.phoneNumber;
+        state.userInfo.userData.address = action.payload.addr;
+        state.userInfo.userData.dob = action.payload.dob;
+      }
+    },
     userLogOut: (state) => {
       state.userInfo = null;
     },
@@ -49,7 +62,7 @@ const userLogInSlice = createSlice({
 });
 
 export const {
-  userLogInFail, userLogInRequest, userLogInSuccess, userLogOut,
+  userLogInFail, userLogInRequest, userLogInSuccess, userLogOut, userDataUpdate
 } = userLogInSlice.actions;
 
 export const selectUserLogIn = (state: RootState) => state.userLogIn;
@@ -109,6 +122,31 @@ export const getUserInfo = (token: string | undefined, email: string) => async (
 		console.log(errorMessage);
 		// dispatch(appointmentListFail(errorMessage));
 	}
+}
+
+export const updateUserData = (token: string, userData: UserData, name: string, email: string, phoneNumber: string, addr: string, dob: string) => async (dispatch: AppDispatch) => {
+  try{
+    console.log("updating userData");
+    dispatch(userDataUpdate({name, email, phoneNumber, addr, dob} as ProfileUpdatePayload));
+    const {data} = await axios({
+      method: "post",
+      url: "/api/v1/editProfile",
+      headers:{
+        Authorization: `Bearer ${token}`
+      },
+      data: {
+        ...userData,
+        name,
+        email,
+        phone: phoneNumber,
+        addr,
+        dob
+      }
+    });
+  } catch(err: any){
+    const errorMessage = err.response ? err.response.data.response : err.message
+    console.error(errorMessage);
+  }
 }
 
 export default userLogInSlice.reducer;
