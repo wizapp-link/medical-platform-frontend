@@ -10,8 +10,8 @@ import {
 import React, { FormEvent, useState } from "react";
 import { createTheme, ThemeProvider, colors } from "@mui/material";
 import { patientTheme } from "../Themes";
-import { selectUserLogIn } from "../features/auth/userLogInSlice";
-import { useAppSelector } from "../app/hooks";
+import { selectUserLogIn, updateUserData } from "../features/auth/userLogInSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Snackbar from "@mui/material/Snackbar";
 import Slide, { SlideProps } from "@mui/material/Slide";
 
@@ -30,15 +30,28 @@ export default function PatientProfileScreen(props: any) {
   const [addr, setAddr] = useState(userInfo?.userData.address);
   const [dob, setDob] = useState(userInfo?.userData.dob);
 
+  const dispatch = useAppDispatch();
+
   const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
     setTransition(() => TransitionDown);
     setOpen(true);
-    setText("Changes updated successfully!");
-    e.preventDefault();
+
+    if (userInfo && name && email && phoneNumber && addr && dob) {
+      dispatch(updateUserData(userInfo.token, userInfo.userData, name, email, phoneNumber, addr, dob))
+      setText("Changes updated successfully!");
+    } else {
+      setText("Check missing fields!");
+    }
   };
 
   const handleDiscard = () => {
-	setTransition(() => TransitionDown);
+    setName(userInfo?.userData.name);
+    setEmail(userInfo?.userData.email);
+    setPhoneNumber(userInfo?.userData.phone);
+    setAddr(userInfo?.userData.address);
+    setDob(userInfo?.userData.dob);
+    setTransition(() => TransitionDown);
     setOpen(true);
     setText("No changes made!");
   }
@@ -159,3 +172,7 @@ export default function PatientProfileScreen(props: any) {
     </ThemeProvider>
   );
 }
+function dispatch() {
+  throw new Error("Function not implemented.");
+}
+
