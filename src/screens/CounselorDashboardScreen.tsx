@@ -18,7 +18,13 @@ import {
   DialogContent,
   Card,
   CardContent,
-  Grid, DialogContentText, TextField, DialogActions, Snackbar, Alert
+  Grid,
+  DialogContentText,
+  TextField,
+  DialogActions,
+  Snackbar,
+  Alert,
+  CardActions,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -37,14 +43,19 @@ import { selectDoctor } from "../features/doctor/doctorSlice";
 import { Patient } from "../types/PatientDataType";
 import { ansList, questions } from "./PatientAssessmentScreen";
 import { roleToPosition } from "../constants/PositionRoleMap";
-import { fetchPatients, selectConselor } from "../features/counselor/counselorSlice"
+import {
+  fetchPatients,
+  selectConselor,
+} from "../features/counselor/counselorSlice";
 import { setPatient } from "../features/counselor/counselorAssignmentSlice";
-import { updatePatientStatus, closeSnackbar } from "../features/counselor/counselorSlice";
+import {
+  updatePatientStatus,
+  closeSnackbar,
+} from "../features/counselor/counselorSlice";
 import getSnackbarSeverity from "../utils/GetSnackBarSeverity";
 import ReduxSnackbar from "../components/ReduxSnackbar";
 
 export default function CounselorDashboardScreen(props: any) {
-
   //todo: change patient
   // const { patients } = useAppSelector(selectDoctor);
   const { userInfo } = useAppSelector(selectUserLogIn);
@@ -75,7 +86,7 @@ export default function CounselorDashboardScreen(props: any) {
       role: "",
       status: "",
       verificationAttempts: null,
-      googleMeetLink: ""
+      googleMeetLink: "",
     },
     {
       address: "Addr2",
@@ -101,8 +112,9 @@ export default function CounselorDashboardScreen(props: any) {
       role: "",
       status: "",
       verificationAttempts: null,
-      googleMeetLink: ""
-    }]);
+      googleMeetLink: "",
+    },
+  ]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   const [open, setOpen] = useState(false);
@@ -141,12 +153,30 @@ export default function CounselorDashboardScreen(props: any) {
 
   const handleAccept = (patient: Patient) => {
     if (userInfo)
-      dispatch(updatePatientStatus(patient.email, userInfo.userData.email, "SELF_ASSIGN", "", userInfo?.token, position));
+      dispatch(
+        updatePatientStatus(
+          patient.email,
+          userInfo.userData.email,
+          "SELF_ASSIGN",
+          "",
+          userInfo?.token,
+          position
+        )
+      );
   };
 
   const handleReject = () => {
     if (selectedPatient && userInfo)
-      dispatch(updatePatientStatus(selectedPatient.email, userInfo?.userData.email, "REJECT_PATIENT", reason, userInfo?.token, position));
+      dispatch(
+        updatePatientStatus(
+          selectedPatient.email,
+          userInfo?.userData.email,
+          "REJECT_PATIENT",
+          reason,
+          userInfo?.token,
+          position
+        )
+      );
     setReason("");
     setOpen(false);
     setConfirm(false);
@@ -158,13 +188,11 @@ export default function CounselorDashboardScreen(props: any) {
 
   const counselor = useAppSelector(selectConselor);
 
-
   useEffect(() => {
     if (userInfo) {
       dispatch(fetchPatients(userInfo.userData.email, userInfo.token));
     }
-  }, [])
-
+  }, []);
 
   return (
     <ThemeProvider theme={counselorTheme}>
@@ -193,59 +221,84 @@ export default function CounselorDashboardScreen(props: any) {
 
         <Divider />
 
-
         <Grid container direction="row">
           <Grid item container md={12} direction="column">
-            <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
+            <Typography
+              variant="h5"
+              color={"primary.contrastText"}
+              margin="1rem"
+            >
               Incoming Patient List
             </Typography>
-            <List sx={{ flexGrow: 1 }}>
-              {counselor.patients.map((patient) => (
-                patient.assessmentTaken && patient.assessmentOptionsSelected[0] != null
-                && <ListItem key={patient.id}>
-                  <Box sx={{ width: "100%" }}>
-                    <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                      <CardContent>
-                        <Stack direction="row" justifyContent={"space-between"}>
-                          <Stack direction="row">
-                            <ListItemAvatar sx={{ display: "flex" }}>
-                              <Avatar alt="patient" src="" sx={{ alignSelf: "center" }} />
-                            </ListItemAvatar>
-                            <Stack direction={"column"} sx={{ marginRight: 3 }}>
-                              <Typography>{patient.name}</Typography>
-                              <Typography>{`${patient.email}`}</Typography>
-                            </Stack>
-                            <Button
-                              variant="contained"
-                              onClick={() => handleAssessmentButtonClick(patient)}
-                              disabled={!patient.assessmentTaken}
+            <Grid container justifyContent={"start"} sx={{ marginTop: 1 }}>
+              {counselor.patients.map(
+                (patient) =>
+                  patient.assessmentTaken &&
+                  patient.assessmentOptionsSelected[0] != null && (
+                    <Grid key={patient.id}>
+                      <Box maxWidth={420} maxHeight={350}>
+                        <Card sx={{ boxShadow: 3, marginTop: 1, marginLeft: 2}}>
+                          <CardContent>
+                            <Stack
+                              direction="row"
+                              justifyContent={"start"}
                             >
-                              Self-Assessment
-                            </Button>
-                          </Stack>
-                          <Stack
-                            direction={"row"}
-                            spacing={2}
-                            sx={{ flexDirection: "row" }}
-                          >
-                            <Button variant="contained"
-                              onClick={() => {
-                                dispatch(setPatient(patient));
-                                navigate(`/counselor/assignment`);
-                              }}
-                            >Assign</Button>
-                            <Button variant="contained" color="secondary"
-                              onClick={() => handleClickOpen(patient)}>
-                              Reject
-                            </Button>
-                          </Stack>
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Box>
-                </ListItem>
-              ))}
-            </List>
+                              <ListItemAvatar sx={{ display: "flex" }}>
+                                <Avatar
+                                  alt="patient"
+                                  src=""
+                                  sx={{ alignSelf: "center" }}
+                                />
+                              </ListItemAvatar>
+                              <Stack
+                                direction={"column"}
+                                sx={{ marginRight: 3 }}
+                              >
+                                <Typography>{patient.name}</Typography>
+                                <Typography>{`${patient.email}`}</Typography>
+                              </Stack>
+                            </Stack>
+                          </CardContent>
+                          <CardActions>
+                            <Stack
+                              direction={"row"}
+                              spacing={2}
+                              sx={{ flexDirection: "row" }}
+                            >
+                              <Button
+                                variant="contained"
+                                onClick={() =>
+                                  handleAssessmentButtonClick(patient)
+                                }
+                                disabled={!patient.assessmentTaken}
+                              >
+                                Self-Assessment
+                              </Button>
+
+                              <Button
+                                variant="contained"
+                                onClick={() => {
+                                  dispatch(setPatient(patient));
+                                  navigate(`/counselor/assignment`);
+                                }}
+                              >
+                                Assign
+                              </Button>
+                              <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => handleClickOpen(patient)}
+                              >
+                                Reject
+                              </Button>
+                            </Stack>
+                          </CardActions>
+                        </Card>
+                      </Box>
+                    </Grid>
+                  )
+              )}
+            </Grid>
           </Grid>
           {/* <Grid item container md={12} lg={6} direction="column">
             <Typography variant="h5" color={"primary.contrastText"} margin="1rem">
@@ -306,19 +359,26 @@ export default function CounselorDashboardScreen(props: any) {
               </Typography>
               <Typography variant="subtitle1">
                 Name: {selectedPatient?.name}
-              </Typography> </Stack>
+              </Typography>{" "}
+            </Stack>
 
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-
-            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}></Typography>
             <Stack spacing={2} pt={1}>
               {questions.map((question) => (
                 <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
-                  <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
-                  <Typography
-                    variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
-                      ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
-                      }`}</Typography>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {question.text}
+                  </Typography>
+                  <Typography variant="body1">{`${
+                    selectedPatient &&
+                    selectedPatient.assessmentOptionsSelected[question.id - 1]
+                      ? ansList[
+                          selectedPatient.assessmentOptionsSelected[
+                            question.id - 1
+                          ].charCodeAt(0) - 97
+                        ]
+                      : "N/A"
+                  }`}</Typography>
                 </Paper>
               ))}
             </Stack>
@@ -371,7 +431,6 @@ export default function CounselorDashboardScreen(props: any) {
               Confirm
             </Button>
           </DialogActions>
-
         </Dialog>
         <ReduxSnackbar
           show={counselor.showSnackbar}
@@ -380,8 +439,8 @@ export default function CounselorDashboardScreen(props: any) {
           error={counselor.error}
           message={counselor.message}
           onClose={() => dispatch(closeSnackbar())}
-          autoHideDuration={5000} />
-
+          autoHideDuration={5000}
+        />
       </Stack>
     </ThemeProvider>
   );
