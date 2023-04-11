@@ -120,6 +120,7 @@ export const updateAppointment = (token: string | undefined, user: UserData, app
 				timeSlot: appointment.slotTime,
 				assignedBy: appointment.slotAssignedBy,
 				status: newStatus,
+				meetingLink: appointment.meetingLink
 			}
 		})
 		dispatch(appointmentUpdateSuccess(data.response));

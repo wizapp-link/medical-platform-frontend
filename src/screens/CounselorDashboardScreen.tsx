@@ -74,7 +74,8 @@ export default function CounselorDashboardScreen(props: any) {
       registrationNo: null,
       role: "",
       status: "",
-      verificationAttempts: null
+      verificationAttempts: null,
+      googleMeetLink: ""
     },
     {
       address: "Addr2",
@@ -99,8 +100,8 @@ export default function CounselorDashboardScreen(props: any) {
       registrationNo: null,
       role: "",
       status: "",
-      verificationAttempts: null
-
+      verificationAttempts: null,
+      googleMeetLink: ""
     }]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);

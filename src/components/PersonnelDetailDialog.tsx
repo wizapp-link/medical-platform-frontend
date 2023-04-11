@@ -21,30 +21,30 @@ export default function PersonnelDetailDialog(props: Props) {
 		<Dialog open={open} onClose={onClose}>
 			<DialogTitle sx={{ fontWeight: "bold" }}>{selectedPerson?.name}</DialogTitle>
 			<DialogContent>
-				<Typography variant="subtitle1">
+				<Typography variant="subtitle1" sx={{fontSize: 18}}>
 					ID: {selectedPerson?.id}
 				</Typography>
-				<Typography variant="subtitle1">
+				<Typography variant="subtitle1" sx={{fontSize: 18}}>
 					Name: {selectedPerson?.name}
 				</Typography>
-				<Typography variant="h6" sx={{ fontWeight: "bold" }}>Registration Information</Typography>
-				<Typography variant="subtitle1">
+				<Typography variant="h6" sx={{ fontWeight: "bold" }}><br></br>Registration Information</Typography>
+				<Typography variant="subtitle1" sx={{fontSize: 18}}>
 					Address: {selectedPerson?.address}
 				</Typography>
-				<Typography variant="subtitle1">
+				<Typography variant="subtitle1" sx={{fontSize: 18}}>
 					DOB: {selectedPerson?.dob}
 				</Typography>
-				<Typography variant="subtitle1">
+				<Typography variant="subtitle1" sx={{fontSize: 18}}>
 					Phone Number: {selectedPerson?.phone}
 				</Typography>
-				<Typography variant="subtitle1">
+				<Typography variant="subtitle1" sx={{fontSize: 18}}>
 					Type:{" "}
 					{selectedPerson ? roleToPosition.get(selectedPerson?.role) : null}
 				</Typography>
-				<Typography variant="subtitle1">
+				<Typography variant="subtitle1" sx={{fontSize: 18}}>
 					Email Address: {selectedPerson?.email}
 				</Typography>
-				{selectedPerson?.registrationNo != null && <Typography variant="subtitle1">
+				{selectedPerson?.registrationNo != null && <Typography variant="subtitle1" sx={{fontSize: 18}}>
 					Registration Number: {selectedPerson?.registrationNo}
 				</Typography>}
 			</DialogContent>

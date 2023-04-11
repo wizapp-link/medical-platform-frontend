@@ -6,6 +6,7 @@ export type Appointment = {
 	slotDate: string,
   status: string,
   type: string,
+  meetingLink: string
 }
 
 export type RawAppointment = {
@@ -15,4 +16,5 @@ export type RawAppointment = {
   slotTime: string,
   status: string,
   type: string,
+  meetingLink: string
 }

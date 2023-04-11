@@ -13,14 +13,17 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogContentText,
   Container,
   ThemeProvider,
   CardContent,
   Card,
-  Grid
+  Grid,
+  TextField,
+  DialogActions
 } from "@mui/material";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import { doctorTheme } from "../Themes";
 import { defaultPatient, Patient } from "../types/PatientDataType";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -30,9 +33,17 @@ import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { roleToPosition } from "../constants/PositionRoleMap";
 import { isAppointmentExpired } from "../utils/AppointmentConversion";
 import { Appointment } from "../types/AppointmentType";
-import { setLastDate, setLastTimeslot, setPatient } from "../features/appointment/appointmentSlice";
-import { listAppointment, selectDoctorAppointmentList } from "../features/doctor/doctorAppointmentSlice";
+import {
+  setLastDate,
+  setLastTimeslot,
+  setPatient,
+} from "../features/appointment/appointmentSlice";
+import {
+  listAppointment,
+  selectDoctorAppointmentList,
+} from "../features/doctor/doctorAppointmentSlice";
 import { useNavigate } from "react-router";
+import { updateGoogleMeetLink } from "../features/auth/userLogInSlice";
 
 export default function DoctorAppointmentScreen(props: any) {
   const [showDetailDialog, setShowDetailDialog] = useState(false);
@@ -52,105 +63,144 @@ export default function DoctorAppointmentScreen(props: any) {
 
   const handleModify = (appointment: Appointment) => {
     if (userInfo) {
-      dispatch(setPatient({ ...defaultPatient, email: appointment.slotAssignedTo, name: appointment.name } as Patient))
+      dispatch(
+        setPatient({
+          ...defaultPatient,
+          email: appointment.slotAssignedTo,
+          name: appointment.name,
+        } as Patient)
+      );
       dispatch(setLastDate(appointment.slotDate));
       dispatch(setLastTimeslot(appointment.slotTime));
       navigate("/doctor/modify_appointment");
     }
-  }
+  };
 
   useEffect(() => {
     if (userInfo) {
-      dispatch(listAppointment(userInfo.token, userInfo.userData))
+      dispatch(listAppointment(userInfo.token, userInfo.userData));
     }
-  }, [])
+  }, []);
+
+  const [open, setOpen] = React.useState(false);
+  const [meetingLink, setMeetingLink] = useState(
+    userInfo ? userInfo.userData.googleMeetLink : ""
+  );
+
+  const handleMeetingOpen = () => {
+    setOpen(true);
+  };
+
+  const handleMeetingSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    //dispatch(link(meetingLink));
+    setOpen(false);
+    if (userInfo && meetingLink) {
+      dispatch(
+        updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink)
+      );
+      //setText("Changes updated successfully!");
+    } else {
+      //setText("Check missing fields!");
+    }
+  };
+
+  const handleMeetingClose = () => {
+    setOpen(false);
+  };
 
   return (
     <ThemeProvider theme={doctorTheme}>
       <Grid item container>
         <Grid item container direction="column" md={12}>
-          <Typography variant="h4" marginLeft="1rem">
-            Appointments Assigned
-          </Typography>
-          <List>
-            {doctorAppointmentList.appointments.length === 0 &&
-              <Typography variant="h5">
-                Empty
-              </Typography>}
-            {doctorAppointmentList.appointments.map((appointment) =>
-            (<ListItem key=
-              {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <Typography variant="h4" marginLeft="1rem">
+              Appointments Assigned
+            </Typography>
+            <Button
+              onClick={handleMeetingOpen}
+              sx={{
+                color: "secondary.contrastText",
+                backgroundColor: "primary.dark",
+                ":hover": { backgroundColor: "primary.main" },
+              }}
             >
-              <Box sx={{ width: "100%" }}>
-                <Card sx={{ marginTop: 2, boxShadow: 3 }}>
-                  <CardContent>
-                    <Stack direction="row" justifyContent="space-between">
-                      <Stack direction="row">
-                        <ListItemAvatar sx={{ display: "flex" }}>
-                          <Avatar
-                            alt={`${appointment.name}`}
-                            src="/static/images/doctor/sampleDoctor.jpg"
-                            sx={{ alignSelf: "center" }}
-                          />
-                        </ListItemAvatar>
-                        <Stack direction={"column"}>
-                          <Typography>{appointment.name}</Typography>
-                          <Typography>Date:{appointment.slotDate}</Typography>
+              Meeting Link
+            </Button>
+          </Stack>
+          <List>
+            {doctorAppointmentList.appointments.length === 0 && (
+              <Typography variant="h5">Empty</Typography>
+            )}
+            {doctorAppointmentList.appointments.map((appointment) => (
+              <ListItem
+                key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+              >
+                <Box sx={{ width: "100%" }}>
+                  <Card sx={{ marginTop: 2, boxShadow: 3 }}>
+                    <CardContent>
+                      <Stack direction="row" justifyContent="space-between">
+                        <Stack direction="row">
+                          <ListItemAvatar sx={{ display: "flex" }}>
+                            <Avatar
+                              alt={`${appointment.name}`}
+                              src="/static/images/doctor/sampleDoctor.jpg"
+                              sx={{ alignSelf: "center" }}
+                            />
+                          </ListItemAvatar>
+                          <Stack direction={"column"}>
+                            <Typography>{appointment.name}</Typography>
+                            <Typography>Date:{appointment.slotDate}</Typography>
+                          </Stack>
                         </Stack>
-                      </Stack>
-                      <Stack direction={"row"}>
-                        <Button
-                          variant="contained"
-                          // variant="outlined"
-                          onClick={() => handleDetailButtonClick(appointment)}
-                          sx={{
-                            marginRight: 2,
-                            backgroundColor: "primary",
-                            color: "primary.contrastText",
-                            ":hover": {
-                              color: "primary.contrastText",
-                              backgroundColor: "secondary.main",
-                            },
-                          }}
-                        >
-                          Details
-                        </Button>
-                        {appointment.status === "ASSIGNED" &&
+                        <Stack direction={"row"}>
                           <Button
                             variant="contained"
-                            color="secondary"
+                            // variant="outlined"
+                            onClick={() => handleDetailButtonClick(appointment)}
                             sx={{
                               marginRight: 2,
-                              borderColor: "secondary.dark",
-                              ":hover": { backgroundColor: "secondary.dark" },
+                              backgroundColor: "primary",
+                              color: "primary.contrastText",
+                              ":hover": {
+                                color: "primary.contrastText",
+                                backgroundColor: "secondary.main",
+                              },
                             }}
-                            onClick={() => handleModify(appointment)}
-                            disabled={appointment.status !== "ASSIGNED"}
                           >
-                            Modify
+                            Details
                           </Button>
-                        }
+                          {appointment.status === "ASSIGNED" && (
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              sx={{
+                                marginRight: 2,
+                                borderColor: "secondary.dark",
+                                ":hover": { backgroundColor: "secondary.dark" },
+                              }}
+                              onClick={() => handleModify(appointment)}
+                              disabled={appointment.status !== "ASSIGNED"}
+                            >
+                              Modify
+                            </Button>
+                          )}
 
-                        {(appointment.status !== "ASSIGNED" ||
-                          isAppointmentExpired(appointment)) &&
-                          <Button
-                            variant="outlined"
-                            disabled
-                          >
-                            {appointment.status}
-                            {isAppointmentExpired(appointment) && " EXPIRED"}
-                          </Button>
-                        }
+                          {(appointment.status !== "ASSIGNED" ||
+                            isAppointmentExpired(appointment)) && (
+                            <Button variant="outlined" disabled>
+                              {appointment.status}
+                              {isAppointmentExpired(appointment) && " EXPIRED"}
+                            </Button>
+                          )}
+                        </Stack>
                       </Stack>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Box>
-            </ListItem>)
-            )}
-
+                    </CardContent>
+                  </Card>
+                </Box>
+              </ListItem>
+            ))}
           </List>
-
         </Grid>
         {/* <Grid item container direction="column" md={12} lg={6}>
           <Grid item container md={12} lg={6} direction="column">
@@ -234,5 +284,43 @@ export default function DoctorAppointmentScreen(props: any) {
           </Typography>
         </DialogContent>
       </Dialog>
-    </ThemeProvider>)
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Meeting Link</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ color: "primary.contrastText" }}>
+            Please enter a valid Meeting Link!
+          </DialogContentText>
+          <form onSubmit={handleMeetingSubmit}>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="meeting_link"
+              label="Meeting Link"
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={(e) => setMeetingLink(e.target.value)}
+              sx={{ color: "primary.dark" }}
+              value={meetingLink}
+            />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleMeetingClose}
+            sx={{ color: "primary.contrastText" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleMeetingSubmit}
+            type="submit"
+            sx={{ color: "primary.contrastText" }}
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </ThemeProvider>
+  );
 }

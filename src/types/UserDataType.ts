@@ -18,6 +18,7 @@ export type UserData = {
   otp: string | null,
   otpExpiryDate: string | null,
   password: string | null,
+  googleMeetLink: string
 
   // appointments?: Appointment[],
   // counsellingComment?: string | null,
