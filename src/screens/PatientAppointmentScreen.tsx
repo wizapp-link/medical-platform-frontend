@@ -26,12 +26,15 @@ import * as React from "react";
 import { patientTheme } from "../Themes";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { listAppointment, selectPatientAppointmentList, updateAppointment } from "../features/patient/patientAppointmentSlice";
+import {
+  listAppointment,
+  selectPatientAppointmentList,
+  updateAppointment,
+} from "../features/patient/patientAppointmentSlice";
 import { Appointment } from "../types/AppointmentType";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import dayjs from "dayjs";
 import { isAppointmentExpired } from "../utils/AppointmentConversion";
-
 
 export default function PatientAppointmentScreen(props: any) {
   const [showDetailDialog, setShowDetailDialog] = useState(false);
@@ -51,20 +54,34 @@ export default function PatientAppointmentScreen(props: any) {
   };
   const handleAccept = (appointment: Appointment) => {
     if (userInfo) {
-      dispatch(updateAppointment(userInfo.token, userInfo.userData, appointment, "ACCEPTED"));
+      dispatch(
+        updateAppointment(
+          userInfo.token,
+          userInfo.userData,
+          appointment,
+          "ACCEPTED"
+        )
+      );
     }
-  }
+  };
   const handleReject = (appointment: Appointment) => {
     if (userInfo) {
-      dispatch(updateAppointment(userInfo.token, userInfo.userData, appointment, "REJECTED"));
+      dispatch(
+        updateAppointment(
+          userInfo.token,
+          userInfo.userData,
+          appointment,
+          "REJECTED"
+        )
+      );
     }
-  }
+  };
 
   useEffect(() => {
     if (userInfo) {
-      dispatch(listAppointment(userInfo.token, userInfo.userData))
+      dispatch(listAppointment(userInfo.token, userInfo.userData));
     }
-  }, [])
+  }, []);
 
   return (
     <ThemeProvider theme={patientTheme}>
@@ -74,101 +91,160 @@ export default function PatientAppointmentScreen(props: any) {
         </Typography>
 
         <List>
-          {patientAppointmentList.appointments.length === 0 &&
-            <Typography variant="h5">
-              Empty
-            </Typography>}
-          {patientAppointmentList.appointments.map((appointment) =>
-          (<ListItem key=
-            {`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
-          >
-            <Box sx={{ width: "100%" }}>
-              <Card sx={{ marginTop: 2, boxShadow: 3 }}>
-                <CardContent>
-                  <Stack direction="row" justifyContent="space-between">
-                    <Stack direction="row">
-                      <ListItemAvatar sx={{ display: "flex" }}>
-                        <Avatar
-                          alt="doctor"
-                          src="/static/images/doctor/sampleDoctor.jpg"
-                          sx={{ alignSelf: "center" }}
-                        />
-                      </ListItemAvatar>
-                      <Stack direction={"column"}>
-                        <Typography>{appointment.name}</Typography>
-                        <Typography>Date:{appointment.slotDate}</Typography>
+          {patientAppointmentList.appointments.length === 0 && (
+            <Typography variant="h5">Empty</Typography>
+          )}
+          {patientAppointmentList.appointments.map((appointment) => (
+            <ListItem
+              key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+            >
+              <Box sx={{ width: "100%" }}>
+                <Card sx={{ marginTop: 2, boxShadow: 3 }}>
+                  <CardContent>
+                    <Stack direction="row" justifyContent="space-between">
+                      <Stack direction="row">
+                        <ListItemAvatar sx={{ display: "flex" }}>
+                          <Avatar
+                            alt="doctor"
+                            src="/static/images/doctor/sampleDoctor.jpg"
+                            sx={{ alignSelf: "center" }}
+                          />
+                        </ListItemAvatar>
+                        <Stack direction={"column"}>
+                          <Typography>{appointment.name}</Typography>
+                          <Typography>Date:{appointment.slotDate}</Typography>
+                        </Stack>
                       </Stack>
-                    </Stack>
-                    <Stack direction={"row"}>
-                      <Button
-                        variant="contained"
-                        // variant="outlined"
-                        onClick={() => handleDetailButtonClick(appointment)}
-                        sx={{
-                          marginRight: 2,
-                          backgroundColor: "primary",
-                          color: "primary.contrastText",
-                          ":hover": {
-                            color: "primary.contrastText",
-                            backgroundColor: "secondary.main",
-                          },
-                        }}
-                      >
-                        Details
-                      </Button>
-                      {appointment.status === "ASSIGNED" &&
-                        !isAppointmentExpired(appointment) &&
+                      <Stack direction={"row"}>
                         <Button
                           variant="contained"
-                          color="secondary"
+                          // variant="outlined"
+                          onClick={() => handleDetailButtonClick(appointment)}
                           sx={{
-                            color: "primary.contrastText",
                             marginRight: 2,
-                            borderColor: "secondary.dark",
-                            ":hover": { backgroundColor: "secondary.dark" },
-                          }}
-                          onClick={() => handleReject(appointment)}
-                        >
-                          Reject
-                        </Button>
-                      }
-                      {appointment.status === "ASSIGNED" &&
-                        !isAppointmentExpired(appointment) &&
-                        <Button
-                          variant="outlined"
-                          onClick={() => handleAccept(appointment)}
-                          sx={{
-                            backgroundColor: "primary.dark",
+                            backgroundColor: "primary",
                             color: "primary.contrastText",
-                            ":hover": { backgroundColor: "primary.main" },
+                            ":hover": {
+                              color: "primary.contrastText",
+                              backgroundColor: "secondary.main",
+                            },
                           }}
                         >
-                          Accept
+                          Details
                         </Button>
-                      }
+                        {appointment.status === "ASSIGNED" &&
+                          !isAppointmentExpired(appointment) && (
+                            <Button
+                              variant="contained"
+                              color="secondary"
+                              sx={{
+                                color: "primary.contrastText",
+                                marginRight: 2,
+                                borderColor: "secondary.dark",
+                                ":hover": { backgroundColor: "secondary.dark" },
+                              }}
+                              onClick={() => handleReject(appointment)}
+                            >
+                              Reject
+                            </Button>
+                          )}
+                        {appointment.status === "ASSIGNED" &&
+                          !isAppointmentExpired(appointment) && (
+                            <Button
+                              variant="outlined"
+                              onClick={() => handleAccept(appointment)}
+                              sx={{
+                                backgroundColor: "primary.dark",
+                                color: "primary.contrastText",
+                                ":hover": { backgroundColor: "primary.main" },
+                              }}
+                            >
+                              Accept
+                            </Button>
+                          )}
 
-                      {(appointment.status !== "ASSIGNED" ||
-                        isAppointmentExpired(appointment)) &&
-                        <Button
-                          variant="outlined"
-                          disabled
-                        >
-                          {appointment.status}
-                          {isAppointmentExpired(appointment) && " EXPIRED"}
-                        </Button>
-                      }
+                        {(appointment.status !== "ASSIGNED" ||
+                          isAppointmentExpired(appointment)) && (
+                          <Button variant="outlined" disabled>
+                            {appointment.status}
+                            {isAppointmentExpired(appointment) && " EXPIRED"}
+                          </Button>
+                        )}
+                      </Stack>
                     </Stack>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Box>
-          </ListItem>)
-          )}
-
+                  </CardContent>
+                </Card>
+              </Box>
+            </ListItem>
+          ))}
         </List>
-
       </Stack>
       <Dialog open={showDetailDialog} onClose={handleClose}>
+        <DialogTitle sx={{ fontWeight: "bold" }}>
+          Appointment Detail
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Your Info
+          </Typography>
+          {/* <Typography variant="subtitle1">
+              Patient ID: {userInfo?.userData.id}
+            </Typography> */}
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Name: {userInfo?.userData.name}
+          </Typography>
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Email: {userInfo?.userData.email}
+          </Typography>
+          {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Assessment Test
+            </Typography>
+            <Typography variant="subtitle1">
+              Status: Pass
+            </Typography> */}
+          {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Assignment Comment 
+            </Typography> */}
+
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            <br></br>Expert Info
+          </Typography>
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Expert Position: {appointmentDetail?.type}
+          </Typography>
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Expert Name: {appointmentDetail?.name}
+          </Typography>
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Expert Email:{" "}
+            {appointmentDetail?.slotAssignedTo
+              ? appointmentDetail?.slotAssignedTo
+              : appointmentDetail?.slotAssignedBy}
+          </Typography>
+          {/* <Typography variant="subtitle1">
+              Doctor: Dr. Gregory House
+            </Typography> */}
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            <br></br>Appointment Info
+          </Typography>
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Status: {appointmentDetail?.status}
+          </Typography>
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Date: {appointmentDetail?.slotDate}
+          </Typography>
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Timeslot: {appointmentDetail?.slotTime}
+          </Typography>
+          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+            Meeting Link: {appointmentDetail?.meetingLink}
+          </Typography>
+          {/* <Typography variant="subtitle1">
+              Notes:
+            </Typography> */}
+        </DialogContent>
+      </Dialog>
+      {/* <Dialog open={showDetailDialog} onClose={handleClose}>
         <DialogTitle sx={{ fontWeight: "bold" }}>
           Patient Name: Rui
         </DialogTitle>
@@ -201,7 +277,7 @@ export default function PatientAppointmentScreen(props: any) {
             Notes:
           </Typography>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </ThemeProvider>
   );
 }
