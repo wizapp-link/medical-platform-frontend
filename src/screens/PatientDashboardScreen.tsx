@@ -363,6 +363,9 @@ export default function PatientDashboardScreen(props: any) {
             <Typography variant="subtitle1">
               Timeslot: {appointmentDetail?.slotTime}
             </Typography>
+            <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
+              Meeting Link: {appointmentDetail?.meetingLink}
+            </Typography>
             {/* <Typography variant="subtitle1">
               Notes:
             </Typography> */}
