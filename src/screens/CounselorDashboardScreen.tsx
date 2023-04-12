@@ -267,6 +267,7 @@ export default function CounselorDashboardScreen(props: any) {
                             >
                               <Button
                                 variant="contained"
+                                color="secondary"
                                 onClick={() =>
                                   handleAssessmentButtonClick(patient)
                                 }
@@ -286,8 +287,8 @@ export default function CounselorDashboardScreen(props: any) {
                               </Button>
                               <Button
                                 variant="contained"
-                                color="secondary"
                                 onClick={() => handleClickOpen(patient)}
+                                sx={{backgroundColor:"secondary.dark"}}
                               >
                                 Reject
                               </Button>
