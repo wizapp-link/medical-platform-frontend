@@ -220,7 +220,7 @@ export default function CounselorAppointmentScreen(props: any) {
           <Grid container justifyContent={"start"} sx={{ marginTop: 1 }}>
             {counselorAppointmentList.appointments.length === 0 && (
               <Typography variant="h5" color={"primary.contrastText"}>
-                Empty
+                You have no appointment.
               </Typography>
             )}
             {counselorAppointmentList.appointments.map((appointment) => (
