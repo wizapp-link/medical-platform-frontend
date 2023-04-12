@@ -22,6 +22,7 @@ import {
   TextField,
   DialogActions,
   CardActions,
+  Snackbar
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState, FormEvent } from "react";
@@ -46,6 +47,13 @@ import {
 import { useNavigate } from "react-router";
 import { updateGoogleMeetLink } from "../features/auth/userLogInSlice";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Slide, { SlideProps } from "@mui/material/Slide";
+
+type TransitionProps = Omit<SlideProps, "direction">;
+
+function TransitionDown(props: TransitionProps) {
+  return <Slide {...props} direction="down" />;
+}
 
 export default function DoctorAppointmentScreen(props: any) {
   const [showDetailDialog, setShowDetailDialog] = useState(false);
@@ -85,9 +93,11 @@ export default function DoctorAppointmentScreen(props: any) {
   }, []);
 
   const [open, setOpen] = React.useState(false);
-  const [meetingLink, setMeetingLink] = useState(
-    userInfo ? userInfo.userData.googleMeetLink : ""
-  );
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [text, setText] = useState("");
+  const [transition, setTransition] = React.useState<
+    React.ComponentType<TransitionProps> | undefined
+  >(undefined);
 
   const handleMeetingOpen = () => {
     setOpen(true);
@@ -96,20 +106,31 @@ export default function DoctorAppointmentScreen(props: any) {
   const handleMeetingSubmit = (e: FormEvent) => {
     e.preventDefault();
     //dispatch(link(meetingLink));
-    setOpen(false);
+    
+    setTransition(() => TransitionDown);
+    setOpenSnackbar(true);
     if (userInfo && meetingLink) {
       dispatch(
-        updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink)
+        updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink),
       );
-      //setText("Changes updated successfully!");
+      setText("Meeting Link Updated Successfully!");
+      setOpen(false);
     } else {
-      //setText("Check missing fields!");
+      setText("Meeting Link cannot be empty!");
     }
   };
 
   const handleMeetingClose = () => {
     setOpen(false);
   };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+  const [meetingLink, setMeetingLink] = useState(
+    userInfo ? userInfo.userData.googleMeetLink : ""
+  );
+
 
   return (
     <ThemeProvider theme={doctorTheme}>
@@ -349,6 +370,16 @@ export default function DoctorAppointmentScreen(props: any) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        onClose={handleCloseSnackbar}
+        TransitionComponent={transition}
+        message={text}
+        key={transition ? transition.name : ""}
+        sx={{ backfroundColor: "primary.main", marginTop: 10, fontSize: 23 }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        autoHideDuration={2000}
+      />
     </ThemeProvider>
   );
 }
