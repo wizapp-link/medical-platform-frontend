@@ -29,6 +29,8 @@ import {
   Select,
   MenuItem,
   TextField,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import * as React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -126,7 +128,9 @@ export default function ManagerDashboardScreen(props: any) {
   };
 
   const handleReject = (user: UserData) => {
-    dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined));
+    setConfirm(true);
+    setSelectedPerson(user);
+    // dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined));
   };
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -154,6 +158,15 @@ export default function ManagerDashboardScreen(props: any) {
   const handleDialogClose = () => {
     setOpen(false);
   };
+
+  const [openConfirm, setConfirm] = useState(false);
+  const handleCloseConfirm = () => {
+    setConfirm(false);
+  };
+  const handleRejectConfirm = (user: UserData) => {
+    dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined));
+    setConfirm(false);
+  }
 
   return (
     <ThemeProvider theme={managerTheme}>
@@ -278,74 +291,74 @@ export default function ManagerDashboardScreen(props: any) {
                   </FormControl>
                 </div>
                 <Stack spacing={2} padding={0}>
-                <div style={{ marginTop: 0 }}>
-                  <Stack spacing={2} padding={0}>
-                    <TextField
-                      id="name-field"
-                      label="Name"
-                      variant="outlined"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      autoFocus
-                      autoComplete="name"
-                      color="primary"
-                    />
-                    <TextField
-                      id="email-field"
-                      label="E-mail"
-                      variant="outlined"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      autoComplete="email"
-                      required
-                      color="primary"
-                    />
-                    <TextField
-                      id="password-field"
-                      label="Password"
-                      variant="outlined"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      type="password"
-                      autoComplete="current-password"
-                      required
-                      color="primary"
-                    />
-                    <TextField
-                      id="number-field"
-                      variant="outlined"
-                      label="Phone Number"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      required
-                      color="primary"
-                    />
-                    <TextField
-                      id="dateOfBirth"
-                      label="Date of Birth"
-                      type="date"
-                      value={dob}
-                      onChange={(e) => setDob(e.target.value)}
-                      variant="outlined"
-                      required
-                      color="primary"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                    <TextField
-                      id="address"
-                      label="Address"
-                      value={addr}
-                      onChange={(e) => setAddr(e.target.value)}
-                      variant="outlined"
-                      fullWidth
-                      required
-                      color="primary"
-                    />
-                  </Stack>
-                </div>
+                  <div style={{ marginTop: 0 }}>
+                    <Stack spacing={2} padding={0}>
+                      <TextField
+                        id="name-field"
+                        label="Name"
+                        variant="outlined"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        autoFocus
+                        autoComplete="name"
+                        color="primary"
+                      />
+                      <TextField
+                        id="email-field"
+                        label="E-mail"
+                        variant="outlined"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="email"
+                        required
+                        color="primary"
+                      />
+                      <TextField
+                        id="password-field"
+                        label="Password"
+                        variant="outlined"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        type="password"
+                        autoComplete="current-password"
+                        required
+                        color="primary"
+                      />
+                      <TextField
+                        id="number-field"
+                        variant="outlined"
+                        label="Phone Number"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        required
+                        color="primary"
+                      />
+                      <TextField
+                        id="dateOfBirth"
+                        label="Date of Birth"
+                        type="date"
+                        value={dob}
+                        onChange={(e) => setDob(e.target.value)}
+                        variant="outlined"
+                        required
+                        color="primary"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                      <TextField
+                        id="address"
+                        label="Address"
+                        value={addr}
+                        onChange={(e) => setAddr(e.target.value)}
+                        variant="outlined"
+                        fullWidth
+                        required
+                        color="primary"
+                      />
+                    </Stack>
+                  </div>
                 </Stack>
                 {userRegister.error && (
                   <Typography color={red[500]}>
@@ -377,6 +390,27 @@ export default function ManagerDashboardScreen(props: any) {
             </form>
           </Stack>
         </Box>
+      </Dialog>
+      <Dialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Do you want to reject this member?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Once you click confirm, this rejection will not be withdrawn.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirm}>Cancel</Button>
+          <Button onClick={() => { if (selectedPerson) { handleRejectConfirm(selectedPerson) } }} autoFocus color="error">
+            Confirm
+          </Button>
+        </DialogActions>
       </Dialog>
     </ThemeProvider>
   );
