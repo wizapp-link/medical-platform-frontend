@@ -22,7 +22,7 @@ import {
   TextField,
   DialogActions,
   CardActions,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState, FormEvent } from "react";
@@ -107,11 +107,12 @@ export default function DoctorAppointmentScreen(props: any) {
     e.preventDefault();
     //dispatch(link(meetingLink));
 
+
     setTransition(() => TransitionDown);
     setOpenSnackbar(true);
     if (userInfo && meetingLink) {
       dispatch(
-        updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink),
+        updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink)
       );
       setText("Meeting Link Updated Successfully!");
       setOpen(false);
@@ -131,7 +132,6 @@ export default function DoctorAppointmentScreen(props: any) {
     userInfo ? userInfo.userData.googleMeetLink : ""
   );
 
-
   return (
     <ThemeProvider theme={doctorTheme}>
       <Grid item container>
@@ -143,17 +143,17 @@ export default function DoctorAppointmentScreen(props: any) {
             <Button
               onClick={handleMeetingOpen}
               sx={{
-                color: "secondary.contrastText",
+                color: "secondary.light",
                 backgroundColor: "primary.dark",
                 ":hover": { backgroundColor: "primary.main" },
                 marginRight: 5,
                 fontSize: 16,
               }}
             >
-              Change Meeting Link
+              Meeting Link
             </Button>
           </Stack>
-          <Stack
+          {/* <Stack
             justifyContent={"end"}
             alignItems={"end"}
             sx={{ marginTop: 1 }}
@@ -165,7 +165,7 @@ export default function DoctorAppointmentScreen(props: any) {
                 </a>
               </Typography>
             )}
-          </Stack>
+          </Stack> */}
           <Grid container justifyContent={"space-around"} sx={{ marginTop: 1 }}>
             {doctorAppointmentList.appointments.length === 0 && (
               <Typography variant="h5">You have no appointment.</Typography>
@@ -182,8 +182,8 @@ export default function DoctorAppointmentScreen(props: any) {
                       marginTop: 2,
                       boxShadow: 3,
                       marginLeft: 2,
-                      width: 380,
-                      height: 160,
+                      width: 390,
+                      height: 150,
                     }}
                   >
                     <CardContent>
@@ -203,47 +203,41 @@ export default function DoctorAppointmentScreen(props: any) {
                         </Stack>
                       </Stack>
                     </CardContent>
-                    <CardActions>
-                      <Stack direction={"row"} spacing={2}>
-                        {appointment.status === "ASSIGNED" && (
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            sx={{
-                              borderColor: "secondary.dark",
-                              ":hover": { backgroundColor: "secondary.dark" },
-                            }}
-                            onClick={() => handleModify(appointment)}
-                            disabled={appointment.status !== "ASSIGNED"}
-                          >
-                            Modify
-                          </Button>
-                        )}
+                    <CardActions sx={{ justifyContent: "space-between" }}>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{
+                          borderColor: "secondary.dark",
+                          ":hover": { backgroundColor: "secondary.dark" },
+                        }}
+                        onClick={() => handleModify(appointment)}
+                        disabled={appointment.status !== "ASSIGNED"}
+                      >
+                        Modify
+                      </Button>
 
-                        {(appointment.status !== "ASSIGNED" ||
-                          isAppointmentExpired(appointment)) && (
-                            <Button variant="outlined" disabled>
-                              {appointment.status}
-                              {isAppointmentExpired(appointment) && " EXPIRED"}
-                            </Button>
-                          )}
-                        <Button
-                          variant="contained"
-                          // variant="outlined"
-                          onClick={() => handleDetailButtonClick(appointment)}
-                          sx={{
-                            marginRight: 2,
-                            backgroundColor: "primary",
+
+                      <Button variant="outlined" disabled>
+                        {appointment.status}
+                        {isAppointmentExpired(appointment) && " EXPIRED"}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        // variant="outlined"
+                        onClick={() => handleDetailButtonClick(appointment)}
+                        sx={{
+                          marginRight: 2,
+                          backgroundColor: "primary",
+                          color: "primary.contrastText",
+                          ":hover": {
                             color: "primary.contrastText",
-                            ":hover": {
-                              color: "primary.contrastText",
-                              backgroundColor: "primary.dark",
-                            },
-                          }}
-                        >
-                          <MoreVertIcon />
-                        </Button>
-                      </Stack>
+                            backgroundColor: "primary.dark",
+                          },
+                        }}
+                      >
+                        <MoreVertIcon />
+                      </Button>
                     </CardActions>
                   </Card>
                 </Box>
@@ -339,8 +333,15 @@ export default function DoctorAppointmentScreen(props: any) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Meeting Link</DialogTitle>
         <DialogContent>
+          {meetingLink !== "" && (
+            <Typography sx={{ fontSize: 18 }}>
+              <a href={meetingLink} target="_blank" rel="noreferrer">
+                {meetingLink}
+              </a>
+            </Typography>
+          )}
           <DialogContentText sx={{ color: "primary.contrastText" }}>
-            Please enter a valid Meeting Link!
+            <br></br>Add/Change Meeting Link:
           </DialogContentText>
           <form onSubmit={handleMeetingSubmit}>
             <TextField
@@ -383,6 +384,6 @@ export default function DoctorAppointmentScreen(props: any) {
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         autoHideDuration={2000}
       />
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }

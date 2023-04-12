@@ -20,7 +20,7 @@ import {
   TextField,
   DialogActions,
   CardActions,
-  Snackbar
+  Snackbar,
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState, FormEvent } from "react";
@@ -165,7 +165,7 @@ export default function CounselorAppointmentScreen(props: any) {
     setOpenSnackbar(true);
     if (userInfo && meetingLink) {
       dispatch(
-        updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink),
+        updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink)
       );
       setText("Meeting Link Updated Successfully!");
       setOpen(false);
@@ -201,10 +201,10 @@ export default function CounselorAppointmentScreen(props: any) {
                 fontSize: 16,
               }}
             >
-              Change Meeting Link
+              Meeting Link
             </Button>
           </Stack>
-          <Stack
+          {/* <Stack
             justifyContent={"end"}
             alignItems={"end"}
             sx={{ marginTop: 1 }}
@@ -216,7 +216,7 @@ export default function CounselorAppointmentScreen(props: any) {
                 </a>
               </Typography>
             )}
-          </Stack>
+          </Stack> */}
           <Grid container justifyContent={"start"} sx={{ marginTop: 1 }}>
             {counselorAppointmentList.appointments.length === 0 && (
               <Typography variant="h5" color={"primary.contrastText"}>
@@ -227,14 +227,14 @@ export default function CounselorAppointmentScreen(props: any) {
               <Grid
                 key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
               >
-                <Box maxWidth={420} maxHeight={350}>
+                <Box maxWidth={420} maxHeight={150}>
                   <Card
                     sx={{
                       marginTop: 5,
                       boxShadow: 3,
                       marginLeft: 5,
                       height: 150,
-                      width: 400,
+                      width: 390,
                     }}
                   >
                     <CardContent>
@@ -254,45 +254,40 @@ export default function CounselorAppointmentScreen(props: any) {
                         </Stack>
                       </Stack>
                     </CardContent>
-                    <CardActions>
-                      <Stack direction={"row"} spacing={2}>
-                        {appointment.status === "ASSIGNED" && (
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            sx={{
-                              borderColor: "secondary.dark",
-                              ":hover": { backgroundColor: "secondary.dark" },
-                            }}
-                            onClick={() => handleModify(appointment)}
-                            disabled={appointment.status !== "ASSIGNED"}
-                          >
-                            Modify
-                          </Button>
-                        )}
+                    <CardActions sx={{ justifyContent: "space-between" }}>
 
-                        {(appointment.status !== "ASSIGNED" ||
-                          isAppointmentExpired(appointment)) && (
-                            <Button variant="outlined" disabled>
-                              {appointment.status}
-                              {isAppointmentExpired(appointment) && " EXPIRED"}
-                            </Button>
-                          )}
-                        <Button
-                          // variant="outlined"
-                          onClick={() => handleDetailButtonClick(appointment)}
-                          sx={{
-                            marginRight: 2,
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{
+                          borderColor: "secondary.dark",
+                          ":hover": { backgroundColor: "secondary.dark" },
+                        }}
+                        onClick={() => handleModify(appointment)}
+                        disabled={appointment.status !== "ASSIGNED"}
+                      >
+                        Modify
+                      </Button>
+
+
+                      <Button variant="outlined" disabled>
+                        {appointment.status}
+                        {isAppointmentExpired(appointment) && " EXPIRED"}
+                      </Button>
+                      <Button
+                        // variant="outlined"
+                        onClick={() => handleDetailButtonClick(appointment)}
+                        sx={{
+                          marginRight: 2,
+                          color: "primary.contrastText",
+                          backgroundColor: "primary.main",
+                          ":hover": {
                             color: "primary.contrastText",
-                            backgroundColor: "primary.main",
-                            ":hover": {
-                              color: "primary.contrastText",
-                            },
-                          }}
-                        >
-                          <MoreVertIcon />
-                        </Button>
-                      </Stack>
+                          },
+                        }}
+                      >
+                        <MoreVertIcon />
+                      </Button>
                     </CardActions>
                   </Card>
                 </Box>
@@ -388,10 +383,17 @@ export default function CounselorAppointmentScreen(props: any) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ fontSize: 24 }}>Meeting Link</DialogTitle>
         <DialogContent>
+          {meetingLink !== "" && (
+            <Typography sx={{ fontSize: 18 }}>
+              <a href={meetingLink} target="_blank" rel="noreferrer">
+                {meetingLink}
+              </a>
+            </Typography>
+          )}
           <DialogContentText
             sx={{ color: "primary.contrastText", fontSize: 20 }}
           >
-            Please enter a valid Meeting Link!
+            <br></br>Add/Change Meeting Link:
           </DialogContentText>
           <form onSubmit={handleMeetingSubmit}>
             <TextField
@@ -434,6 +436,6 @@ export default function CounselorAppointmentScreen(props: any) {
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         autoHideDuration={2000}
       />
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
