@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Grid,
 } from "@mui/material";
 import {
   Box,
@@ -90,16 +91,29 @@ export default function PatientAppointmentScreen(props: any) {
           Appointment History
         </Typography>
 
-        <List>
+        <Grid
+          container
+          justifyContent={"start"}
+          sx={{ marginTop: 1, marginLeft: 10 }}
+        >
           {patientAppointmentList.appointments.length === 0 && (
             <Typography variant="h5">You have no appointment.</Typography>
           )}
           {patientAppointmentList.appointments.map((appointment) => (
-            <ListItem
+            <Grid
               key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
             >
-              <Box sx={{ width: "100%" }}>
-                <Card sx={{ marginTop: 2, boxShadow: 3 }}>
+              <Box maxWidth={550} maxHeight={150}>
+                <Card
+                  sx={{
+                    marginTop: 5,
+                    boxShadow: 3,
+                    marginLeft: 5,
+                    height: 150,
+                    width: 440,
+                    marginRight: 5,
+                  }}
+                >
                   <CardContent>
                     <Stack direction="row" justifyContent="space-between">
                       <Stack direction="row">
@@ -115,69 +129,105 @@ export default function PatientAppointmentScreen(props: any) {
                           <Typography>Date:{appointment.slotDate}</Typography>
                         </Stack>
                       </Stack>
-                      <Stack direction={"row"}>
-                        <Button
-                          variant="contained"
-                          // variant="outlined"
-                          onClick={() => handleDetailButtonClick(appointment)}
-                          sx={{
-                            marginRight: 2,
-                            backgroundColor: "primary",
-                            color: "primary.contrastText",
-                            ":hover": {
-                              color: "primary.contrastText",
-                              backgroundColor: "secondary.main",
-                            },
-                          }}
-                        >
-                          Details
-                        </Button>
-                        {appointment.status === "ASSIGNED" &&
-                          !isAppointmentExpired(appointment) && (
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              sx={{
-                                color: "primary.contrastText",
-                                marginRight: 2,
-                                borderColor: "secondary.dark",
-                                ":hover": { backgroundColor: "secondary.dark" },
-                              }}
-                              onClick={() => handleReject(appointment)}
-                            >
-                              Reject
-                            </Button>
-                          )}
-                        {appointment.status === "ASSIGNED" &&
-                          !isAppointmentExpired(appointment) && (
-                            <Button
-                              variant="outlined"
-                              onClick={() => handleAccept(appointment)}
-                              sx={{
-                                backgroundColor: "primary.dark",
-                                color: "primary.contrastText",
-                                ":hover": { backgroundColor: "primary.main" },
-                              }}
-                            >
-                              Accept
-                            </Button>
-                          )}
-
-                        {(appointment.status !== "ASSIGNED" ||
-                          isAppointmentExpired(appointment)) && (
-                          <Button variant="outlined" disabled>
-                            {appointment.status}
-                            {isAppointmentExpired(appointment) && " EXPIRED"}
-                          </Button>
-                        )}
-                      </Stack>
                     </Stack>
                   </CardContent>
+                  <CardActions sx={{ justifyContent: "space-around" }}>
+                    <Button
+                      variant="contained"
+                      // variant="outlined"
+                      onClick={() => handleDetailButtonClick(appointment)}
+                      sx={{
+                        marginRight: 2,
+                        backgroundColor: "primary",
+                        color: "primary.contrastText",
+                        ":hover": {
+                          color: "primary.contrastText",
+                          backgroundColor: "secondary.main",
+                        },
+                      }}
+                    >
+                      Details
+                    </Button>
+                    {appointment.status === "ASSIGNED" &&
+                      !isAppointmentExpired(appointment) && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          sx={{
+                            color: "primary.contrastText",
+                            marginRight: 2,
+                            borderColor: "secondary.dark",
+                            ":hover": { backgroundColor: "secondary.dark" },
+                          }}
+                          onClick={() => handleReject(appointment)}
+                        >
+                          Reject
+                        </Button>
+                      )}
+
+                    {appointment.status === "ASSIGNED" &&
+                      isAppointmentExpired(appointment) && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          sx={{
+                            color: "primary.contrastText",
+                            marginRight: 2,
+                            borderColor: "secondary.dark",
+                            ":hover": { backgroundColor: "secondary.dark" },
+                          }}
+                          onClick={() => handleReject(appointment)}
+                          disabled
+                        >
+                          Reject
+                        </Button>
+                      )}
+
+                    {appointment.status !== "ASSIGNED" &&
+                      isAppointmentExpired(appointment) && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          sx={{
+                            color: "primary.contrastText",
+                            marginRight: 2,
+                            borderColor: "secondary.dark",
+                            ":hover": { backgroundColor: "secondary.dark" },
+                          }}
+                          onClick={() => handleReject(appointment)}
+                          disabled
+                        >
+                          Reject
+                        </Button>
+                      )}
+                    {appointment.status === "ASSIGNED" &&
+                      !isAppointmentExpired(appointment) && (
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleAccept(appointment)}
+                          sx={{
+                            backgroundColor: "primary.dark",
+                            color: "primary.contrastText",
+                            ":hover": { backgroundColor: "primary.main" },
+                          }}
+                        >
+                          Accept
+                        </Button>
+                      )}
+
+                    {(appointment.status !== "ASSIGNED" ||
+                      isAppointmentExpired(appointment)) && (
+                      <Button variant="outlined" disabled>
+                        {appointment.status}
+                        {isAppointmentExpired(appointment) && " EXPIRED"}
+                      </Button>
+                    )}
+                  </CardActions>
                 </Card>
               </Box>
-            </ListItem>
+            </Grid>
           ))}
-        </List>
+        </Grid>
       </Stack>
       <Dialog open={showDetailDialog} onClose={handleClose}>
         <DialogTitle sx={{ fontWeight: "bold" }}>
@@ -190,10 +240,10 @@ export default function PatientAppointmentScreen(props: any) {
           {/* <Typography variant="subtitle1">
               Patient ID: {userInfo?.userData.id}
             </Typography> */}
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Name: {userInfo?.userData.name}
           </Typography>
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Email: {userInfo?.userData.email}
           </Typography>
           {/* <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -209,13 +259,13 @@ export default function PatientAppointmentScreen(props: any) {
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             <br></br>Expert Info
           </Typography>
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Expert Position: {appointmentDetail?.type}
           </Typography>
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Expert Name: {appointmentDetail?.name}
           </Typography>
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Expert Email:{" "}
             {appointmentDetail?.slotAssignedTo
               ? appointmentDetail?.slotAssignedTo
@@ -227,16 +277,16 @@ export default function PatientAppointmentScreen(props: any) {
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             <br></br>Appointment Info
           </Typography>
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Status: {appointmentDetail?.status}
           </Typography>
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Date: {appointmentDetail?.slotDate}
           </Typography>
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Timeslot: {appointmentDetail?.slotTime}
           </Typography>
-          <Typography variant="subtitle1" sx={{fontSize: 18}}>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             Meeting Link: {appointmentDetail?.meetingLink}
           </Typography>
           {/* <Typography variant="subtitle1">
