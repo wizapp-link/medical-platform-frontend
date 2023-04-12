@@ -92,7 +92,7 @@ export default function PatientAppointmentScreen(props: any) {
 
         <List>
           {patientAppointmentList.appointments.length === 0 && (
-            <Typography variant="h5">Empty</Typography>
+            <Typography variant="h5">You have no appointment.</Typography>
           )}
           {patientAppointmentList.appointments.map((appointment) => (
             <ListItem
