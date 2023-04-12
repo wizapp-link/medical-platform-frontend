@@ -107,6 +107,7 @@ export default function DoctorAppointmentScreen(props: any) {
     e.preventDefault();
     //dispatch(link(meetingLink));
 
+
     setTransition(() => TransitionDown);
     setOpenSnackbar(true);
     if (userInfo && meetingLink) {
@@ -203,51 +204,24 @@ export default function DoctorAppointmentScreen(props: any) {
                       </Stack>
                     </CardContent>
                     <CardActions sx={{ justifyContent: "space-between" }}>
-                      {appointment.status === "ASSIGNED" && (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          sx={{
-                            borderColor: "secondary.dark",
-                            ":hover": { backgroundColor: "secondary.dark" },
-                          }}
-                          onClick={() => handleModify(appointment)}
-                          disabled={appointment.status !== "ASSIGNED"}
-                        >
-                          Modify
-                        </Button>
-                      )}
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{
+                          borderColor: "secondary.dark",
+                          ":hover": { backgroundColor: "secondary.dark" },
+                        }}
+                        onClick={() => handleModify(appointment)}
+                        disabled={appointment.status !== "ASSIGNED"}
+                      >
+                        Modify
+                      </Button>
 
-                      {appointment.status !== "ASSIGNED" && (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          sx={{
-                            borderColor: "secondary.dark",
-                            ":hover": { backgroundColor: "secondary.dark" },
-                          }}
-                          onClick={() => handleModify(appointment)}
-                          disabled={appointment.status !== "ASSIGNED"}
-                        >
-                          Modify
-                        </Button>
-                      )}
 
-                      {appointment.status == "ASSIGNED" &&
-                        !isAppointmentExpired(appointment) && (
-                          <Button variant="outlined" disabled>
-                            {appointment.status}
-                            {/* {isAppointmentExpired(appointment) && " EXPIRED"} */}
-                          </Button>
-                        )}
-
-                      {(appointment.status !== "ASSIGNED" ||
-                        isAppointmentExpired(appointment)) && (
-                        <Button variant="outlined" disabled>
-                          {appointment.status}
-                          {isAppointmentExpired(appointment) && " EXPIRED"}
-                        </Button>
-                      )}
+                      <Button variant="outlined" disabled>
+                        {appointment.status}
+                        {isAppointmentExpired(appointment) && " EXPIRED"}
+                      </Button>
                       <Button
                         variant="contained"
                         // variant="outlined"
@@ -351,6 +325,9 @@ export default function DoctorAppointmentScreen(props: any) {
           <Typography variant="subtitle1">
             Timeslot: {appointmentDetail?.slotTime}
           </Typography>
+          <Typography variant="subtitle1">
+            Meeting Link: {appointmentDetail?.meetingLink}
+          </Typography>
         </DialogContent>
       </Dialog>
       <Dialog open={open} onClose={handleClose}>
@@ -407,6 +384,6 @@ export default function DoctorAppointmentScreen(props: any) {
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         autoHideDuration={2000}
       />
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
