@@ -40,6 +40,7 @@ export const doctorTheme = createTheme({
 		},
 		secondary:{
 			main:'#FEFF89',
+			dark:'#F1876F'
 		}
 	}
 })

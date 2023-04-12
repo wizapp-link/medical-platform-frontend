@@ -19,6 +19,8 @@ import {
   DialogContentText,
   TextField,
   DialogActions,
+  CardActions,
+  Snackbar
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState, FormEvent } from "react";
@@ -41,7 +43,20 @@ import {
 } from "../features/appointment/appointmentSlice";
 import { defaultPatient } from "../types/PatientDataType";
 import { useNavigate } from "react-router";
-import { selectUserLogIn, logIn, updateGoogleMeetLink } from '../features/auth/userLogInSlice';
+import {
+  selectUserLogIn,
+  logIn,
+  updateGoogleMeetLink,
+} from "../features/auth/userLogInSlice";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Slide, { SlideProps } from "@mui/material/Slide";
+
+type TransitionProps = Omit<SlideProps, "direction">;
+
+function TransitionDown(props: TransitionProps) {
+  return <Slide {...props} direction="down" />;
+}
 
 export default function CounselorAppointmentScreen(props: any) {
   // const { patients } = useAppSelector(selectDoctor);
@@ -98,7 +113,9 @@ export default function CounselorAppointmentScreen(props: any) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [meetingLink, setMeetingLink] = useState(userInfo ? userInfo.userData.googleMeetLink : "")
+  const [meetingLink, setMeetingLink] = useState(
+    userInfo ? userInfo.userData.googleMeetLink : ""
+  );
 
   const handleDetailButtonClick = (appointment: Appointment) => {
     setAppointmentDetail(appointment);
@@ -130,58 +147,96 @@ export default function CounselorAppointmentScreen(props: any) {
   }, []);
 
   const [open, setOpen] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [text, setText] = useState("");
+  const [transition, setTransition] = React.useState<
+    React.ComponentType<TransitionProps> | undefined
+  >(undefined);
 
   const handleMeetingOpen = () => {
     setOpen(true);
   };
 
   const handleMeetingSubmit = (e: FormEvent) => {
-		e.preventDefault();
-		//dispatch(link(meetingLink));
-    setOpen(false);
+    e.preventDefault();
+    //dispatch(link(meetingLink));
+    
+    setTransition(() => TransitionDown);
+    setOpenSnackbar(true);
     if (userInfo && meetingLink) {
-      dispatch(updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink))
-      //setText("Changes updated successfully!");
+      dispatch(
+        updateGoogleMeetLink(userInfo.token, userInfo.userData, meetingLink),
+      );
+      setText("Meeting Link Updated Successfully!");
+      setOpen(false);
     } else {
-      //setText("Check missing fields!");
+      setText("Meeting Link cannot be empty!");
     }
-	};
+  };
 
   const handleMeetingClose = () => {
     setOpen(false);
   };
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
     <ThemeProvider theme={counselorTheme}>
       <Grid item container>
-        <Grid item container direction="column" md={12}>
+        <Grid item container direction="column" md={12} sx={{ marginTop: 2 }}>
           <Stack direction={"row"} justifyContent={"space-between"}>
             <Typography variant="h4" marginLeft="1rem">
               Appointments Assigned
             </Typography>
+
             <Button
               onClick={handleMeetingOpen}
               sx={{
                 color: "secondary.contrastText",
                 backgroundColor: "primary.contrastText",
                 ":hover": { backgroundColor: "primary.main" },
+                marginRight: 5,
+                fontSize: 16,
               }}
             >
-              Meeting Link
+              Change Meeting Link
             </Button>
           </Stack>
-          <List>
+          <Stack
+            justifyContent={"end"}
+            alignItems={"end"}
+            sx={{ marginTop: 1 }}
+          >
+            {meetingLink !== "" && (
+              <Typography sx={{ fontSize: 18 }}>
+                <a href={meetingLink} target="_blank" rel="noreferrer">
+                  {meetingLink}
+                </a>
+              </Typography>
+            )}
+          </Stack>
+          <Grid container justifyContent={"start"} sx={{ marginTop: 1 }}>
             {counselorAppointmentList.appointments.length === 0 && (
               <Typography variant="h5" color={"primary.contrastText"}>
                 Empty
               </Typography>
             )}
             {counselorAppointmentList.appointments.map((appointment) => (
-              <ListItem
+              <Grid
                 key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
               >
-                <Box sx={{ width: "100%" }}>
-                  <Card sx={{ marginTop: 2, boxShadow: 3 }}>
+                <Box maxWidth={420} maxHeight={350}>
+                  <Card
+                    sx={{
+                      marginTop: 5,
+                      boxShadow: 3,
+                      marginLeft: 5,
+                      height: 150,
+                      width: 400,
+                    }}
+                  >
                     <CardContent>
                       <Stack direction="row" justifyContent="space-between">
                         <Stack direction="row">
@@ -197,54 +252,53 @@ export default function CounselorAppointmentScreen(props: any) {
                             <Typography>Date:{appointment.slotDate}</Typography>
                           </Stack>
                         </Stack>
-                        <Stack direction={"row"}>
-                          <Button
-                            variant="contained"
-                            // variant="outlined"
-                            onClick={() => handleDetailButtonClick(appointment)}
-                            sx={{
-                              marginRight: 2,
-                              backgroundColor: "primary",
-                              color: "primary.contrastText",
-                              ":hover": {
-                                color: "primary.contrastText",
-                                backgroundColor: "secondary.main",
-                              },
-                            }}
-                          >
-                            Details
-                          </Button>
-                          {appointment.status === "ASSIGNED" && (
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              sx={{
-                                marginRight: 2,
-                                borderColor: "secondary.dark",
-                                ":hover": { backgroundColor: "secondary.dark" },
-                              }}
-                              onClick={() => handleModify(appointment)}
-                              disabled={appointment.status !== "ASSIGNED"}
-                            >
-                              Modify
-                            </Button>
-                          )}
-
-                          {(appointment.status !== "ASSIGNED" ||
-                            isAppointmentExpired(appointment)) && (
-                            <Button variant="outlined" disabled>
-                              {appointment.status}
-                              {isAppointmentExpired(appointment) && " EXPIRED"}
-                            </Button>
-                          )}
-                        </Stack>
                       </Stack>
                     </CardContent>
+                    <CardActions>
+                      <Stack direction={"row"} spacing={2}>
+                        {appointment.status === "ASSIGNED" && (
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            sx={{
+                              borderColor: "secondary.dark",
+                              ":hover": { backgroundColor: "secondary.dark" },
+                            }}
+                            onClick={() => handleModify(appointment)}
+                            disabled={appointment.status !== "ASSIGNED"}
+                          >
+                            Modify
+                          </Button>
+                        )}
+
+                        {(appointment.status !== "ASSIGNED" ||
+                          isAppointmentExpired(appointment)) && (
+                          <Button variant="outlined" disabled>
+                            {appointment.status}
+                            {isAppointmentExpired(appointment) && " EXPIRED"}
+                          </Button>
+                        )}
+                        <Button
+                          // variant="outlined"
+                          onClick={() => handleDetailButtonClick(appointment)}
+                          sx={{
+                            marginRight: 2,
+                            color: "primary.contrastText",
+                            backgroundColor: "primary.main",
+                            ":hover": {
+                              color: "primary.contrastText",
+                            },
+                          }}
+                        >
+                          <MoreVertIcon />
+                        </Button>
+                      </Stack>
+                    </CardActions>
                   </Card>
                 </Box>
-              </ListItem>
+              </Grid>
             ))}
-          </List>
+          </Grid>
         </Grid>
         {/* <Grid item container direction="column" md={12} lg={6}>
           <Grid item container md={12} lg={6} direction="column">
@@ -329,31 +383,54 @@ export default function CounselorAppointmentScreen(props: any) {
         </DialogContent>
       </Dialog>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Meeting Link</DialogTitle>
+        <DialogTitle sx={{ fontSize: 24 }}>Meeting Link</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{color: "primary.contrastText"}}>
+          <DialogContentText
+            sx={{ color: "primary.contrastText", fontSize: 20 }}
+          >
             Please enter a valid Meeting Link!
           </DialogContentText>
           <form onSubmit={handleMeetingSubmit}>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="meeting_link"
-            label="Meeting Link"
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={e => setMeetingLink(e.target.value)}
-            sx={{color: "primary.dark"}}
-            value={meetingLink}
-          />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="meeting_link"
+              label="Meeting Link"
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={(e) => setMeetingLink(e.target.value)}
+              sx={{ color: "primary.dark", fontSize: 20 }}
+              value={meetingLink}
+            />
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleMeetingClose} sx={{color: "primary.contrastText"}}>Cancel</Button>
-          <Button onClick={handleMeetingSubmit} type="submit" sx={{color: "primary.contrastText"}}>Submit</Button>
+          <Button
+            onClick={handleMeetingClose}
+            sx={{ color: "primary.contrastText" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleMeetingSubmit}
+            type="submit"
+            sx={{ color: "primary.contrastText" }}
+          >
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        onClose={handleCloseSnackbar}
+        TransitionComponent={transition}
+        message={text}
+        key={transition ? transition.name : ""}
+        sx={{ backfroundColor: "primary.main", marginTop: 10, fontSize: 23 }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        autoHideDuration={2000}
+      />
     </ThemeProvider>
   );
 }

@@ -14,7 +14,15 @@ import {
   Checkbox,
   IconButton,
   Card,
-  CardContent, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions
+  Grid,
+  CardContent,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
+  CardActions,
 } from "@mui/material";
 import * as React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -26,7 +34,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import { useNavigate } from "react-router-dom";
-import { closeSnackbar, fetchPatients, selectDoctor, updatePatientStatus } from "../features/doctor/doctorSlice";
+import {
+  closeSnackbar,
+  fetchPatients,
+  selectDoctor,
+  updatePatientStatus,
+} from "../features/doctor/doctorSlice";
 import { useEffect, useState } from "react";
 import { Patient } from "../types/PatientDataType";
 import { roleToPosition } from "../constants/PositionRoleMap";
@@ -44,7 +57,6 @@ export default function DoctorDashboardScreen(props: any) {
   const [reason, setReason] = useState("");
   const [showAssessmentDialog, setShowAssessmentDialog] = useState(false);
   const [openConfirm, setConfirm] = useState(false);
-
 
   const role = userInfo?.userData.role;
   const position = roleToPosition.get(role ? role : "");
@@ -78,29 +90,37 @@ export default function DoctorDashboardScreen(props: any) {
   const handleAccept = (patient: Patient) => {
     if (userInfo) {
       // dispatch(updatePatientStatus(patient.email, "SELF_ASSIGN", "", userInfo?.token, position));
-      dispatch(setPatient(patient))
+      dispatch(setPatient(patient));
       setTimeout(() => {
         navigate("/doctor/modify_appointment");
       }, 500);
     }
-
   };
 
   const handleReject = () => {
     if (selectedPatient && userInfo) {
-      dispatch(updatePatientStatus(selectedPatient.email, userInfo?.userData.email, "REJECT_PATIENT", reason, userInfo?.token, position,));
+      dispatch(
+        updatePatientStatus(
+          selectedPatient.email,
+          userInfo?.userData.email,
+          "REJECT_PATIENT",
+          reason,
+          userInfo?.token,
+          position
+        )
+      );
     }
 
     setReason("");
     setOpen(false);
     setConfirm(false);
-
   };
-
 
   useEffect(() => {
     if (userInfo)
-      dispatch(fetchPatients(userInfo.userData.email, userInfo.token, position));
+      dispatch(
+        fetchPatients(userInfo.userData.email, userInfo.token, position)
+      );
   }, [dispatch]);
 
   return (
@@ -120,53 +140,70 @@ export default function DoctorDashboardScreen(props: any) {
 
         <Stack>
           <Typography variant="h5">Incoming Patients</Typography>
-          <List sx={{ flexGrow: 1 }}>
+          <Grid container justifyContent={"start"} sx={{ marginTop: 1 }}>
             {patients.map(
-              patient => (
-                patient.assessmentTaken && patient.assessmentOptionsSelected[0] != null &&
-                <ListItem key={patient.id}>
-                  <Box width={"100%"}>
-                    <Card sx={{ boxShadow: 3, marginTop: 1 }}>
-                      <CardContent>
-                        <Stack direction={"row"} justifyContent={"space-between"}>
-                          <Stack direction={"row"}>
-                            <ListItemAvatar sx={{ display: "flex" }}>
-                              <Avatar sx={{ alignSelf: "center" }}
-                                alt={patient.name}
-                                src="/static/images/doctor/samplePatient.jpg"
-                              />
-                            </ListItemAvatar>
-                            <Stack direction={"column"}>
-                              <Typography>{patient.name}</Typography>
-                              <Typography>{patient.email}</Typography>
+              (patient) =>
+                patient.assessmentTaken &&
+                patient.assessmentOptionsSelected[0] != null && (
+                  <Grid key={patient.id}>
+                    <Box maxWidth={420} maxHeight={350}>
+                      <Card sx={{ boxShadow: 3, marginTop: 2, marginLeft: 2, marginBottom: 2 }}>
+                        <CardContent>
+                          <Stack
+                            direction={"row"}
+                            justifyContent={"space-between"}
+                          >
+                            <Stack direction={"row"}>
+                              <ListItemAvatar sx={{ display: "flex" }}>
+                                <Avatar
+                                  sx={{ alignSelf: "center" }}
+                                  alt={patient.name}
+                                  src="/static/images/doctor/samplePatient.jpg"
+                                />
+                              </ListItemAvatar>
+                              <Stack direction={"column"}>
+                                <Typography>{patient.name}</Typography>
+                                <Typography>{patient.email}</Typography>
+                              </Stack>
                             </Stack>
                           </Stack>
+                        </CardContent>
+                        <CardActions>
                           <Stack direction={"row"}>
                             <Button
                               variant="contained"
-                              color="primary"
-                              onClick={() => handleAssessmentButtonClick(patient)}
-                              sx={{ marginRight: 2 }}
-                              disabled={patient.assessmentOptionsSelected == null || patient.assessmentOptionsSelected.length === 0}
+                              color="secondary"
+                              onClick={() =>
+                                handleAssessmentButtonClick(patient)
+                              }
+                              sx={{ marginRight: 2, ":hover": { backgroundColor: "secondary.main" }}}
+                              disabled={
+                                patient.assessmentOptionsSelected == null ||
+                                patient.assessmentOptionsSelected.length === 0
+                              }
                             >
                               Self-Assessment
                             </Button>
-                            <Button variant="contained"
+                            <Button
+                              variant="contained"
                               sx={{ marginRight: 2 }}
                               onClick={() => handleAccept(patient)}
                             >
                               Accept
                             </Button>
-                            <Button variant="contained" color="secondary" onClick={() => handleClickOpen(patient)}>
+                            <Button
+                              variant="contained"
+                              sx={{backgroundColor: "secondary.dark", ":hover": { backgroundColor: "secondary.dark" }}}
+                              onClick={() => handleClickOpen(patient)}
+                            >
                               Reject
                             </Button>
                           </Stack>
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Box>
-                </ListItem>
-              )
+                        </CardActions>
+                      </Card>
+                    </Box>
+                  </Grid>
+                )
             )}
 
             <Dialog open={open} onClose={handleClose}>
@@ -214,16 +251,12 @@ export default function DoctorDashboardScreen(props: any) {
                   Confirm
                 </Button>
               </DialogActions>
-
             </Dialog>
-
-
-
-
-
-
-          </List>
-          <Dialog open={showAssessmentDialog} onClose={() => setShowAssessmentDialog(false)}>
+          </Grid>
+          <Dialog
+            open={showAssessmentDialog}
+            onClose={() => setShowAssessmentDialog(false)}
+          >
             <DialogTitle sx={{ fontWeight: "bold", fontSize: 30 }}>
               {selectedPatient?.name} Self-Assessment Results
             </DialogTitle>
@@ -234,20 +267,31 @@ export default function DoctorDashboardScreen(props: any) {
                 </Typography>
                 <Typography variant="subtitle1">
                   Name: {selectedPatient?.name}
-                </Typography> </Stack>
+                </Typography>{" "}
+              </Stack>
 
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {"Counselor's comment:"}
               </Typography>
-              <Typography variant="body1">{selectedPatient?.counsellingComment}</Typography>
+              <Typography variant="body1">
+                {selectedPatient?.counsellingComment}
+              </Typography>
               <Stack spacing={2} pt={1}>
                 {questions.map((question) => (
                   <Paper key={question.id} sx={{ p: 2, borderRadius: 2 }}>
-                    <Typography variant="subtitle1" fontWeight="bold">{question.text}</Typography>
-                    <Typography
-                      variant="body1">{`${selectedPatient && selectedPatient.assessmentOptionsSelected[question.id - 1] ?
-                        ansList[selectedPatient.assessmentOptionsSelected[question.id - 1].charCodeAt(0) - 97] : "N/A"
-                        }`}</Typography>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {question.text}
+                    </Typography>
+                    <Typography variant="body1">{`${
+                      selectedPatient &&
+                      selectedPatient.assessmentOptionsSelected[question.id - 1]
+                        ? ansList[
+                            selectedPatient.assessmentOptionsSelected[
+                              question.id - 1
+                            ].charCodeAt(0) - 97
+                          ]
+                        : "N/A"
+                    }`}</Typography>
                   </Paper>
                 ))}
               </Stack>
@@ -261,7 +305,8 @@ export default function DoctorDashboardScreen(props: any) {
           error={doctor.error}
           message={doctor.message}
           onClose={() => dispatch(closeSnackbar())}
-          autoHideDuration={5000} />
+          autoHideDuration={5000}
+        />
       </Stack>
     </ThemeProvider>
   );

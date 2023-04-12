@@ -20,7 +20,8 @@ import {
   Card,
   Grid,
   TextField,
-  DialogActions
+  DialogActions,
+  CardActions,
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState, FormEvent } from "react";
@@ -44,6 +45,7 @@ import {
 } from "../features/doctor/doctorAppointmentSlice";
 import { useNavigate } from "react-router";
 import { updateGoogleMeetLink } from "../features/auth/userLogInSlice";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export default function DoctorAppointmentScreen(props: any) {
   const [showDetailDialog, setShowDetailDialog] = useState(false);
@@ -112,7 +114,7 @@ export default function DoctorAppointmentScreen(props: any) {
   return (
     <ThemeProvider theme={doctorTheme}>
       <Grid item container>
-        <Grid item container direction="column" md={12}>
+        <Grid item container direction="column" md={12} sx={{ marginTop: 2 }}>
           <Stack direction={"row"} justifyContent={"space-between"}>
             <Typography variant="h4" marginLeft="1rem">
               Appointments Assigned
@@ -123,21 +125,46 @@ export default function DoctorAppointmentScreen(props: any) {
                 color: "secondary.contrastText",
                 backgroundColor: "primary.dark",
                 ":hover": { backgroundColor: "primary.main" },
+                marginRight: 5,
+                fontSize: 16,
               }}
             >
-              Meeting Link
+              Change Meeting Link
             </Button>
           </Stack>
-          <List>
+          <Stack
+            justifyContent={"end"}
+            alignItems={"end"}
+            sx={{ marginTop: 1 }}
+          >
+            {meetingLink !== "" && (
+              <Typography sx={{ fontSize: 18 }}>
+                <a href={meetingLink} target="_blank" rel="noreferrer">
+                  {meetingLink}
+                </a>
+              </Typography>
+            )}
+          </Stack>
+          <Grid container justifyContent={"space-around"} sx={{ marginTop: 1 }}>
             {doctorAppointmentList.appointments.length === 0 && (
               <Typography variant="h5">Empty</Typography>
             )}
             {doctorAppointmentList.appointments.map((appointment) => (
-              <ListItem
+              <Grid
                 key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
+                spacing={3}
+                sx={{ marginTop: 1 }}
               >
-                <Box sx={{ width: "100%" }}>
-                  <Card sx={{ marginTop: 2, boxShadow: 3 }}>
+                <Box maxWidth={420} maxHeight={350}>
+                  <Card
+                    sx={{
+                      marginTop: 2,
+                      boxShadow: 3,
+                      marginLeft: 2,
+                      width: 380,
+                      height: 160,
+                    }}
+                  >
                     <CardContent>
                       <Stack direction="row" justifyContent="space-between">
                         <Stack direction="row">
@@ -153,54 +180,55 @@ export default function DoctorAppointmentScreen(props: any) {
                             <Typography>Date:{appointment.slotDate}</Typography>
                           </Stack>
                         </Stack>
-                        <Stack direction={"row"}>
-                          <Button
-                            variant="contained"
-                            // variant="outlined"
-                            onClick={() => handleDetailButtonClick(appointment)}
-                            sx={{
-                              marginRight: 2,
-                              backgroundColor: "primary",
-                              color: "primary.contrastText",
-                              ":hover": {
-                                color: "primary.contrastText",
-                                backgroundColor: "secondary.main",
-                              },
-                            }}
-                          >
-                            Details
-                          </Button>
-                          {appointment.status === "ASSIGNED" && (
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              sx={{
-                                marginRight: 2,
-                                borderColor: "secondary.dark",
-                                ":hover": { backgroundColor: "secondary.dark" },
-                              }}
-                              onClick={() => handleModify(appointment)}
-                              disabled={appointment.status !== "ASSIGNED"}
-                            >
-                              Modify
-                            </Button>
-                          )}
-
-                          {(appointment.status !== "ASSIGNED" ||
-                            isAppointmentExpired(appointment)) && (
-                            <Button variant="outlined" disabled>
-                              {appointment.status}
-                              {isAppointmentExpired(appointment) && " EXPIRED"}
-                            </Button>
-                          )}
-                        </Stack>
                       </Stack>
                     </CardContent>
+                    <CardActions>
+                      <Stack direction={"row"} spacing={2}>
+                        {appointment.status === "ASSIGNED" && (
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            sx={{
+                              borderColor: "secondary.dark",
+                              ":hover": { backgroundColor: "secondary.dark" },
+                            }}
+                            onClick={() => handleModify(appointment)}
+                            disabled={appointment.status !== "ASSIGNED"}
+                          >
+                            Modify
+                          </Button>
+                        )}
+
+                        {(appointment.status !== "ASSIGNED" ||
+                          isAppointmentExpired(appointment)) && (
+                          <Button variant="outlined" disabled>
+                            {appointment.status}
+                            {isAppointmentExpired(appointment) && " EXPIRED"}
+                          </Button>
+                        )}
+                        <Button
+                          variant="contained"
+                          // variant="outlined"
+                          onClick={() => handleDetailButtonClick(appointment)}
+                          sx={{
+                            marginRight: 2,
+                            backgroundColor: "primary",
+                            color: "primary.contrastText",
+                            ":hover": {
+                              color: "primary.contrastText",
+                              backgroundColor: "primary.dark",
+                            },
+                          }}
+                        >
+                          <MoreVertIcon />
+                        </Button>
+                      </Stack>
+                    </CardActions>
                   </Card>
                 </Box>
-              </ListItem>
+              </Grid>
             ))}
-          </List>
+          </Grid>
         </Grid>
         {/* <Grid item container direction="column" md={12} lg={6}>
           <Grid item container md={12} lg={6} direction="column">
