@@ -17,6 +17,8 @@ import {
   Tabs,
   Tab,
   Snackbar,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -61,7 +63,9 @@ export default function ManagerMembersScreen(props: any) {
   };
 
   const handleReject = (user: UserData) => {
-    dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined));
+    setConfirm(true);
+    setSelectedPerson(user);
+    // dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined));
   };
 
   const handleSnackbarClose = () => {
@@ -75,6 +79,15 @@ export default function ManagerMembersScreen(props: any) {
   ) => {
     setTabIndex(newTabIndex);
   };
+
+  const [openConfirm, setConfirm] = useState(false);
+  const handleCloseConfirm = () => {
+    setConfirm(false);
+  };
+  const handleRejectConfirm = (user: UserData) => {
+    dispatch(updatePersonnel(userInfo?.token, user, personnelStatus.declined));
+    setConfirm(false);
+  }
 
   return (
     <ThemeProvider theme={managerTheme}>
@@ -130,6 +143,27 @@ export default function ManagerMembersScreen(props: any) {
           </Box>
         </Box>
         <PersonnelDetailDialog open={showAssessmentDialog} onClose={handleClose} selectedPerson={selectedPerson} />
+        <Dialog
+          open={openConfirm}
+          onClose={handleCloseConfirm}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Do you want to reject this member?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Once you click confirm, this rejection will not be withdrawn.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirm}>Cancel</Button>
+            <Button onClick={() => { if (selectedPerson) { handleRejectConfirm(selectedPerson) } }} autoFocus color="error">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Snackbar
           open={personnelList.personnelUpdateMessage !== ""}
           message={personnelList.personnelUpdateMessage}
