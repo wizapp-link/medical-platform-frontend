@@ -36,6 +36,7 @@ import { Appointment } from "../types/AppointmentType";
 import { selectUserLogIn } from "../features/auth/userLogInSlice";
 import dayjs from "dayjs";
 import { isAppointmentExpired } from "../utils/AppointmentConversion";
+import { MoreVert } from "@mui/icons-material";
 
 export default function PatientAppointmentScreen(props: any) {
   const [showDetailDialog, setShowDetailDialog] = useState(false);
@@ -146,7 +147,7 @@ export default function PatientAppointmentScreen(props: any) {
                         },
                       }}
                     >
-                      Details
+                      <MoreVert />
                     </Button>
                     {appointment.status === "ASSIGNED" &&
                       !isAppointmentExpired(appointment) && (

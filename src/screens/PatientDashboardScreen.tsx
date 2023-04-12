@@ -38,6 +38,7 @@ import {
 import { useAppDispatch } from "../app/hooks";
 import { Appointment } from "../types/AppointmentType";
 import { updateAppointment } from "../features/patient/patientAppointmentSlice";
+import { MoreVert } from "@mui/icons-material";
 
 export default function PatientDashboardScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn);
@@ -192,7 +193,7 @@ export default function PatientDashboardScreen(props: any) {
                               },
                             }}
                           >
-                            Details
+                            <MoreVert />
                           </Button>
                           {appointment.status !== "ACCEPTED" &&
                             appointment.status !== "REJECTED" && (
@@ -307,7 +308,7 @@ export default function PatientDashboardScreen(props: any) {
                             },
                           }}
                         >
-                          Details
+                          <MoreVert />
                         </Button>
                         {appointment.status !== "ACCEPTED" &&
                           appointment.status !== "REJECTED" && (
