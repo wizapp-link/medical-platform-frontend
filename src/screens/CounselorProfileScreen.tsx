@@ -1,118 +1,188 @@
-import { Box, Button, Container, makeStyles, Stack, TextField, Typography } from "@mui/material";
-import * as React from "react";
-import { FormEvent, useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { FormEvent, useState } from "react";
+import { createTheme, ThemeProvider, colors } from "@mui/material";
+import { patientTheme } from "../Themes";
+import { selectUserLogIn, updateUserData } from "../features/auth/userLogInSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import Snackbar from "@mui/material/Snackbar";
+import Slide, { SlideProps } from "@mui/material/Slide";
 
-import { createTheme, ThemeProvider, colors} from '@mui/material';
-import { counselorTheme } from '../Themes';
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../app/store";
-import { useAppSelector } from "../app/hooks";
-import { selectUserLogIn } from "../features/auth/userLogInSlice";
-import { useLocation, useNavigate, Link as RouterLink, useSearchParams } from "react-router-dom";
+type TransitionProps = Omit<SlideProps, "direction">;
 
-export default function CounselorProfileScreen() {
+function TransitionDown(props: TransitionProps) {
+  return <Slide {...props} direction="down" />;
+}
+
+export default function CounselorProfileScreen(props: any) {
   const { userInfo } = useAppSelector(selectUserLogIn);
-  const dispatch = useDispatch()
 
-  const handleSave = (e: FormEvent) => {
-  e.preventDefault()
-    // dispatch(profileUpdate({
-    //   name,
-    //   dob,
-    //   phone,
-    //   address,
-    //   registrationNo,
-    //   email
-    // }))
-    // TODO: Save profile
-  };
-  const [name, setName] = useState(userInfo?.userData.name)
-  const [dob, setDob] = useState(userInfo?.userData.dob)
-  const [phone, setPhone] = useState(userInfo?.userData.phone)
-  const [address, setAddress] = useState(userInfo?.userData.address)
-  const [registrationNo, setRegistrationNo] = useState(userInfo?.userData.registrationNo)
+  const [name, setName] = useState(userInfo?.userData.name);
   const [email, setEmail] = useState(userInfo?.userData.email);
+  const [phoneNumber, setPhoneNumber] = useState(userInfo?.userData.phone);
+  const [addr, setAddr] = useState(userInfo?.userData.address);
+  const [dob, setDob] = useState(userInfo?.userData.dob);
+  const [registrationNo, setRegistrationNo] = useState(userInfo?.userData.registrationNo);
+  const dispatch = useAppDispatch();
 
-  
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setTransition(() => TransitionDown);
+    setOpen(true);
+
+    if (userInfo && name && email && phoneNumber && addr && dob) {
+      dispatch(updateUserData(userInfo.token, userInfo.userData, name, email, phoneNumber, addr, dob))
+      setText("Changes updated successfully!");
+    } else {
+      setText("Check missing fields!");
+    }
+  };
+
+  const handleDiscard = () => {
+    setName(userInfo?.userData.name);
+    setEmail(userInfo?.userData.email);
+    setPhoneNumber(userInfo?.userData.phone);
+    setAddr(userInfo?.userData.address);
+    setDob(userInfo?.userData.dob);
+    setTransition(() => TransitionDown);
+    setOpen(true);
+    setText("No changes made!");
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [open, setOpen] = React.useState(false);
+  const [text, setText] = useState("");
+  const [transition, setTransition] = React.useState<
+    React.ComponentType<TransitionProps> | undefined
+  >(undefined);
+
+  //   const handleReject = () => {
+  //     enqueueSnackbar("No Changes Made");
+  //   };
 
   return (
-    <ThemeProvider theme={counselorTheme}>
-    <Box>
-      <Container>
-        <>
-          <Typography variant="h5" gutterBottom>
-          </Typography>
-          <form noValidate autoComplete="off" onSubmit={handleSave}>
+    <ThemeProvider theme={patientTheme}>
+      <Box>
+        <Container>
+          <form onSubmit={handleSubmit}>
             <Stack spacing={5} padding={5}>
               <Typography variant="h4">Profile</Typography>
               <TextField
-                fullWidth
-                label="Email"
-                name="email"
+                id="email-field"
+                label="E-mail"
+                variant="outlined"
                 value={email}
-                disabled
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 required
-                color='secondary'
+                disabled
+                color="secondary"
               />
               <TextField
-                fullWidth
+                id="name-field"
                 label="Name"
-                name="name"
+                variant="outlined"
                 value={name}
-                onChange={e => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 required
-                color='secondary'
+                autoFocus
+                autoComplete="name"
+                color="secondary"
               />
               <TextField
-                fullWidth
-                label="Date Of Birth"
-                name="dateOfBirth"
+                id="number-field"
+                variant="outlined"
+                label="Number"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+                color="secondary"
+              />
+              <TextField
+                id="dateOfBirth"
+                label="Date of Birth"
+                type="date"
                 value={dob}
-                onChange={e => setDob(e.target.value)}
+                onChange={(e) => setDob(e.target.value)}
+                variant="outlined"
                 required
-                color='secondary'
+                color="secondary"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
               <TextField
-                fullWidth
-                label="Phone"
-                name="phone"
-                value={phone}
-                onChange={e => setPhone(e.target.value)}
-                required
-                color='secondary'
-              />
-              <TextField
-                fullWidth
+                id="address"
                 label="Address"
-                name="address"
-                value={address}
-                onChange={e => setAddress(e.target.value)}
+                value={addr}
+                onChange={(e) => setAddr(e.target.value)}
+                variant="outlined"
+                fullWidth
                 required
-                color='secondary'
+                color="secondary"
               />
               <TextField
-                fullWidth
-                label="Counselor Registration Number"
-                name="counselorrRegistrationNumber"
+                id="registrationNo"
+                label="Registration Number"
                 value={registrationNo}
-                onChange={e => setRegistrationNo(e.target.value)}
-                required
-                color='secondary'
+                onChange={(e) => setRegistrationNo(e.target.value)}
+                variant="outlined"
+                fullWidth
                 disabled
+                color="secondary"
               />
-              <Stack direction="row" spacing={5} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button size={'large'} variant="contained" color="secondary" onClick={() => { window.location.reload() }}>
+              <Stack
+                direction="row"
+                spacing={5}
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleDiscard}
+                >
                   Discard
                 </Button>
-                <Button size={'large'} variant="contained" color="primary" type="submit" onClick={handleSave}>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  onClick={handleSubmit}
+                  sx={{
+                    backgroundColor: "primary.dark",
+                    ":hover": { backgroundColor: "primary.main" },
+                  }}
+                >
                   Submit
                 </Button>
+                <Snackbar
+                  open={open}
+                  onClose={handleClose}
+                  TransitionComponent={transition}
+                  message={text}
+                  key={transition ? transition.name : ""}
+                  sx={{ backfroundColor: "primary.main", marginTop: 10, fontSize: 23 }}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  autoHideDuration={2000}
+                />
               </Stack>
             </Stack>
           </form>
-        </>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
     </ThemeProvider>
   );
 }
+function dispatch() {
+  throw new Error("Function not implemented.");
+}
+

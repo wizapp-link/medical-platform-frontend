@@ -168,7 +168,7 @@ export default function DoctorAppointmentScreen(props: any) {
           </Stack>
           <Grid container justifyContent={"space-around"} sx={{ marginTop: 1 }}>
             {doctorAppointmentList.appointments.length === 0 && (
-              <Typography variant="h5">Empty</Typography>
+              <Typography variant="h5">You have no appointment.</Typography>
             )}
             {doctorAppointmentList.appointments.map((appointment) => (
               <Grid
