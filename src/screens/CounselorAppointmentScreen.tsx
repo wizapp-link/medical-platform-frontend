@@ -160,7 +160,7 @@ export default function CounselorAppointmentScreen(props: any) {
   const handleMeetingSubmit = (e: FormEvent) => {
     e.preventDefault();
     //dispatch(link(meetingLink));
-    
+
     setTransition(() => TransitionDown);
     setOpenSnackbar(true);
     if (userInfo && meetingLink) {
@@ -273,11 +273,11 @@ export default function CounselorAppointmentScreen(props: any) {
 
                         {(appointment.status !== "ASSIGNED" ||
                           isAppointmentExpired(appointment)) && (
-                          <Button variant="outlined" disabled>
-                            {appointment.status}
-                            {isAppointmentExpired(appointment) && " EXPIRED"}
-                          </Button>
-                        )}
+                            <Button variant="outlined" disabled>
+                              {appointment.status}
+                              {isAppointmentExpired(appointment) && " EXPIRED"}
+                            </Button>
+                          )}
                         <Button
                           // variant="outlined"
                           onClick={() => handleDetailButtonClick(appointment)}
@@ -379,6 +379,9 @@ export default function CounselorAppointmentScreen(props: any) {
           </Typography>
           <Typography variant="subtitle1">
             Timeslot: {appointmentDetail?.slotTime}
+          </Typography>
+          <Typography variant="subtitle1">
+            Meeting Link: {appointmentDetail?.meetingLink}
           </Typography>
         </DialogContent>
       </Dialog>
