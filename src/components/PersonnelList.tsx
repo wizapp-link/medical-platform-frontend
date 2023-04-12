@@ -42,7 +42,7 @@ export default function PersonnelList(props: PropsType) {
         users.map((user) => (
           <Grid key={user.id}>
             <Box>
-              <Box maxWidth={350} maxHeight={250} sx={{marginLeft: 6}}>
+              <Box maxWidth={350} maxHeight={250} sx={{ marginLeft: 6 }}>
                 <Card
                   sx={{
                     boxShadow: 3,
@@ -99,6 +99,7 @@ export default function PersonnelList(props: PropsType) {
                           : "Reject"}
                       </Button>
                       <Button
+                        variant="contained"
                         onClick={() => handleAssessmentButtonClick(user)}
                         sx={{ marginRight: 2 }}
                       >
