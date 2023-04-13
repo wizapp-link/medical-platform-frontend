@@ -146,6 +146,7 @@ export default function PatientDashboardScreen(props: any) {
             <Grid container justifyContent={"start"} sx={{ marginTop: 1 }}>
               {patientAppointmentList.acceptedFutureAppointments.map(
                 (appointment) => (
+                  (appointment.name != "" && appointment.name != null) &&
                   <Grid
                     key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
                   >
@@ -261,6 +262,7 @@ export default function PatientDashboardScreen(props: any) {
           <Grid container justifyContent={"start"} sx={{ marginTop: 1 }}>
             {patientAppointmentList.pendingFutureAppointments.map(
               (appointment) => (
+                (appointment.name != "" && appointment.name != null) &&
                 <Grid
                   key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
                 >

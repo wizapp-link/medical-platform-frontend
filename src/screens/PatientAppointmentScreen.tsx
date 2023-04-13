@@ -101,6 +101,7 @@ export default function PatientAppointmentScreen(props: any) {
             <Typography variant="h5">You have no appointment.</Typography>
           )}
           {patientAppointmentList.appointments.map((appointment) => (
+            (appointment.name != "" && appointment.name != null) &&
             <Grid
               key={`${appointment.name}${appointment.slotDate}${appointment.slotTime}`}
             >
