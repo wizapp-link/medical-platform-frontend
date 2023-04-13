@@ -251,7 +251,10 @@ export default function PatientAppointmentScreen(props: any) {
             Timeslot: {appointmentDetail?.slotTime}
           </Typography>
           <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
-            Meeting Link: {appointmentDetail?.meetingLink}
+            Meeting Link:
+            <a href={appointmentDetail?.meetingLink} target="_blank" rel="noreferrer">
+              {appointmentDetail?.meetingLink}
+            </a>
           </Typography>
           {/* <Typography variant="subtitle1">
               Notes:

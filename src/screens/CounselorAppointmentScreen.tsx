@@ -376,7 +376,10 @@ export default function CounselorAppointmentScreen(props: any) {
             Timeslot: {appointmentDetail?.slotTime}
           </Typography>
           <Typography variant="subtitle1">
-            Meeting Link: {appointmentDetail?.meetingLink}
+            Meeting Link: 
+            <a href={appointmentDetail?.meetingLink} target="_blank" rel="noreferrer">
+              {appointmentDetail?.meetingLink}
+            </a>
           </Typography>
         </DialogContent>
       </Dialog>
